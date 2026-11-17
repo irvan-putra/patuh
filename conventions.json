@@ -29,7 +29,14 @@
     "apk_name_source": "version in downloadable filenames, early enough not to be truncated",
     "sha256_sidecar": "{app}-v{version}.apk.sha256",
     "label_lowercase": true,
-    "label_source": "lowercase launcher names, 2026-11-17 (itdapk, cabang, menit, ...)"
+    "label_source": "lowercase launcher names, 2026-11-17 (itdapk, cabang, menit, ...)",
+    "checksum_formats": {
+      "accepted": [
+        "{app}-v{version}.apk.sha256 (hex, optionally followed by filename)",
+        "SHA256SUMS (sha256sum format, one 'hash  filename' line per asset)"
+      ],
+      "source": "A checksum asset must exist per release APK; both formats are in approved use (SHA256SUMS in intodo, per-asset sidecars elsewhere)."
+    }
   },
   "icon_family": {
     "source": "Eleven-app family approved 2026-11-17 ~17:37: rounded-square art, numbers-only full-width version strip across the bottom, readable at launcher size, main symbol left visible. Constants from the shared generator (kemas tools/badge_icon.py).",

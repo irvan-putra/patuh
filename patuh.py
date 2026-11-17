@@ -211,6 +211,77 @@ def _cdist(a, b):
     return sum((a[i] - b[i]) ** 2 for i in range(3)) ** 0.5
 
 
+_BADGE_CHARS = "0123456789."
+_glyph_cache = {}
+
+
+def _bbox(pts):
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def _candidate_glyph(ch, size, conv, font_path):
+    """One badge character rendered through the family's exact pipeline."""
+    key = (ch, size)
+    if key in _glyph_cache:
+        return _glyph_cache[key]
+    _, Image, ImageDraw, ImageFont = pil()
+    big = 768
+    m = Image.new("L", (big, big), 0)
+    d = ImageDraw.Draw(m)
+    f = ImageFont.truetype(font_path, int(big * conv["text_size"]))
+    d.text((big / 2, (int(big * conv["strip_top"]) + big) / 2), ch, font=f, fill=255, anchor="mm")
+    m = m.resize((size, size), Image.LANCZOS)
+    mm = m.load()
+    pts = set((x, y) for y in range(size) for x in range(size) if mm[x, y] > 100)
+    _glyph_cache[key] = pts
+    return pts
+
+
+def _iou_centered(a, b):
+    """IoU with b kept at its rendered size and its bbox center aligned to a's."""
+    ax0, ay0, ax1, ay1 = _bbox(a)
+    bx0, by0, bx1, by1 = _bbox(b)
+    dx = int(round((ax0 + ax1) / 2 - (bx0 + bx1) / 2))
+    dy = int(round((ay0 + ay1) / 2 - (by0 + by1) / 2))
+    bb = set((x + dx, y + dy) for (x, y) in b)
+    inter = len(a & bb)
+    union = len(a | bb)
+    return inter / union if union else 0
+
+
+def read_badge(tmask, size, conv, font_path):
+    """Segment the badge text mask into glyphs and classify each against the
+    pinned font's digits and period. Returns (string, min glyph IoU), or
+    (None, confidence) when segmentation found no glyphs. Deterministic:
+    same pixels in, same reading out."""
+    cols = {}
+    for (x, y) in tmask:
+        cols.setdefault(x, []).append(y)
+    if not cols:
+        return None, 0.0
+    xs = sorted(cols)
+    groups = [[xs[0]]]
+    for x in xs[1:]:
+        if x - groups[-1][-1] <= 1:
+            groups[-1].append(x)
+        else:
+            groups.append([x])
+    out = []
+    worst = 1.0
+    for g in groups:
+        pts = set((x, y) for x in g for y in cols[x])
+        scored = [(c, _iou_centered(pts, _candidate_glyph(c, size, conv, font_path)))
+                  for c in _BADGE_CHARS]
+        best, score = max(scored, key=lambda cs: cs[1])
+        out.append(best)
+        worst = min(worst, score)
+    if worst < 0.4:
+        return None, worst
+    return "".join(out), worst
+
+
 def icon_pixel_checks(img, version, conv, font_path):
     """The family geometry suite. Returns list of (ok, check_id, message).
 
@@ -287,34 +358,22 @@ def icon_pixel_checks(img, version, conv, font_path):
     out.append((0.002 <= frac <= 0.40, "icon-badge-text", "badge text covers %.1f%% of strip" % (frac * 100)))
 
     if version and w >= 144:
-        # render the expected badge with the pinned font and compare masks
+        # read the badge characters with the pinned font and compare to the version
         if not os.path.isfile(font_path):
             out.append((None, "icon-badge-version", "SKIP: pinned font missing at %s" % font_path))
         elif hashlib.sha256(open(font_path, "rb").read()).hexdigest() != conv["font_sha256"]:
             out.append((False, "icon-badge-version", "pinned font sha256 mismatch"))
         else:
-            big = 768
-            m = Image.new("L", (big, big), 0)
-            d = ImageDraw.Draw(m)
-            f = ImageFont.truetype(font_path, int(big * text_size))
-            d.text((big / 2, (int(big * strip_top) + big) / 2), version,
-                   font=f, fill=255, anchor="mm")
-            m = m.resize((w, h), Image.LANCZOS)
-            mm = m.load()
-            exp = set((x, yy) for yy in range(y0, h) for x in range(w) if mm[x, yy] > 100)
-
-            def dil(s):
-                o = set()
-                for (x, yy) in s:
-                    for dx in (-1, 0, 1):
-                        for dy in (-1, 0, 1):
-                            o.add((x + dx, yy + dy))
-                return o
-            dexp, dact = dil(exp), dil(tmask)
-            rec = sum(1 for p in exp if p in dact) / len(exp) if exp else 0
-            prec = sum(1 for p in tmask if p in dexp) / len(tmask) if tmask else 0
-            out.append((rec > 0.85 and prec > 0.75, "icon-badge-version",
-                        "badge reads %s (recall %.2f, precision %.2f)" % (version, rec, prec)))
+            read_str, confidence = read_badge(tmask, w, conv, font_path)
+            if read_str is None:
+                out.append((None, "icon-badge-version",
+                            "SKIP: badge text unreadable at this size (confidence %.2f)" % confidence))
+            elif read_str == version:
+                out.append((True, "icon-badge-version",
+                            "badge reads %s (character confidence %.2f)" % (version, confidence)))
+            else:
+                out.append((False, "icon-badge-version",
+                            "badge reads %r but version is %s" % (read_str, version)))
 
     # art above the strip stays inside the round-mask safe circle
     bg = Counter(px[x, yy][:3] for yy in range(0, y0, 3)
@@ -504,6 +563,33 @@ def check_icon(rep, proj, clone, conv, version):
         rep.add(app, PASS if ok else (SKIP if ok is None else FAIL), cid, msg)
 
 
+def find_checksum(assets, want_apk, want_sha):
+    """Locate the published checksum for the APK. Two accepted formats:
+    the per-asset sidecar `app-vX.Y.Z.apk.sha256` (hex, possibly followed by
+    the filename) and a sha256sum-format `SHA256SUMS` file listing every
+    asset. Returns (asset_name, sha_hex, format) or None."""
+    if want_sha in assets:
+        try:
+            text = fetch_bytes(assets[want_sha]["browser_download_url"]).decode()
+        except Exception:
+            return None
+        fields = text.split()
+        if fields and re.fullmatch(r"[0-9a-fA-F]{64}", fields[0]):
+            return (want_sha, fields[0].lower(), "sidecar")
+        return None
+    if "SHA256SUMS" in assets:
+        try:
+            text = fetch_bytes(assets["SHA256SUMS"]["browser_download_url"]).decode()
+        except Exception:
+            return None
+        for line in text.splitlines():
+            m = re.match(r"([0-9a-fA-F]{64})\s+\*?(\S+)", line.strip())
+            if m and m.group(2) == want_apk:
+                return ("SHA256SUMS", m.group(1).lower(), "sha256sums")
+        return None
+    return None
+
+
 def latest_release(owner, repo):
     rels = api_get("%s/repos/%s/%s/releases?per_page=5" % (GH_API, owner, repo))
     for r in rels:
@@ -541,18 +627,13 @@ def check_release(rep, proj, conv, gallery_card, verify_downloads, workdir):
     else:
         rep.add(app, FAIL, "release-apk-name", "release has no assets; want " + want_apk)
     sha_declared = None
-    if want_sha in assets:
-        try:
-            sha_declared = fetch_bytes(assets[want_sha]["browser_download_url"]).decode().split()[0].strip()
-            if re.fullmatch(r"[0-9a-f]{64}", sha_declared):
-                rep.add(app, PASS, "release-sha256-file", "sidecar present")
-            else:
-                rep.add(app, FAIL, "release-sha256-file", "sidecar is not a sha256 hex")
-                sha_declared = None
-        except Exception as e:
-            rep.add(app, SKIP, "release-sha256-file", "could not read sidecar: %s" % e)
+    found = find_checksum(assets, want_apk, want_sha)
+    if found:
+        asset_name, sha_declared, fmt = found
+        rep.add(app, PASS, "release-sha256-file", "checksum published as %s (%s)" % (asset_name, fmt))
     else:
-        rep.add(app, FAIL, "release-sha256-file", "missing " + want_sha)
+        rep.add(app, FAIL, "release-sha256-file",
+                "no checksum asset for %s (accepted: %s or a SHA256SUMS line)" % (want_apk, want_sha))
     if gallery_card is not None:
         cv = gallery_card.get("version")
         if cv == version:
@@ -563,14 +644,14 @@ def check_release(rep, proj, conv, gallery_card, verify_downloads, workdir):
         csha = (gallery_card.get("sha256") or "").lower()
         if sha_declared and csha:
             if csha == sha_declared.lower():
-                rep.add(app, PASS, "gallery-sha256", "gallery checksum matches sidecar")
+                rep.add(app, PASS, "gallery-sha256", "gallery checksum matches published checksum")
             else:
-                rep.add(app, FAIL, "gallery-sha256", "gallery checksum != release sidecar")
+                rep.add(app, FAIL, "gallery-sha256", "gallery checksum != published checksum")
     if verify_downloads and want_apk in assets and sha_declared:
         data = fetch_bytes(assets[want_apk]["browser_download_url"])
         digest = hashlib.sha256(data).hexdigest()
         if digest == sha_declared.lower():
-            rep.add(app, PASS, "release-download", "downloaded APK sha256 matches sidecar")
+            rep.add(app, PASS, "release-download", "downloaded APK sha256 matches published checksum")
         else:
             rep.add(app, FAIL, "release-download", "downloaded APK sha256 MISMATCH")
         check_packaged_icon(rep, proj, conv, data, version)

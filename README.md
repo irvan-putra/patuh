@@ -19,8 +19,10 @@ Per Android app in `projects.json`:
   Android treat the app as new, so patuh never "fixes" it.
 - **Versions are three numbers, aligned everywhere.** `versionName` in the
   build file, the release tag (`vX.Y.Z`), the APK filename
-  (`app-vX.Y.Z.apk`), the `.sha256` sidecar name, the gallery card, and the
-  version drawn on the icon badge itself.
+  (`app-vX.Y.Z.apk`), the published checksum, the gallery card, and the
+  version drawn on the icon badge itself (the badge is read character by
+  character with the family's pinned font, so a one-digit-stale badge
+  fails).
 - **Launcher icon family geometry** (needs Pillow, pinned): rounded corner,
   full-width strip across the bottom 24%, badge text pixels match the
   version string rendered with the pinned font, art stays inside the
@@ -38,9 +40,29 @@ Per Android app in `projects.json`:
   names are grandfathered: violations are warnings.
 - **Gallery agreement.** Every app has a card in kaji's `gallery/apps.json`;
   card version matches the latest release; card checksum matches the
-  release sidecar.
+  release's published checksum. Two checksum formats are accepted, both in
+  approved use: the per-asset `app-vX.Y.Z.apk.sha256` sidecar and a
+  sha256sum-format `SHA256SUMS` file (intodo's format).
 - With `--apk`: downloads the released APK, verifies its sha256 against the
-  sidecar, and pixel-checks the launcher icon that actually ships.
+  published checksum, and pixel-checks the launcher icon that actually
+  ships.
+
+## Coverage: source configuration vs built APK
+
+Being explicit about where each fact is checked:
+
+| Fact | In source | In the built APK (--apk) |
+|---|---|---|
+| applicationId / com.vanipy.* | yes (build file) | no - compiled manifest decoding is not implemented |
+| versionName | yes (build file) | via tag/filename/badge |
+| permissions | yes (AndroidManifest.xml) | no |
+| launcher label | yes (manifest + strings) | no |
+| launcher icon geometry + badge text | yes (res PNGs) | yes (packaged PNG, incl. obfuscated resource paths) |
+| checksum integrity | n/a | yes (download and hash) |
+| release assets, tag, gallery card | yes (GitHub API) | n/a |
+
+A build step that rewrites the manifest between source and APK would not be
+caught today; that gap is stated, not hidden.
 
 ## What it does not check
 
