@@ -1,0 +1,23 @@
+name: patuh consistency check
+on:
+  workflow_dispatch:
+    inputs:
+      apk:
+        description: "also download APKs and verify checksums + packaged icons"
+        type: boolean
+        default: false
+  schedule:
+    - cron: "17 3 * * 1"   # weekly, Monday 10:17 WIB
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pillow==12.3.0
+      - name: source + release + gallery checks
+        run: python3 patuh.py --workdir "$RUNNER_TEMP/patuh-clones"
+      - name: APK verification
+        if: inputs.apk
+        run: python3 patuh.py --apk --workdir "$RUNNER_TEMP/patuh-clones"

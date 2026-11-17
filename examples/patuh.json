@@ -1,0 +1,10 @@
+{
+  "comment": "Drop this file at a repo's root to override the patuh registry for that repo. Only the fields you list are overridden; they are reported as applied overrides. Keep an exception honest: say why in a *_note field.",
+  "patuh_overrides": {
+    "permissions_baseline": ["android.permission.INTERNET"],
+    "icon_mode": "family",
+    "icon_note": "Why this project's icon legitimately differs, if it does",
+    "license_baseline": "AGPL-3.0",
+    "label_expected": "myapp"
+  }
+}

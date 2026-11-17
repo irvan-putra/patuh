@@ -1,0 +1,58 @@
+{
+  "comment": "Shared conventions across irvan-putra app projects. Each rule cites where it came from. Per-project exceptions live in projects.json and in each repo's own patuh.json.",
+  "owner": "irvan-putra",
+  "commit_author": {
+    "email": "irvan.putra@gmail.com",
+    "names": [
+      "irvan-putra",
+      "Irvan Putra"
+    ],
+    "source": "instinct-working-style preference; the email is the load-bearing half, both name forms appear in approved history. github-actions[bot] deploy commits are allowed."
+  },
+  "naming": {
+    "forbid_chars": [
+      "l",
+      "r"
+    ],
+    "forbid_first_chars": [
+      "i"
+    ],
+    "source": "Irvan 2026-11-14/15: no L or R letters, no leading I (looks like lowercase L), no people's names, not near big-tech brands. Applies to new names; existing names are grandfathered as warnings."
+  },
+  "android": {
+    "package_prefix": "com.vanipy.",
+    "package_source": "Decision 2026-11-15: all apps migrate to com.vanipy.* (he owns vanipy.com). Changing an applicationId makes Android treat it as a new app, so a mismatch is a finding to discuss, never something to auto-fix.",
+    "version_regex": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+    "version_source": "Irvan 2026-11-17 14:33: three numbers everywhere, no r14/S1 labels",
+    "release_tag_pattern": "v{version}",
+    "apk_name_pattern": "{app}-v{version}.apk",
+    "apk_name_source": "version in downloadable filenames, early enough not to be truncated",
+    "sha256_sidecar": "{app}-v{version}.apk.sha256",
+    "label_lowercase": true,
+    "label_source": "lowercase launcher names, 2026-11-17 (itdapk, cabang, menit, ...)"
+  },
+  "icon_family": {
+    "source": "Eleven-app family approved 2026-11-17 ~17:37: rounded-square art, numbers-only full-width version strip across the bottom, readable at launcher size, main symbol left visible. Constants from the shared generator (kemas tools/badge_icon.py).",
+    "strip_top": 0.76,
+    "strip_top_tolerance": 0.03,
+    "text_size": 0.115,
+    "safe_radius": 0.485,
+    "corner_radius": 0.2,
+    "densities": {
+      "mdpi": 48,
+      "hdpi": 72,
+      "xhdpi": 96,
+      "xxhdpi": 144,
+      "xxxhdpi": 192
+    },
+    "pillow_pin": "12.3.0",
+    "font_sha256": "d1c3ff99f1e1ce1827a33efd4dad81f40babda06bff9e43bd7591c86662a287b"
+  },
+  "gallery": {
+    "apps_url": "https://raw.githubusercontent.com/irvan-putra/kaji/main/gallery/apps.json",
+    "page": "https://vanipy.com/kaji/apk/",
+    "source": "Irvan 2026-11-17 15:19: one page listing every APK with icons and links"
+  },
+  "repos_public": true,
+  "repos_public_source": "Irvan 2026-11-16: all my repos should be public"
+}
