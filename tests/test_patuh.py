@@ -181,3 +181,18 @@ class Checksums(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class GalleryCoverageKinds(unittest.TestCase):
+    def test_web_site_projects_skip_apk_gallery_coverage(self):
+        rep = patuh.Report()
+        projects = [
+            {"app": "kapan", "repo": "kapan", "kind": "web-site"},
+            {"app": "ghost", "repo": "ghost", "kind": "android-app"},
+        ]
+        patuh.check_gallery_coverage(rep, projects, [])
+        by_app = {}
+        for app, sev, cid, msg in rep.rows:
+            by_app.setdefault(app, []).append((sev, cid))
+        self.assertNotIn("kapan", by_app)
+        self.assertIn((patuh.FAIL, "gallery-card"), by_app["ghost"])

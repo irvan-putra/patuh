@@ -185,6 +185,13 @@
       "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "note": "repo is tumbuh-app while the app is tumbuh"
+    },
+    {
+      "app": "kapan",
+      "repo": "kapan",
+      "kind": "web-site",
+      "license_baseline": "AGPL-3.0",
+      "note": "Website (vanipy.com/kapan/ with /jakarta/ and /jogja/ routes); no APK. Checked for README, license baseline, commit author and naming only."
     }
   ]
 }

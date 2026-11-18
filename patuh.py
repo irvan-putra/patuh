@@ -703,6 +703,8 @@ def check_packaged_icon(rep, proj, conv, apk_bytes, version):
 def check_gallery_coverage(rep, projects, cards):
     by_app = {c.get("name"): c for c in cards}
     for proj in projects:
+        if proj.get("kind") != "android-app":
+            continue  # the apps catalog only covers APKs, not websites
         if proj["app"] not in by_app:
             rep.add(proj["app"], FAIL, "gallery-card", "no gallery card for this app")
 
@@ -748,8 +750,9 @@ def main(argv):
     os.makedirs(args.workdir, exist_ok=True)
     for proj in projects:
         app = proj["app"]
-        if proj.get("kind") != "android-app":
-            rep.add(app, SKIP, "kind", "unknown kind %r" % proj.get("kind"))
+        kind = proj.get("kind")
+        if kind not in ("android-app", "web-site"):
+            rep.add(app, SKIP, "kind", "unknown kind %r" % kind)
             continue
         try:
             clone = ensure_clone(conv["owner"], proj["repo"], args.workdir, args.offline)
@@ -771,6 +774,9 @@ def main(argv):
 
         check_repo_hygiene(rep, merged, clone, conv, args.offline)
         check_naming(rep, merged, conv)
+        if kind == "web-site":
+            # websites have no module, icon, package or APK release to check
+            continue
         version = check_module(rep, merged, clone, conv, merged["module"],
                                merged.get("package_expected"), merged.get("label_expected"),
                                merged.get("permissions_baseline"))
