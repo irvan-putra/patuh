@@ -1,62 +1,190 @@
 {
   "comment": "Registry of projects patuh checks. Baselines pin the state Irvan approved; drift is reported, never auto-fixed. Licenses differ per project on purpose - patuh records them and warns on change (relicensing needs his confirmation per repo).",
   "projects": [
-    {"app": "itdapk", "repo": "intodo", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.intodo",
-     "package_note": "App and launcher name are itdapk; the applicationId stays com.vanipy.intodo because changing it would orphan installed data/widgets.",
-     "label_expected": "itdapk",
-     "permissions_baseline": ["android.permission.FOREGROUND_SERVICE", "android.permission.FOREGROUND_SERVICE_SPECIAL_USE", "android.permission.INTERNET", "android.permission.POST_NOTIFICATIONS", "android.permission.RECEIVE_BOOT_COMPLETED", "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS", "android.permission.REQUEST_INSTALL_PACKAGES"],
-     "license_baseline": null, "icon_mode": "family"},
-    {"app": "kemas", "repo": "kemas", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.kemas", "label_expected": "kemas",
-     "permissions_baseline": ["android.permission.CAMERA"],
-     "license_baseline": null, "icon_mode": "family"},
-    {"app": "cabang", "repo": "cabang", "kind": "android-app", "module": "android/app",
-     "package_expected": "com.vanipy.cabang", "label_expected": "cabang",
-     "permissions_baseline": ["android.permission.INTERNET"],
-     "license_baseline": "GPL-3.0", "icon_mode": "family"},
-    {"app": "menit", "repo": "menit", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.menit", "label_expected": "menit",
-     "permissions_baseline": ["android.permission.PACKAGE_USAGE_STATS"],
-     "license_baseline": "GPL-3.0", "icon_mode": "family",
-     "extra_modules": [{"path": "diagnostic/app", "package_expected": "com.vanipy.menit.diag", "note": "separate diagnostic app with its own signing key; not gallery-listed"}]},
-    {"app": "jin", "repo": "jin", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.jin", "label_expected": "jin",
-     "permissions_baseline": ["android.permission.FOREGROUND_SERVICE", "android.permission.FOREGROUND_SERVICE_SPECIAL_USE", "android.permission.INTERNET", "android.permission.POST_NOTIFICATIONS", "android.permission.RECEIVE_BOOT_COMPLETED", "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"],
-     "license_baseline": null, "icon_mode": "family"},
-    {"app": "fae", "repo": "fae", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.fae", "label_expected": "fae",
-     "permissions_baseline": ["android.permission.INTERNET"],
-     "license_baseline": null,
-     "icon_mode": "custom",
-     "icon_note": "Approved full-bleed photo icon with version strip (res/drawable/ic_irvan.png, single density, manifest android:icon=@drawable/ic_irvan). Family geometry checks do not apply; visual review on change."},
-    {"app": "sapa", "repo": "sapa", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.sapa", "label_expected": "sapa",
-     "permissions_baseline": ["android.permission.CAMERA", "android.permission.INTERNET"],
-     "license_baseline": "AGPL-3.0",
-     "icon_mode": "family",
-     "icon_note": "Has mipmap-anydpi-v26 adaptive wrapper (@color background + @mipmap/ic_launcher_foreground) reviewed 2026-11-17; patuh checks the referenced resources exist and pixel-checks the raster set."},
-    {"app": "onda", "repo": "onda", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.onda", "label_expected": "onda",
-     "permissions_baseline": ["android.permission.CAMERA", "android.permission.INTERNET", "android.permission.RECORD_AUDIO"],
-     "license_baseline": null, "icon_mode": "family"},
-    {"app": "bidik", "repo": "bidik", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.bidik", "label_expected": "bidik",
-     "permissions_baseline": ["android.permission.FOREGROUND_SERVICE", "android.permission.FOREGROUND_SERVICE_DATA_SYNC", "android.permission.INTERNET", "android.permission.POST_NOTIFICATIONS"],
-     "license_baseline": null, "icon_mode": "family"},
-    {"app": "denyut", "repo": "denyut", "kind": "android-app", "module": "android/app",
-     "package_expected": "com.vanipy.denyut", "label_expected": "denyut",
-     "permissions_baseline": ["android.permission.FOREGROUND_SERVICE", "android.permission.FOREGROUND_SERVICE_DATA_SYNC", "android.permission.INTERNET", "android.permission.POST_NOTIFICATIONS"],
-     "license_baseline": "MIT", "icon_mode": "family"},
-    {"app": "saku", "repo": "saku", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.saku", "label_expected": "saku",
-     "permissions_baseline": [],
-     "license_baseline": null, "icon_mode": "family",
-     "note": "spikes/ and prototypes/ modules are experiments with their own IDs (com.vanipy.saku.synthetic, com.vanipy.saku.storageprobe) and are not checked"},
-    {"app": "tumbuh", "repo": "tumbuh-app", "kind": "android-app", "module": "app",
-     "package_expected": "com.vanipy.tumbuh", "label_expected": "tumbuh",
-     "permissions_baseline": [],
-     "license_baseline": "AGPL-3.0", "icon_mode": "family",
-     "note": "repo is tumbuh-app while the app is tumbuh"}
+    {
+      "app": "itdapk",
+      "repo": "intodo",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.intodo",
+      "package_note": "App and launcher name are itdapk; the applicationId stays com.vanipy.intodo because changing it would orphan installed data/widgets.",
+      "label_expected": "itdapk",
+      "permissions_baseline": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+        "android.permission.INTERNET",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
+        "android.permission.REQUEST_INSTALL_PACKAGES"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family"
+    },
+    {
+      "app": "kemas",
+      "repo": "kemas",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.kemas",
+      "label_expected": "kemas",
+      "permissions_baseline": [
+        "android.permission.CAMERA"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family"
+    },
+    {
+      "app": "cabang",
+      "repo": "cabang",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.cabang",
+      "label_expected": "cabang",
+      "permissions_baseline": [
+        "android.permission.INTERNET"
+      ],
+      "license_baseline": "GPL-3.0",
+      "icon_mode": "family"
+    },
+    {
+      "app": "menit",
+      "repo": "menit",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.menit",
+      "label_expected": "menit",
+      "permissions_baseline": [
+        "android.permission.PACKAGE_USAGE_STATS"
+      ],
+      "license_baseline": "GPL-3.0",
+      "icon_mode": "family",
+      "extra_modules": [
+        {
+          "path": "diagnostic/app",
+          "package_expected": "com.vanipy.menit.diag",
+          "note": "separate diagnostic app with its own signing key; not gallery-listed"
+        }
+      ]
+    },
+    {
+      "app": "jin",
+      "repo": "jin",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.jin",
+      "label_expected": "jin",
+      "permissions_baseline": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+        "android.permission.INTERNET",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family"
+    },
+    {
+      "app": "unggah",
+      "repo": "unggah",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.unggah",
+      "label_expected": "unggah",
+      "permissions_baseline": [
+        "android.permission.INTERNET"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family",
+      "package_note": "Renamed 2026-11-18 with his yes; the old com.vanipy.fae install stays on the phone as a separate app with its own settings.",
+      "icon_note": "Generated by tools/badge_icon.py: in-app rocket launching out of a parcel, version strip, single-density res/drawable/ic_launcher.png, manifest android:icon=@drawable/ic_launcher."
+    },
+    {
+      "app": "sapa",
+      "repo": "sapa",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.sapa",
+      "label_expected": "sapa",
+      "permissions_baseline": [
+        "android.permission.CAMERA",
+        "android.permission.INTERNET"
+      ],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "icon_note": "Has mipmap-anydpi-v26 adaptive wrapper (@color background + @mipmap/ic_launcher_foreground) reviewed 2026-11-17; patuh checks the referenced resources exist and pixel-checks the raster set."
+    },
+    {
+      "app": "onda",
+      "repo": "onda",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.onda",
+      "label_expected": "onda",
+      "permissions_baseline": [
+        "android.permission.CAMERA",
+        "android.permission.INTERNET",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family"
+    },
+    {
+      "app": "bidik",
+      "repo": "bidik",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.bidik",
+      "label_expected": "bidik",
+      "permissions_baseline": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+        "android.permission.INTERNET",
+        "android.permission.POST_NOTIFICATIONS"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family"
+    },
+    {
+      "app": "denyut",
+      "repo": "denyut",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.denyut",
+      "label_expected": "denyut",
+      "permissions_baseline": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+        "android.permission.INTERNET",
+        "android.permission.POST_NOTIFICATIONS"
+      ],
+      "license_baseline": "MIT",
+      "icon_mode": "family"
+    },
+    {
+      "app": "saku",
+      "repo": "saku",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.saku",
+      "label_expected": "saku",
+      "permissions_baseline": [],
+      "license_baseline": null,
+      "icon_mode": "family",
+      "note": "spikes/ and prototypes/ modules are experiments with their own IDs (com.vanipy.saku.synthetic, com.vanipy.saku.storageprobe) and are not checked"
+    },
+    {
+      "app": "tumbuh",
+      "repo": "tumbuh-app",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.tumbuh",
+      "label_expected": "tumbuh",
+      "permissions_baseline": [],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "note": "repo is tumbuh-app while the app is tumbuh"
+    }
   ]
 }
