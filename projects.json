@@ -2,13 +2,13 @@
   "comment": "Registry of projects patuh checks. Baselines pin the state Irvan approved; drift is reported, never auto-fixed. Licenses differ per project on purpose - patuh records them and warns on change (relicensing needs his confirmation per repo).",
   "projects": [
     {
-      "app": "itdapk",
+      "app": "intodo",
       "repo": "intodo",
       "kind": "android-app",
       "module": "app",
       "package_expected": "com.vanipy.intodo",
-      "package_note": "App and launcher name are itdapk; the applicationId stays com.vanipy.intodo because changing it would orphan installed data/widgets.",
-      "label_expected": "itdapk",
+      "package_note": "App family renamed to intodo 2026-11-18 with his approval; applicationId com.vanipy.intodo unchanged, so installed apps update in place.",
+      "label_expected": "intodo",
       "permissions_baseline": [
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
