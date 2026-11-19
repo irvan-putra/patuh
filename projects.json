@@ -140,11 +140,13 @@
       "permissions_baseline": [
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION",
         "android.permission.INTERNET",
         "android.permission.POST_NOTIFICATIONS"
       ],
       "license_baseline": null,
-      "icon_mode": "family"
+      "icon_mode": "family",
+      "permissions_note": "MediaProjection foreground-service permission required for the requested screen-recorder feature targeting API34; https://developer.android.com/media/grow/media-projection . No audio recording permission added."
     },
     {
       "app": "denyut",

@@ -541,16 +541,27 @@ def check_icon(rep, proj, clone, conv, version):
                 rep.add(app, WARN, "icon-adaptive-refs",
                         "%s: adaptive icon present; Android 8+ uses it, not the raster set - "
                         "references exist but family look needs visual check" % fn)
-    densities = conv["icon_family"]["densities"]
-    missing = [d for d in densities
-               if not os.path.isfile(os.path.join(resdir, "mipmap-" + d, "ic_launcher.png"))]
-    if missing:
-        rep.add(app, FAIL, "icon-densities", "missing ic_launcher.png for %s" % ", ".join(missing))
+    # Follow an actual manifest drawable reference, rather than assuming mipmaps.
+    manifest = os.path.join(clone, module, "src", "main", "AndroidManifest.xml")
+    _, _, icon_ref = manifest_facts(manifest)
+    drawable = re.fullmatch(r"@drawable/([A-Za-z0-9_]+)", icon_ref or "")
+    if drawable:
+        biggest = os.path.join(resdir, "drawable", drawable.group(1) + ".png")
+        if not os.path.isfile(biggest):
+            rep.add(app, FAIL, "icon-resource", "manifest drawable PNG missing: " + str(icon_ref))
+            return
+        rep.add(app, INFO, "icon-resource", "manifest uses single drawable PNG; mipmap-density coverage is not applicable")
     else:
-        rep.add(app, PASS, "icon-densities", "ic_launcher.png in all %d densities" % len(densities))
-    biggest = os.path.join(resdir, "mipmap-xxxhdpi", "ic_launcher.png")
-    if not os.path.isfile(biggest):
-        return
+        densities = conv["icon_family"]["densities"]
+        missing = [d for d in densities
+                   if not os.path.isfile(os.path.join(resdir, "mipmap-" + d, "ic_launcher.png"))]
+        if missing:
+            rep.add(app, FAIL, "icon-densities", "missing ic_launcher.png for %s" % ", ".join(missing))
+        else:
+            rep.add(app, PASS, "icon-densities", "ic_launcher.png in all %d densities" % len(densities))
+        biggest = os.path.join(resdir, "mipmap-xxxhdpi", "ic_launcher.png")
+        if not os.path.isfile(biggest):
+            return
     status = pil()
     if status[0] != "ok":
         rep.add(app, SKIP, "icon-pixels", "Pillow 12.3.0 not available - pixel checks skipped")

@@ -220,6 +220,19 @@ class RegistryCoverageTests(unittest.TestCase):
             r.add("x", severity, "coverage", "not verified")
             self.assertIn(status, r.text())
 
+class DrawableIconTests(unittest.TestCase):
+    def test_manifest_drawable_is_pixel_checked_not_missing_mipmap(self):
+        with tempfile.TemporaryDirectory() as d:
+            from pathlib import Path
+            root = Path(d) / "app/src/main"
+            (root / "res/drawable").mkdir(parents=True)
+            (root / "AndroidManifest.xml").write_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android"><application android:icon="@drawable/ic_launcher"/></manifest>')
+            make_family_icon("1.2.3").save(root / "res/drawable/ic_launcher.png")
+            r = patuh.Report()
+            patuh.check_icon(r, {"app":"test", "module":"app"}, d, {"icon_family": CONV}, "1.2.3")
+            self.assertFalse(any(row[2] == "icon-densities" for row in r.rows))
+            self.assertTrue(any(row[2] == "icon-badge-version" for row in r.rows))
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
 
