@@ -721,20 +721,6 @@
       ]
     },
     {
-      "app": "tumbuh-app",
-      "repo": "tumbuh-app",
-      "kind": "inventory",
-      "source_type": "android-app",
-      "coverage": "inventory-only",
-      "coverage_note": "Archived source history, consolidated into tumbuh/android. Retained inventory entry; not a second active app.",
-      "fork": false,
-      "archived": true,
-      "observed_modules": [
-        "app"
-      ],
-      "canonical_repo": "tumbuh"
-    },
-    {
       "app": "typing",
       "repo": "typing",
       "kind": "inventory",
@@ -789,5 +775,13 @@
     }
   ],
   "inventory_as_of": "2026-11-19",
-  "inventory_source": "GitHub owner repository list, including forks and archives"
+  "inventory_source": "GitHub owner repository list, including forks and archives",
+  "removed_repositories": [
+    {
+      "repo": "tumbuh-app",
+      "canonical_repo": "tumbuh",
+      "reason": "Absent from owner inventory and repository API returns404 after owner removal on2026-11-19. Android source and releases remain in tumbuh/android and canonical releases.",
+      "coverage": "not-current"
+    }
+  ]
 }

@@ -129,9 +129,9 @@ against or change any repo by itself.
 
 ## Complete repository inventory
 
-The registry now represents all 69 owner repositories observed on 19 November 2026,
+The registry now represents all 68 current owner repositories observed on 19 November 2026,
 including forks and archived projects. Thirteen entries keep their existing checker
-configuration. The other 56 are explicitly `inventory-only`, including newer Android
+configuration. The other 55 are explicitly `inventory-only`, including newer Android
 apps, Unggun (Flutter), websites, tools and older repositories. Being on this list does
 not mean a project passed checks. Each such entry produces REVIEW, never PASS.
 New package/permission/license baselines have not been silently approved or invented.
@@ -139,8 +139,8 @@ New package/permission/license baselines have not been silently approved or inve
 Every online run compares the whole registry with the live, paginated owner repository
 list. A new unregistered repository fails `registry-missing`, even with `--only`.
 An unavailable listing or offline run is SKIP. Removed/renamed entries are REVIEW.
-Archived Tumbuh source stays visible with its canonical destination, not as a duplicate
-active app. Current supported checks still cover native Android and website hygiene;
+Removed tumbuh-app is recorded separately with its canonical destination, not as a current
+repository. Its direct URL is unavailable; consolidated Tumbuh source/releases remain. Current supported checks still cover native Android and website hygiene;
 Flutter, other types and unqualified projects need further checker work.
 
 Report status is NOT CLEAN for failures, INCOMPLETE for skips/reviews, WARNINGS for
