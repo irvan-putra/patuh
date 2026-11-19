@@ -176,15 +176,16 @@
     },
     {
       "app": "tumbuh",
-      "repo": "tumbuh-app",
+      "repo": "tumbuh",
       "kind": "android-app",
-      "module": "app",
+      "module": "android/app",
       "package_expected": "com.vanipy.tumbuh",
       "label_expected": "tumbuh",
       "permissions_baseline": [],
       "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
-      "note": "repo is tumbuh-app while the app is tumbuh"
+      "note": "Android app is consolidated under android/ alongside the unchanged website. Its AGPL license applies to the Android subtree; package and signing identity unchanged.",
+      "license_root": "android"
     },
     {
       "app": "kapan",

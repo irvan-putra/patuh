@@ -121,9 +121,9 @@ def read(path):
         return f.read()
 
 
-def detect_license(clone):
+def detect_license(clone, license_root="."):
     for name in ("LICENSE", "LICENSE.md", "LICENSE.txt", "COPYING"):
-        p = os.path.join(clone, name)
+        p = os.path.join(clone, license_root, name)
         if os.path.isfile(p):
             head = read(p)[:400]
             if "GNU AFFERO GENERAL PUBLIC LICENSE" in head:
@@ -398,7 +398,7 @@ def check_repo_hygiene(rep, proj, clone, conv, offline):
         rep.add(app, FAIL, "readme", "no README")
     else:
         rep.add(app, PASS, "readme", "README present")
-    lic = detect_license(clone)
+    lic = detect_license(clone, proj.get("license_root", "."))
     base = proj.get("license_baseline")
     if lic == base:
         rep.add(app, PASS, "license", "license %s (as baselined)" % (lic or "absent"))
@@ -701,7 +701,7 @@ def check_packaged_icon(rep, proj, conv, apk_bytes, version):
 
 
 def check_gallery_coverage(rep, projects, cards):
-    by_app = {c.get("name"): c for c in cards}
+    by_app = current_gallery_by_app(cards)
     for proj in projects:
         if proj.get("kind") != "android-app":
             continue  # the apps catalog only covers APKs, not websites
@@ -745,7 +745,7 @@ def main(argv):
             rep.add("(gallery)", PASS, "gallery-fetch", "catalog fetched, %d cards" % len(cards))
         except Exception as e:
             rep.add("(gallery)", SKIP, "gallery-fetch", "could not fetch catalog: %s" % e)
-    by_app = {c.get("name"): c for c in cards}
+    by_app = current_gallery_by_app(cards)
 
     os.makedirs(args.workdir, exist_ok=True)
     for proj in projects:
@@ -800,6 +800,17 @@ def main(argv):
 
 def load_json_url(url):
     return json.loads(fetch_bytes(url).decode("utf-8"))
+
+
+def current_gallery_by_app(cards):
+    """Previous-build cards must never shadow the available current card."""
+    out = {}
+    for card in cards:
+        name = card.get("name")
+        if name not in out or (card.get("state") == "available" and
+                               out[name].get("state") != "available"):
+            out[name] = card
+    return out
 
 
 def gallery_cards(data):

@@ -99,7 +99,7 @@ Exit code: `0` no FAIL findings, `1` at least one FAIL, `2` usage error.
 - `conventions.json` — the shared rules as data, each with its source.
 - `projects.json` — the registry: repo, app module path, expected package
   ID, label, permission baseline, license baseline, icon mode
-  (`family`/`adaptive`/`custom`), and free-text notes for declared
+  (`family`/`adaptive`/`custom`), optional `license_root` for a licensed subtree, and free-text notes for declared
   exceptions.
 - A repo's own `patuh.json` (see `examples/patuh.json`) overrides registry
   fields for that repo. Declaring an exception in the repo keeps it next to

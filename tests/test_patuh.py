@@ -98,6 +98,22 @@ class IconGeometry(unittest.TestCase):
         self.assertFalse(results_by_id(rows)["icon-safe-circle"])
 
 
+class ConsolidatedLicense(unittest.TestCase):
+    def test_nested_license_does_not_relicense_website(self):
+        with tempfile.TemporaryDirectory() as root:
+            os.makedirs(os.path.join(root, "android"))
+            with open(os.path.join(root, "android", "LICENSE"), "w") as f:
+                f.write("GNU AFFERO GENERAL PUBLIC LICENSE")
+            self.assertIsNone(patuh.detect_license(root))
+            self.assertEqual(patuh.detect_license(root, "android"), "AGPL-3.0")
+
+    def test_tumbuh_registry_points_to_consolidated_module(self):
+        with open(os.path.join(os.path.dirname(__file__), "..", "projects.json")) as f:
+            p = next(x for x in json.load(f)["projects"] if x["app"] == "tumbuh")
+        self.assertEqual((p["repo"], p["module"], p["license_root"]),
+                         ("tumbuh", "android/app", "android"))
+
+
 class Parsing(unittest.TestCase):
     def gradle(self, text):
         with tempfile.NamedTemporaryFile("w", suffix=".gradle", delete=False) as f:
@@ -126,6 +142,14 @@ class Parsing(unittest.TestCase):
         self.assertEqual(perms, ["android.permission.CAMERA"])
         self.assertEqual(label, "myapp")
         self.assertEqual(icon, "@mipmap/ic_launcher")
+
+
+class CurrentGallery(unittest.TestCase):
+    def test_previous_build_does_not_shadow_available(self):
+        current = {"name": "tumbuh", "version": "0.2.2", "state": "available"}
+        old = {"name": "tumbuh", "version": "0.2.1", "state": "previous"}
+        self.assertEqual(patuh.current_gallery_by_app([current, old])["tumbuh"], current)
+        self.assertEqual(patuh.current_gallery_by_app([old, current])["tumbuh"], current)
 
 
 class Checksums(unittest.TestCase):
