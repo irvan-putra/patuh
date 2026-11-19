@@ -69,7 +69,7 @@ caught today; that gap is stated, not hidden.
 patuh compares structure, metadata and pixels. It cannot judge that art
 looks right, that an app works, that wording is good, or that an
 adaptive/custom icon renders correctly on a launcher. Those stay REVIEW
-items for a human with screenshots. fae's approved photo icon is such a
+items for a human with screenshots. a declared custom photo icon is such a
 declared exception. CLEAN only means every check that ran passed; skipped
 and review items are always listed in the summary.
 
@@ -126,3 +126,23 @@ own small reviewed change.
 
 This repo checks the projects listed in its own registry. It does not run
 against or change any repo by itself.
+
+## Complete repository inventory
+
+The registry now represents all 69 owner repositories observed on 19 November 2026,
+including forks and archived projects. Thirteen entries keep their existing checker
+configuration. The other 56 are explicitly `inventory-only`, including newer Android
+apps, Unggun (Flutter), websites, tools and older repositories. Being on this list does
+not mean a project passed checks. Each such entry produces REVIEW, never PASS.
+New package/permission/license baselines have not been silently approved or invented.
+
+Every online run compares the whole registry with the live, paginated owner repository
+list. A new unregistered repository fails `registry-missing`, even with `--only`.
+An unavailable listing or offline run is SKIP. Removed/renamed entries are REVIEW.
+Archived Tumbuh source stays visible with its canonical destination, not as a duplicate
+active app. Current supported checks still cover native Android and website hygiene;
+Flutter, other types and unqualified projects need further checker work.
+
+Report status is NOT CLEAN for failures, INCOMPLETE for skips/reviews, WARNINGS for
+warnings alone, and CLEAN only when none of those remain. Historical author metadata
+is not repaired by a correctly attributed new HEAD; the author check inspects HEAD only.

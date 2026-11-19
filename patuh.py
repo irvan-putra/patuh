@@ -73,7 +73,7 @@ class Report:
         out.append("")
         out.append("summary: %d pass, %d info, %d skip, %d review, %d warn, %d fail"
                    % (c[PASS], c[INFO], c[SKIP], c[REVIEW], c[WARN], c[FAIL]))
-        out.append("CLEAN" if c[FAIL] == 0 else "NOT CLEAN")
+        out.append("NOT CLEAN" if c[FAIL] else "INCOMPLETE" if c[SKIP] or c[REVIEW] else "WARNINGS" if c[WARN] else "CLEAN")
         if c[SKIP] or c[REVIEW]:
             out.append("(skips/reviews above mean parts were not verified)")
         return "\n".join(out)
@@ -700,6 +700,17 @@ def check_packaged_icon(rep, proj, conv, apk_bytes, version):
         rep.add(app, PASS if ok else (SKIP if ok is None else FAIL), "apk-" + cid, msg)
 
 
+def check_registry_coverage(rep, projects, repositories):
+    registered = {p["repo"] for p in projects}
+    current = {r["name"] for r in repositories}
+    for name in sorted(current - registered):
+        rep.add(name, FAIL, "registry-missing", "owner repository absent from registry")
+    for name in sorted(registered - current):
+        rep.add(name, REVIEW, "registry-stale", "registered repository not found in owner listing")
+    if current <= registered:
+        rep.add("(registry)", PASS, "registry-coverage", "%d owner repositories represented; presence is not qualification" % len(current))
+
+
 def check_gallery_coverage(rep, projects, cards):
     by_app = current_gallery_by_app(cards)
     for proj in projects:
@@ -731,6 +742,7 @@ def main(argv):
 
     conv = load_json(args.conventions)
     projects = load_json(args.registry)["projects"]
+    all_projects = projects[:]
     if args.only:
         projects = [p for p in projects if p["app"] in args.only or p["repo"] in args.only]
     if not projects:
@@ -739,6 +751,21 @@ def main(argv):
 
     rep = Report()
     cards = []
+    if not args.offline:
+        try:
+            repositories = []
+            page = 1
+            while True:
+                batch = api_get(GH_API + "/users/%s/repos?type=owner&per_page=100&page=%d" % (conv["owner"], page))
+                repositories.extend(batch)
+                if len(batch) < 100:
+                    break
+                page += 1
+            check_registry_coverage(rep, all_projects, repositories)
+        except Exception as e:
+            rep.add("(registry)", SKIP, "registry-coverage", "live owner inventory not verified: %s" % e)
+    else:
+        rep.add("(registry)", SKIP, "registry-coverage", "offline: current owner repositories not verified")
     if not args.offline:
         try:
             cards = gallery_cards(load_json_url(conv["gallery"]["apps_url"]))
@@ -751,6 +778,10 @@ def main(argv):
     for proj in projects:
         app = proj["app"]
         kind = proj.get("kind")
+        if kind == "inventory":
+            rep.add(app, REVIEW, "coverage", proj.get("coverage_note", "Inventory only; checks not qualified"))
+            rep.add(app, INFO, "source-type", proj.get("source_type", "repository"))
+            continue
         if kind not in ("android-app", "web-site"):
             rep.add(app, SKIP, "kind", "unknown kind %r" % kind)
             continue

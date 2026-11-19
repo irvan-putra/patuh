@@ -203,6 +203,23 @@ class Checksums(unittest.TestCase):
         self.assertIsNone(found)
 
 
+class RegistryCoverageTests(unittest.TestCase):
+    def test_missing_repo_fails_even_if_other_entries_exist(self):
+        r = patuh.Report()
+        patuh.check_registry_coverage(r, [{"repo": "tumbuh"}], [{"name": "tumbuh"}, {"name": "new-app"}])
+        self.assertTrue(any(row[1:3] == (patuh.FAIL, "registry-missing") for row in r.rows))
+
+    def test_all_represented_is_presence_only(self):
+        r = patuh.Report()
+        patuh.check_registry_coverage(r, [{"repo": "tumbuh"}], [{"name": "tumbuh"}])
+        self.assertIn("presence is not qualification", r.rows[0][3])
+
+    def test_skips_reviews_and_warnings_not_clean(self):
+        for severity, status in [(patuh.REVIEW, "INCOMPLETE"), (patuh.SKIP, "INCOMPLETE"), (patuh.WARN, "WARNINGS")]:
+            r = patuh.Report()
+            r.add("x", severity, "coverage", "not verified")
+            self.assertIn(status, r.text())
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
 

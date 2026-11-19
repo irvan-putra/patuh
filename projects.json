@@ -193,6 +193,599 @@
       "kind": "web-site",
       "license_baseline": "AGPL-3.0",
       "note": "Website (vanipy.com/kapan/ with /jakarta/ and /jogja/ routes); no APK. Checked for README, license baseline, commit author and naming only."
+    },
+    {
+      "app": "adaptechid",
+      "repo": "adaptechid",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "aiq",
+      "repo": "aiq",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "animate",
+      "repo": "animate",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "anyam",
+      "repo": "anyam",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "awx",
+      "repo": "awx",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "bedah",
+      "repo": "bedah",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "bitstarter",
+      "repo": "bitstarter",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "catat",
+      "repo": "catat",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "daya",
+      "repo": "daya",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "denting",
+      "repo": "denting",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "devguide",
+      "repo": "devguide",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "encore",
+      "repo": "encore",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "gitsafescan",
+      "repo": "gitsafescan",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "gotong",
+      "repo": "gotong",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "hackathon",
+      "repo": "hackathon",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "haskell-intro",
+      "repo": "haskell-intro",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "hello-lambda-jakarta",
+      "repo": "hello-lambda-jakarta",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "irvan",
+      "repo": "irvan",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false,
+      "observed_modules": [
+        "android/app"
+      ]
+    },
+    {
+      "app": "irvan-putra",
+      "repo": "irvan-putra",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "irvan-putra.github.io",
+      "repo": "irvan-putra.github.io",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "jejak",
+      "repo": "jejak",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "kaca",
+      "repo": "kaca",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "kaji",
+      "repo": "kaji",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "kembang",
+      "repo": "kembang",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "kokok",
+      "repo": "kokok",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false,
+      "observed_modules": [
+        "app"
+      ]
+    },
+    {
+      "app": "mimpi",
+      "repo": "mimpi",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "minima",
+      "repo": "minima",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "myschoolcampid",
+      "repo": "myschoolcampid",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "nada",
+      "repo": "nada",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false,
+      "observed_modules": [
+        "android/app"
+      ]
+    },
+    {
+      "app": "naga",
+      "repo": "naga",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "old-visi-web",
+      "repo": "old-visi-web",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "org-ruby",
+      "repo": "org-ruby",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "pandu",
+      "repo": "pandu",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "paper2repo",
+      "repo": "paper2repo",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "patuh",
+      "repo": "patuh",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "picu",
+      "repo": "picu",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "PL101ProjectTemplate",
+      "repo": "PL101ProjectTemplate",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "pustaka",
+      "repo": "pustaka",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "pyconapac2024-teaser",
+      "repo": "pyconapac2024-teaser",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "pythonid-10-2026",
+      "repo": "pythonid-10-2026",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "sanggup",
+      "repo": "sanggup",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false,
+      "observed_modules": [
+        "android/app"
+      ]
+    },
+    {
+      "app": "sapi",
+      "repo": "sapi",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false,
+      "observed_modules": [
+        "app"
+      ]
+    },
+    {
+      "app": "setup",
+      "repo": "setup",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "suaka",
+      "repo": "suaka",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "tampung",
+      "repo": "tampung",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false,
+      "observed_modules": [
+        "android/app"
+      ]
+    },
+    {
+      "app": "tangkai",
+      "repo": "tangkai",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "tapak",
+      "repo": "tapak",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "tayang",
+      "repo": "tayang",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "tengok",
+      "repo": "tengok",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false,
+      "observed_modules": [
+        "app"
+      ]
+    },
+    {
+      "app": "tuju",
+      "repo": "tuju",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false,
+      "observed_modules": [
+        "android/app"
+      ]
+    },
+    {
+      "app": "tumbuh-app",
+      "repo": "tumbuh-app",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Archived source history, consolidated into tumbuh/android. Retained inventory entry; not a second active app.",
+      "fork": false,
+      "archived": true,
+      "observed_modules": [
+        "app"
+      ],
+      "canonical_repo": "tumbuh"
+    },
+    {
+      "app": "typing",
+      "repo": "typing",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "unggun",
+      "repo": "unggun",
+      "kind": "inventory",
+      "source_type": "flutter-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false,
+      "observed_modules": [
+        "android/app"
+      ]
+    },
+    {
+      "app": "utak",
+      "repo": "utak",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "vault-cli",
+      "repo": "vault-cli",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "vnproject.id",
+      "repo": "vnproject.id",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
     }
-  ]
+  ],
+  "inventory_as_of": "2026-11-19",
+  "inventory_source": "GitHub owner repository list, including forks and archives"
 }
