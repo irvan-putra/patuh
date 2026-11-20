@@ -307,6 +307,18 @@
    "icon_mode": "family"
   },
   {
+   "app": "jumpa",
+   "repo": "jumpa",
+   "kind": "android-app",
+   "module": "app",
+   "package_expected": "com.vanipy.jumpa",
+   "label_expected": "jumpa",
+   "permissions_baseline": [],
+   "license_baseline": "GPL-3.0",
+   "icon_mode": "family",
+   "baseline_source": "Qualified 2026-11-20 against real source at commit 112c9c7 (jumpa 0.1.0). Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38), and confirmed GPL-3.0 for jumpa specifically (16:32). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission baseline below is seeded from the shipped source at that commit: it detects FUTURE DRIFT from what shipped - it is not his approval of those permissions, and not a security validation. A deliberate baseline edit with his ok is how it changes."
+  },
+  {
    "app": "kaca",
    "repo": "kaca",
    "kind": "inventory",
@@ -631,6 +643,16 @@
    "coverage": "inventory-only",
    "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
    "fork": true,
+   "archived": false
+  },
+  {
+   "app": "signing-key-backups",
+   "repo": "signing-key-backups",
+   "kind": "inventory",
+   "source_type": "repository",
+   "coverage": "inventory-only",
+   "coverage_note": "Encrypted backups of app signing keys (ciphertext only; recovery passwords live in the vault). Infrastructure, not an app: no package, permission, license or icon baseline applies. Registered so registry coverage is complete.",
+   "fork": false,
    "archived": false
   },
   {
