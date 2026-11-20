@@ -123,12 +123,18 @@ was wrong. A red weekly run means drift was found between releases.
 
 `.github/workflows/release-gate.yml` is a reusable workflow an app repo
 calls so a release cannot ship past a consistency failure. Wire it per app,
-as its own small reviewed change:
+as its own small reviewed change. Pin the reusable workflow by full commit
+SHA (as shown); version tags are movable and must not be used as the pin.
+The workflow itself checks out the patuh checker by its reviewed commit, so
+the executed code is immutable too. `tools/validate_caller_chain.py`
+shape-checks a wired release workflow before it is trusted:
+
+    python3 tools/validate_caller_chain.py /path/to/repo/.github/workflows/release.yml
 
 ```yaml
 jobs:
   consistency:
-    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@7d8d0523f22046b71c0a2e0419d852219bed8a77
     with:
       app: myapp
       published: false   # pre-publish gate on the exact tree being released
@@ -137,7 +143,7 @@ jobs:
     # ... build and sign the APK, upload it as an artifact named candidate-apk ...
   candidate-bytes:
     needs: build
-    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@7d8d0523f22046b71c0a2e0419d852219bed8a77
     with:
       app: myapp
       published: false
@@ -147,7 +153,7 @@ jobs:
     # ... gh release create ...
   verify:
     needs: publish
-    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@7d8d0523f22046b71c0a2e0419d852219bed8a77
     with:
       app: myapp
       published: true    # post-publish: verifies the live release + gallery

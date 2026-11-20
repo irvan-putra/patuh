@@ -353,5 +353,109 @@ class PackagedIcon(unittest.TestCase):
                       [(row[1], row[2]) for row in rep.rows])
 
 
+class ReleaseGateWorkflowShape(unittest.TestCase):
+    """The reusable gate itself must keep the proven shape: the pinned patuh
+    checkout, the three modes, and the byte check gated on the artifact input
+    and never running post-publish."""
+
+    @classmethod
+    def doc(cls):
+        import yaml
+        path = os.path.join(os.path.dirname(__file__), "..",
+                            ".github", "workflows", "release-gate.yml")
+        with open(path) as f:
+            return yaml.safe_load(f)
+
+    @classmethod
+    def steps(cls):
+        return cls.doc()["jobs"]["gate"]["steps"]
+
+    def test_pinned_patuh_checkout_is_an_immutable_commit(self):
+        # A version tag is movable: the internal checker checkout must pin
+        # the exact reviewed commit, or a caller pinning this workflow by
+        # SHA would still execute a mutable patuh.py.
+        checkouts = [s for s in self.steps()
+                     if str(s.get("uses", "")).startswith("actions/checkout@")
+                     and (s.get("with") or {}).get("repository") == "irvan-putra/patuh"]
+        self.assertEqual(len(checkouts), 1)
+        self.assertRegex(checkouts[0]["with"]["ref"], r"^[0-9a-f]{40}$")
+
+    def test_inputs_keep_their_contract(self):
+        on = self.doc().get(True, self.doc().get("on"))
+        inputs = on["workflow_call"]["inputs"]
+        self.assertTrue(inputs["app"]["required"])
+        self.assertIs(inputs["published"]["default"], False)
+        self.assertEqual(inputs["candidate_apk_artifact"]["default"], "")
+        self.assertEqual(inputs["candidate_version"]["default"], "")
+
+    def test_source_gate_is_offline_and_pre_publish_only(self):
+        src = [s for s in self.steps() if "pre-publish source gate" in s.get("name", "")]
+        self.assertEqual(len(src), 1)
+        self.assertIn("--offline", src[0]["run"])
+        self.assertIn("!inputs.published", src[0]["if"])
+
+    def test_byte_check_uses_apk_file_and_requires_artifact(self):
+        byt = [s for s in self.steps() if "--apk-file" in s.get("run", "")]
+        self.assertEqual(len(byt), 1)
+        self.assertIn("!inputs.published", byt[0]["if"])
+        self.assertIn("candidate_apk_artifact != ''", byt[0]["if"])
+
+    def test_post_publish_verify_uses_apk_online(self):
+        post = [s for s in self.steps() if "post-publish" in s.get("name", "")]
+        self.assertEqual(len(post), 1)
+        self.assertIn("--apk", post[0]["run"])
+        self.assertNotIn("--offline", post[0]["run"])
+        self.assertIn("inputs.published", post[0]["if"])
+
+
+class CallerChainValidator(unittest.TestCase):
+    """The validator script: a correctly wired chain passes, and each broken
+    shape it exists to catch fails."""
+
+    def write(self, doc):
+        import yaml
+        f = tempfile.NamedTemporaryFile("w", suffix=".yml", delete=False)
+        yaml.safe_dump(doc, f)
+        f.close()
+        return f.name
+
+    def good(self):
+        gate = "irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1"
+        return {"on": {"workflow_dispatch": None}, "jobs": {
+            "consistency": {"uses": gate, "with": {"app": "x", "published": False}},
+            "build": {"needs": "consistency", "steps": [{"run": "./gradlew assembleRelease"}]},
+            "candidate-bytes": {"needs": "build", "uses": gate,
+                                "with": {"app": "x", "published": False,
+                                         "candidate_apk_artifact": "candidate-apk"}},
+            "publish": {"needs": "candidate-bytes",
+                        "steps": [{"run": "gh release create v1 x.apk"}]},
+            "verify": {"needs": "publish", "uses": gate,
+                       "with": {"app": "x", "published": True}},
+        }}
+
+    def test_well_shaped_chain_passes(self):
+        from tools import validate_caller_chain as v
+        self.assertEqual(v.problems(self.write(self.good())), [])
+
+    def test_ungated_publish_fails(self):
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        doc["jobs"]["publish"]["needs"] = "build"
+        self.assertTrue(any("must gate publishing" in p
+                            for p in v.problems(self.write(doc))))
+
+    def test_automatic_trigger_fails(self):
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        doc["on"] = {"workflow_dispatch": None, "push": {"branches": ["main"]}}
+        self.assertTrue(any("human-dispatched" in p for p in v.problems(self.write(doc))))
+
+    def test_missing_bytes_job_fails(self):
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        del doc["jobs"]["candidate-bytes"]
+        self.assertTrue(any("candidate-bytes" in p for p in v.problems(self.write(doc))))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
