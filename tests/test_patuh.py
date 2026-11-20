@@ -233,9 +233,29 @@ class DrawableIconTests(unittest.TestCase):
             self.assertFalse(any(row[2] == "icon-densities" for row in r.rows))
             self.assertTrue(any(row[2] == "icon-badge-version" for row in r.rows))
 
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    def test_manifest_vector_drawable_is_review_not_fail(self):
+        """A vector launcher icon (tampung's shape) is legitimate Android; the
+        family geometry cannot be pixel-checked, so it is a visual REVIEW."""
+        with tempfile.TemporaryDirectory() as d:
+            from pathlib import Path
+            root = Path(d) / "app/src/main"
+            (root / "res/drawable").mkdir(parents=True)
+            (root / "AndroidManifest.xml").write_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android"><application android:icon="@drawable/ic_launcher"/></manifest>')
+            (root / "res/drawable/ic_launcher.xml").write_text('<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp"/>')
+            r = patuh.Report()
+            patuh.check_icon(r, {"app": "test", "module": "app"}, d, {"icon_family": CONV}, "1.2.3")
+            self.assertIn((patuh.REVIEW, "icon-resource"), [(row[1], row[2]) for row in r.rows])
+            self.assertFalse(any(row[1] == patuh.FAIL for row in r.rows))
 
+    def test_manifest_drawable_missing_entirely_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            from pathlib import Path
+            root = Path(d) / "app/src/main"
+            (root / "res/drawable").mkdir(parents=True)
+            (root / "AndroidManifest.xml").write_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android"><application android:icon="@drawable/ic_launcher"/></manifest>')
+            r = patuh.Report()
+            patuh.check_icon(r, {"app": "test", "module": "app"}, d, {"icon_family": CONV}, "1.2.3")
+            self.assertIn((patuh.FAIL, "icon-resource"), [(row[1], row[2]) for row in r.rows])
 
 class GalleryCoverageKinds(unittest.TestCase):
     def test_web_site_projects_skip_apk_gallery_coverage(self):
@@ -250,3 +270,54 @@ class GalleryCoverageKinds(unittest.TestCase):
             by_app.setdefault(app, []).append((sev, cid))
         self.assertNotIn("kapan", by_app)
         self.assertIn((patuh.FAIL, "gallery-card"), by_app["ghost"])
+
+    def test_unreleased_app_is_not_flagged_for_missing_card(self):
+        """No published APK means a missing gallery card is not a defect."""
+        rep = patuh.Report()
+        projects = [
+            {"app": "released", "repo": "released", "kind": "android-app"},
+            {"app": "unreleased", "repo": "unreleased", "kind": "android-app"},
+        ]
+        patuh.check_gallery_coverage(rep, projects, [], apps_with_release={"released"})
+        flagged = {app for app, sev, cid, msg in rep.rows if sev == patuh.FAIL}
+        self.assertEqual(flagged, {"released"})
+
+
+class RegistryShape(unittest.TestCase):
+    """The registry itself: qualification must be explicit and complete, and
+    an inventory entry must never silently carry an approved baseline."""
+
+    @classmethod
+    def projects(cls):
+        with open(os.path.join(os.path.dirname(__file__), "..", "projects.json")) as f:
+            return json.load(f)["projects"]
+
+    def test_inventory_entries_carry_no_baselines(self):
+        baseline_fields = {"module", "package_expected", "label_expected",
+                           "permissions_baseline", "license_baseline", "icon_mode"}
+        for p in self.projects():
+            if p["kind"] == "inventory":
+                self.assertFalse(baseline_fields & set(p),
+                                 "inventory entry %s must not carry baseline fields" % p["app"])
+
+    def test_qualified_android_apps_are_complete(self):
+        for p in self.projects():
+            if p["kind"] == "android-app":
+                for field in ("module", "package_expected", "label_expected",
+                              "permissions_baseline", "icon_mode"):
+                    self.assertIn(field, p, "%s missing %s" % (p["app"], field))
+                self.assertTrue(p["package_expected"].startswith("com.vanipy."),
+                                "%s outside com.vanipy.*" % p["app"])
+                self.assertEqual(p["label_expected"], p["label_expected"].lower(),
+                                 "%s label not lowercase" % p["app"])
+
+    def test_seeded_baselines_are_recorded_openly(self):
+        """Entries qualified after the original thirteen must say where their
+        baselines came from - never a silent inventory-to-approved flip."""
+        for p in self.projects():
+            if p["kind"] != "inventory" and "baseline_source" in p:
+                self.assertIn("seeded", p["baseline_source"])
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

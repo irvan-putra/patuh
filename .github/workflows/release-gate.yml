@@ -1,0 +1,52 @@
+name: patuh release gate
+# Reusable required check for app repos. Call it from a release workflow:
+#
+#   jobs:
+#     consistency:
+#       uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.0
+#       with:
+#         app: myapp
+#         published: false   # set true on a second call AFTER the release is live
+#
+# published=false (pre-publish gate): checks the exact source tree being
+# released - package ID, three-number version, lowercase label, permission
+# drift, license drift, family icon geometry and the badge text reading the
+# candidate version. Release metadata of older releases is not judged here,
+# so fixing an old non-conforming release is never blocked by its own past.
+#
+# published=true (post-publish verify): the new release must be live first;
+# runs the full online suite for this app including APK download, sha256
+# against the published checksum, the packaged icon's pixels, and the
+# gallery card agreeing with the release.
+on:
+  workflow_call:
+    inputs:
+      app:
+        description: "registry app name in irvan-putra/patuh projects.json"
+        required: true
+        type: string
+      published:
+        description: "false = pre-publish source gate; true = the release is already live, verify it"
+        type: boolean
+        default: false
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { repository: irvan-putra/patuh, ref: v0.2.0, path: patuh }
+      - name: place the caller's source where patuh looks for clones
+        uses: actions/checkout@v4
+        with: { path: caller-clone }
+      - run: mkdir -p clones && mv caller-clone "clones/${GITHUB_REPOSITORY#*/}"
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pillow==12.3.0
+      - name: pre-publish source gate
+        if: ${{ !inputs.published }}
+        run: python3 patuh/patuh.py --only "${{ inputs.app }}" --offline --workdir clones
+      - name: post-publish verification
+        if: inputs.published
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 patuh/patuh.py --only "${{ inputs.app }}" --apk --workdir clones

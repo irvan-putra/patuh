@@ -68,9 +68,10 @@ caught today; that gap is stated, not hidden.
 
 patuh compares structure, metadata and pixels. It cannot judge that art
 looks right, that an app works, that wording is good, or that an
-adaptive/custom icon renders correctly on a launcher. Those stay REVIEW
-items for a human with screenshots. a declared custom photo icon is such a
-declared exception. CLEAN only means every check that ran passed; skipped
+adaptive/custom/vector icon renders correctly on a launcher - those stay
+REVIEW items for a human with screenshots, and a green run is not proof an
+icon looks right. A declared custom photo icon is such a declared
+exception. CLEAN only means every check that ran passed; skipped
 and review items are always listed in the summary.
 
 Secret scanning is deliberately not reimplemented here: use
@@ -110,17 +111,42 @@ effect of running the checker.
 
 ## Running in GitHub Actions
 
-`.github/workflows/patuh.yml` runs the checker on demand and weekly against
-the registry. To use patuh from an app's own repo, pin a tag and call it
-before a release build; do not wire every repo at once — each wiring is its
-own small reviewed change.
+`.github/workflows/patuh.yml` runs the checker on demand and weekly
+(Mondays 02:00 UTC, 09:00 WIB) against the whole registry, including the
+APK download/checksum/packaged-icon verification. The weekly schedule was
+approved 2026-11-20; before that the run was manual-only and this README
+was wrong. A red weekly run means drift was found between releases.
+
+## Required gate in an app's release workflow
+
+`.github/workflows/release-gate.yml` is a reusable workflow an app repo
+calls so a release cannot ship past a consistency failure. Wire it per app,
+as its own small reviewed change:
 
 ```yaml
-- uses: actions/checkout@v4
-  with: { repository: irvan-putra/patuh, ref: v0.1.0, path: patuh }
-- run: pip install pillow==12.3.0
-- run: python3 patuh/patuh.py --only myapp --workdir patuh-clones
+jobs:
+  consistency:
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.0
+    with:
+      app: myapp
+      published: false   # pre-publish gate on the exact tree being released
+  # ... build, sign, publish ...
+  verify:
+    needs: publish
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.0
+    with:
+      app: myapp
+      published: true    # post-publish: verifies the live release + gallery
 ```
+
+The pre-publish gate checks the candidate source (package ID, three-number
+version, lowercase label, permission/license drift, family icon geometry,
+badge text reading the candidate version). It does not judge older
+releases, so fixing an old non-conforming release is never blocked by its
+own past. The post-publish call runs after the release is live and verifies
+the published artifacts: tag format, versioned APK filename, checksum
+asset, gallery card agreement, downloaded-APK sha256, and the packaged
+icon's pixels.
 
 ## Scope
 
@@ -129,11 +155,21 @@ against or change any repo by itself.
 
 ## Complete repository inventory
 
-The registry now represents all 68 current owner repositories observed on 19 November 2026,
-including forks and archived projects. Thirteen entries keep their existing checker
-configuration. The other 55 are explicitly `inventory-only`, including newer Android
-apps, Unggun (Flutter), websites, tools and older repositories. Being on this list does
-not mean a project passed checks. Each such entry produces REVIEW, never PASS.
+The registry represents all 68 current owner repositories observed on 19 November 2026,
+including forks and archived projects. Twenty-one entries are qualified: eighteen Android
+apps and three websites. The Android family grew from the original twelve on 2026-11-20,
+when Irvan approved making these checks required across the app family, explicitly beyond
+Nada (kokok, nada, sanggup, tampung, tengok and tuju qualified that day, plus the daya and
+denting websites). Their per-app permission/license baselines are seeded from the shipped
+source at that date and say so in their `baseline_source` notes; the family conventions
+themselves (com.vanipy.* IDs, lowercase labels, three-number versions, family icons,
+versioned APK filenames with checksums) come from his standing rules. Seeded baselines
+change only by a deliberate edit with his ok.
+
+The other 47 entries are explicitly `inventory-only`, including Unggun (Flutter, checker
+unsupported), sapi (a personal sandbox tester outside the family conventions - whether it
+adopts them is his call), tools and older repositories. Being on this list does not mean a
+project passed checks. Each such entry produces REVIEW, never PASS.
 New package/permission/license baselines have not been silently approved or invented.
 
 Every online run compares the whole registry with the live, paginated owner repository

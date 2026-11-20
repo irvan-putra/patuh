@@ -1,6 +1,13 @@
 name: patuh consistency check
-# Manual runs only: no automatic schedule without Irvan's explicit say-so.
+# On demand and weekly. The weekly schedule was approved by Irvan on
+# 2026-11-20 (WhatsApp) when he made these checks required across the app
+# family; the README said "weekly" from the start but no schedule existed
+# until then. A red scheduled run means family drift was found between
+# releases - investigate, don't silence.
 on:
+  schedule:
+    # Mondays 02:00 UTC = 09:00 WIB
+    - cron: "0 2 * * 1"
   workflow_dispatch:
     inputs:
       apk:
@@ -20,5 +27,6 @@ jobs:
       - name: source + release + gallery checks
         run: python3 patuh.py --workdir "$RUNNER_TEMP/patuh-clones"
       - name: APK verification
-        if: inputs.apk
+        # always on for the weekly run; on demand it follows the input
+        if: inputs.apk || github.event_name == 'schedule'
         run: python3 patuh.py --apk --workdir "$RUNNER_TEMP/patuh-clones"

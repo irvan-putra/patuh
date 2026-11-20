@@ -546,9 +546,16 @@ def check_icon(rep, proj, clone, conv, version):
     _, _, icon_ref = manifest_facts(manifest)
     drawable = re.fullmatch(r"@drawable/([A-Za-z0-9_]+)", icon_ref or "")
     if drawable:
-        biggest = os.path.join(resdir, "drawable", drawable.group(1) + ".png")
+        name = drawable.group(1)
+        biggest = os.path.join(resdir, "drawable", name + ".png")
+        vector = os.path.join(resdir, "drawable", name + ".xml")
+        if not os.path.isfile(biggest) and os.path.isfile(vector):
+            rep.add(app, REVIEW, "icon-resource",
+                    "manifest icon is a vector drawable (@drawable/%s) - family geometry not "
+                    "machine-verifiable, visual review on change" % name)
+            return
         if not os.path.isfile(biggest):
-            rep.add(app, FAIL, "icon-resource", "manifest drawable PNG missing: " + str(icon_ref))
+            rep.add(app, FAIL, "icon-resource", "manifest drawable icon missing: " + str(icon_ref))
             return
         rep.add(app, INFO, "icon-resource", "manifest uses single drawable PNG; mipmap-density coverage is not applicable")
     else:
@@ -620,12 +627,12 @@ def check_release(rep, proj, conv, gallery_card, verify_downloads, workdir):
         return
     if not rel:
         rep.add(app, SKIP, "release", "no release yet")
-        return
+        return None
     tag = rel["tag_name"]
     m = re.fullmatch(r"v([0-9]+\.[0-9]+\.[0-9]+)", tag)
     if not m:
         rep.add(app, FAIL, "release-tag", "tag %r is not vX.Y.Z" % tag)
-        return
+        return rel
     version = m.group(1)
     rep.add(app, PASS, "release-tag", "latest release %s" % tag)
     want_apk = andr["apk_name_pattern"].format(app=app, version=version)
@@ -666,6 +673,7 @@ def check_release(rep, proj, conv, gallery_card, verify_downloads, workdir):
         else:
             rep.add(app, FAIL, "release-download", "downloaded APK sha256 MISMATCH")
         check_packaged_icon(rep, proj, conv, data, version)
+    return rel
 
 
 def check_packaged_icon(rep, proj, conv, apk_bytes, version):
@@ -722,13 +730,17 @@ def check_registry_coverage(rep, projects, repositories):
         rep.add("(registry)", PASS, "registry-coverage", "%d owner repositories represented; presence is not qualification" % len(current))
 
 
-def check_gallery_coverage(rep, projects, cards):
+def check_gallery_coverage(rep, projects, cards, apps_with_release=None):
     by_app = current_gallery_by_app(cards)
     for proj in projects:
         if proj.get("kind") != "android-app":
             continue  # the apps catalog only covers APKs, not websites
+        if apps_with_release is not None and proj["app"] not in apps_with_release:
+            # no published APK, so a missing card is not a defect
+            continue
         if proj["app"] not in by_app:
-            rep.add(proj["app"], FAIL, "gallery-card", "no gallery card for this app")
+            rep.add(proj["app"], FAIL, "gallery-card",
+                    "app has a published release but no gallery card")
 
 
 # ---------------------------------------------------------------- main
@@ -762,6 +774,7 @@ def main(argv):
 
     rep = Report()
     cards = []
+    apps_with_release = set()
     if not args.offline:
         try:
             repositories = []
@@ -828,9 +841,11 @@ def main(argv):
                          lenient=True)
         check_icon(rep, merged, clone, conv, version)
         if not args.offline:
-            check_release(rep, merged, conv, by_app.get(app), args.apk, args.workdir)
+            rel = check_release(rep, merged, conv, by_app.get(app), args.apk, args.workdir)
+            if rel:
+                apps_with_release.add(app)
     if not args.offline and cards:
-        check_gallery_coverage(rep, projects, cards)
+        check_gallery_coverage(rep, projects, cards, apps_with_release)
 
     print(rep.text())
     if args.json:
