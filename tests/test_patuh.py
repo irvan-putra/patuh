@@ -429,7 +429,8 @@ class CallerChainValidator(unittest.TestCase):
                                 "with": {"app": "x", "published": False,
                                          "candidate_apk_artifact": "candidate-apk"}},
             "publish": {"needs": "candidate-bytes",
-                        "steps": [{"run": "gh release create v1 x.apk"}]},
+                        "steps": [{"uses": "actions/download-artifact@v4"},
+                                  {"run": "gh release create v1 x.apk"}]},
             "verify": {"needs": "publish", "uses": gate,
                        "with": {"app": "x", "published": True}},
         }}
@@ -459,7 +460,8 @@ class CallerChainValidator(unittest.TestCase):
         from tools import validate_caller_chain as v
         doc = self.good()
         long_cmd = "gh release create v1 " + "--notes " + "x" * 120 + " app.apk"
-        doc["jobs"]["publish"]["steps"] = [{"run": long_cmd}]
+        doc["jobs"]["publish"]["steps"] = [{"uses": "actions/download-artifact@v4"},
+                                           {"run": long_cmd}]
         self.assertEqual(v.problems(self.write(doc)), [])
 
     def test_missing_bytes_job_fails(self):
@@ -491,6 +493,21 @@ class CallerChainValidator(unittest.TestCase):
         doc = self.good()
         doc["jobs"]["publish"]["needs"] = "build"
         self.assertTrue(any("must gate publishing" in p
+                            for p in v.problems(self.write(doc))))
+
+    def test_outputs_reference_without_needs_fails(self):
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        doc["jobs"]["publish"]["steps"].append(
+            {"run": "gh release create v1 ${{ needs.build.outputs.apk }}"})
+        self.assertTrue(any("without needing them" in p
+                            for p in v.problems(self.write(doc))))
+
+    def test_publish_without_checkout_or_download_fails(self):
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        doc["jobs"]["publish"]["steps"] = [{"run": "gh release create v1 x.apk"}]
+        self.assertTrue(any("no checkout/download-artifact step" in p
                             for p in v.problems(self.write(doc))))
 
     def test_tag_trigger_with_ungated_publish_fails(self):

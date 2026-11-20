@@ -59,6 +59,17 @@ def problems(path):
         n = (jobs.get(job) or {}).get("needs") or []
         return [n] if isinstance(n, str) else list(n)
 
+    # a job referencing needs.X.outputs.Y must actually need X
+    import json
+    out_ref = re.compile(r"needs\.([A-Za-z0-9_-]+)\.outputs\.")
+    for n, j in jobs.items():
+        if not isinstance(j, dict):
+            continue
+        missing = set(out_ref.findall(json.dumps(j))) - set(needs(n))
+        if missing:
+            out.append("job %r references outputs of %s without needing them"
+                       % (n, sorted(missing)))
+
     def run_text(job):
         # Inspect the original run scalars; yaml.safe_dump wraps long lines
         # and can split a command literal in two.
@@ -72,6 +83,15 @@ def problems(path):
                and "gh release create" in run_text(j)]
     if not publish:
         out.append("no publish job (a non-gate job running 'gh release create')")
+    for p in publish:
+        steps = (jobs[p] or {}).get("steps") or []
+        has_fetch = any(isinstance(s, dict)
+                        and str(s.get("uses", "")).startswith(
+                            ("actions/checkout@", "actions/download-artifact@"))
+                        for s in steps)
+        if not has_fetch:
+            out.append("publish job %r has no checkout/download-artifact step - "
+                       "'gh release create' needs its assets from somewhere" % p)
     for p in publish:
         for b in bytes_jobs:
             if b not in needs(p):
