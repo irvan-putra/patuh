@@ -437,14 +437,15 @@ class CallerChainValidator(unittest.TestCase):
 
     def test_well_shaped_chain_passes(self):
         from tools import validate_caller_chain as v
-        self.assertEqual(v.problems(self.write(self.good())), [])
+        probs, notes = v.problems(self.write(self.good()))
+        self.assertEqual(probs, [])
 
     def test_ungated_publish_fails(self):
         from tools import validate_caller_chain as v
         doc = self.good()
         doc["jobs"]["publish"]["needs"] = "build"
         self.assertTrue(any("must gate publishing" in p
-                            for p in v.problems(self.write(doc))))
+                            for p in v.problems(self.write(doc))[0]))
 
     def test_tag_trigger_allowed_when_gates_hold(self):
         # Trigger style is an implementation choice, not checker policy:
@@ -452,7 +453,7 @@ class CallerChainValidator(unittest.TestCase):
         from tools import validate_caller_chain as v
         doc = self.good()
         doc["on"] = {"push": {"tags": ["v*"]}}
-        self.assertEqual(v.problems(self.write(doc)), [])
+        self.assertEqual(v.problems(self.write(doc))[0], [])
 
     def test_wrapped_run_scalar_still_detected(self):
         # yaml.safe_dump wraps long lines; detection must read the raw run
@@ -462,13 +463,13 @@ class CallerChainValidator(unittest.TestCase):
         long_cmd = "gh release create v1 " + "--notes " + "x" * 120 + " app.apk"
         doc["jobs"]["publish"]["steps"] = [{"uses": "actions/download-artifact@v4"},
                                            {"run": long_cmd}]
-        self.assertEqual(v.problems(self.write(doc)), [])
+        self.assertEqual(v.problems(self.write(doc))[0], [])
 
     def test_missing_bytes_job_fails(self):
         from tools import validate_caller_chain as v
         doc = self.good()
         del doc["jobs"]["candidate-bytes"]
-        self.assertTrue(any("candidate-bytes" in p for p in v.problems(self.write(doc))))
+        self.assertTrue(any("candidate-bytes" in p for p in v.problems(self.write(doc))[0]))
 
     def test_tag_pinned_gate_fails(self):
         # Tags are movable: only a full reviewed commit SHA is an acceptable pin.
@@ -478,7 +479,7 @@ class CallerChainValidator(unittest.TestCase):
             if "uses" in j:
                 j["uses"] = "irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1"
         self.assertTrue(any("full reviewed commit SHA" in p
-                            for p in v.problems(self.write(doc))))
+                            for p in v.problems(self.write(doc))[0]))
 
     def test_build_without_source_gate_needs_fails(self):
         from tools import validate_caller_chain as v
@@ -486,14 +487,14 @@ class CallerChainValidator(unittest.TestCase):
         doc["jobs"]["build"]["needs"] = []
         doc["jobs"]["candidate-bytes"]["needs"] = "build"
         self.assertTrue(any("must follow the source gate" in p
-                            for p in v.problems(self.write(doc))))
+                            for p in v.problems(self.write(doc))[0]))
 
     def test_publish_without_bytes_needs_fails(self):
         from tools import validate_caller_chain as v
         doc = self.good()
         doc["jobs"]["publish"]["needs"] = "build"
         self.assertTrue(any("must gate publishing" in p
-                            for p in v.problems(self.write(doc))))
+                            for p in v.problems(self.write(doc))[0]))
 
     def test_outputs_reference_without_needs_fails(self):
         from tools import validate_caller_chain as v
@@ -501,14 +502,17 @@ class CallerChainValidator(unittest.TestCase):
         doc["jobs"]["publish"]["steps"].append(
             {"run": "gh release create v1 ${{ needs.build.outputs.apk }}"})
         self.assertTrue(any("without needing them" in p
-                            for p in v.problems(self.write(doc))))
+                            for p in v.problems(self.write(doc))[0]))
 
-    def test_publish_without_checkout_or_download_fails(self):
+    def test_publish_without_fetch_is_a_note_not_a_failure(self):
+        # scripts may generate assets inline; static analysis cannot prove
+        # provenance either way, so this stays a note.
         from tools import validate_caller_chain as v
         doc = self.good()
         doc["jobs"]["publish"]["steps"] = [{"run": "gh release create v1 x.apk"}]
-        self.assertTrue(any("no checkout/download-artifact step" in p
-                            for p in v.problems(self.write(doc))))
+        probs, notes = v.problems(self.write(doc))
+        self.assertEqual(probs, [])
+        self.assertTrue(any("not statically proven" in n for n in notes))
 
     def test_tag_trigger_with_ungated_publish_fails(self):
         from tools import validate_caller_chain as v
@@ -516,7 +520,7 @@ class CallerChainValidator(unittest.TestCase):
         doc["on"] = {"push": {"tags": ["v*"]}}
         doc["jobs"]["publish"]["needs"] = "build"
         self.assertTrue(any("must gate publishing" in p
-                            for p in v.problems(self.write(doc))))
+                            for p in v.problems(self.write(doc))[0]))
 
 
 if __name__ == "__main__":
