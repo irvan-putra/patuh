@@ -231,8 +231,8 @@
    "kind": "android-app",
    "module": "app",
    "package_expected": "com.vanipy.intodo",
-   "package_note": "App family renamed to intodo 2026-11-18 with his approval; applicationId com.vanipy.intodo unchanged, so installed apps update in place.",
-   "label_expected": "intodo",
+   "package_note": "Visible rename intodo -> tindak approved 2026-11-20 16:36 (WhatsApp) and pushed by the app owner as c495a8a. applicationId com.vanipy.intodo, signing identity, storage keys, update asset names intodo-v* and DeltaChat miniapp identity deliberately unchanged, so installed apps update in place. Display name is tindak; intodo remains the technical/repo alias.",
+   "label_expected": "tindak",
    "permissions_baseline": [
     "android.permission.FOREGROUND_SERVICE",
     "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
@@ -629,15 +629,17 @@
   {
    "app": "sapi",
    "repo": "sapi",
-   "kind": "inventory",
-   "source_type": "android-app",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false,
-   "observed_modules": [
-    "app"
-   ]
+   "kind": "android-app",
+   "module": "app",
+   "package_expected": "com.vanipy.sapi",
+   "package_note": "applicationId moved com.irvanputra.sapi -> com.vanipy.sapi with his explicit approval 2026-11-20 16:40 (WhatsApp); he had not installed the app, so no data migration was needed. Local-only tester: talks to a backend on 127.0.0.1 over adb reverse, credentials stay on the computer.",
+   "label_expected": "sapi bca sandbox",
+   "permissions_baseline": [
+    "android.permission.INTERNET"
+   ],
+   "license_baseline": "MIT",
+   "icon_mode": "custom",
+   "icon_note": "No launcher icon resources and no android:icon in the manifest; the system default icon applies. Local tester tool; family icon art not yet made or approved."
   },
   {
    "app": "setup",
