@@ -420,7 +420,8 @@ class CallerChainValidator(unittest.TestCase):
         return f.name
 
     def good(self):
-        gate = "irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1"
+        gate = ("irvan-putra/patuh/.github/workflows/release-gate.yml@"
+                "6f4b1eec2a8f73348725b7e3698d3e7bca93b890")
         return {"on": {"workflow_dispatch": None}, "jobs": {
             "consistency": {"uses": gate, "with": {"app": "x", "published": False}},
             "build": {"needs": "consistency", "steps": [{"run": "./gradlew assembleRelease"}]},
@@ -455,6 +456,31 @@ class CallerChainValidator(unittest.TestCase):
         doc = self.good()
         del doc["jobs"]["candidate-bytes"]
         self.assertTrue(any("candidate-bytes" in p for p in v.problems(self.write(doc))))
+
+    def test_tag_pinned_gate_fails(self):
+        # Tags are movable: only a full reviewed commit SHA is an acceptable pin.
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        for j in doc["jobs"].values():
+            if "uses" in j:
+                j["uses"] = "irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1"
+        self.assertTrue(any("full reviewed commit SHA" in p
+                            for p in v.problems(self.write(doc))))
+
+    def test_build_without_source_gate_needs_fails(self):
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        doc["jobs"]["build"]["needs"] = []
+        doc["jobs"]["candidate-bytes"]["needs"] = "build"
+        self.assertTrue(any("must follow the source gate" in p
+                            for p in v.problems(self.write(doc))))
+
+    def test_publish_without_bytes_needs_fails(self):
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        doc["jobs"]["publish"]["needs"] = "build"
+        self.assertTrue(any("must gate publishing" in p
+                            for p in v.problems(self.write(doc))))
 
 
 if __name__ == "__main__":

@@ -22,7 +22,8 @@ import sys
 
 import yaml
 
-GATE_RE = re.compile(r"^irvan-putra/patuh/.github/workflows/release-gate\.yml@v\d+\.\d+\.\d+$")
+GATE_RE = re.compile(r"^irvan-putra/patuh/.github/workflows/release-gate\.yml@(.+)$")
+SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
 def problems(path):
@@ -33,6 +34,12 @@ def problems(path):
 
     def gate_call(job):
         return isinstance(job, dict) and GATE_RE.match(str(job.get("uses", "")))
+
+    for n, j in jobs.items():
+        m = GATE_RE.match(str(j.get("uses", ""))) if isinstance(j, dict) else None
+        if m and not SHA_RE.match(m.group(1)):
+            out.append("gate job %r pins %r - pin the full reviewed commit SHA; "
+                       "a tag is mutable" % (n, m.group(1)))
 
     consistency = [n for n, j in jobs.items()
                    if gate_call(j) and (j.get("with") or {}).get("published") is False
@@ -61,11 +68,15 @@ def problems(path):
             if b not in needs(p):
                 out.append("publish job %r does not need %r - the byte check must gate publishing"
                            % (p, b))
-    for b in bytes_jobs:
-        build_like = [n for n, j in jobs.items()
+    build_like_all = [n for n, j in jobs.items()
                       if not gate_call(j) and n not in publish and "assembleRelease" in yaml.safe_dump(j)]
-        if build_like and not any(bld in needs(b) for bld in build_like):
-            out.append("candidate-bytes %r does not need the build job %s" % (b, build_like))
+    for bld in build_like_all:
+        if consistency and not any(c in needs(bld) for c in consistency):
+            out.append("build job %r does not need the source-gate job %s - "
+                       "the build must follow the source gate" % (bld, consistency))
+    for b in bytes_jobs:
+        if build_like_all and not any(bld in needs(b) for bld in build_like_all):
+            out.append("candidate-bytes %r does not need the build job %s" % (b, build_like_all))
     for v in verify:
         for p in publish:
             if p not in needs(v):
