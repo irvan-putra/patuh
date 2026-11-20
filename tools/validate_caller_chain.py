@@ -105,6 +105,21 @@ def problems(path):
             # cannot prove provenance either way, so this is a note, not a failure.
             notes.append("publish job %r has no checkout/download-artifact step - "
                          "asset provenance is not statically proven" % p)
+        # Without a checkout, gh release create cannot resolve the repository
+        # from a git remote - it needs explicit context (GH_REPO or --repo).
+        has_checkout = any(isinstance(s, dict)
+                           and str(s.get("uses", "")).startswith("actions/checkout@")
+                           for s in steps)
+        job_env = dict((jobs[p] or {}).get("env") or {})
+        for s in steps:
+            if not (isinstance(s, dict) and "gh release create" in str(s.get("run", ""))):
+                continue
+            env = dict(job_env)
+            env.update(s.get("env") or {})
+            if not has_checkout and "GH_REPO" not in env \
+                    and "--repo" not in s["run"] and " -R " not in s["run"]:
+                out.append("publish job %r runs gh release create without a checkout, "
+                           "GH_REPO, or --repo - gh cannot resolve the repository" % p)
     for p in publish:
         for b in bytes_jobs:
             if b not in needs(p):

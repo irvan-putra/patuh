@@ -514,6 +514,26 @@ class CallerChainValidator(unittest.TestCase):
         self.assertEqual(probs, [])
         self.assertTrue(any("not statically proven" in n for n in notes))
 
+    def test_publish_gh_without_repo_context_fails(self):
+        # no checkout and no explicit repo context: gh cannot resolve the
+        # repository - a provable failure, not a heuristic.
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        doc["jobs"]["publish"]["steps"] = [
+            {"uses": "actions/download-artifact@v4"},
+            {"run": "gh release create v1 x.apk"}]
+        probs, _ = v.problems(self.write(doc))
+        self.assertTrue(any("cannot resolve the repository" in p for p in probs))
+
+    def test_publish_gh_with_gh_repo_env_passes(self):
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        doc["jobs"]["publish"]["steps"] = [
+            {"uses": "actions/download-artifact@v4"},
+            {"env": {"GH_REPO": "o/r"}, "run": "gh release create v1 x.apk"}]
+        probs, _ = v.problems(self.write(doc))
+        self.assertEqual(probs, [])
+
     def test_tag_trigger_with_ungated_publish_fails(self):
         from tools import validate_caller_chain as v
         doc = self.good()
