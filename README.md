@@ -134,7 +134,7 @@ shape-checks a wired release workflow before it is trusted:
 ```yaml
 jobs:
   consistency:
-    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@7d8d0523f22046b71c0a2e0419d852219bed8a77
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@6f4b1eec2a8f73348725b7e3698d3e7bca93b890
     with:
       app: myapp
       published: false   # pre-publish gate on the exact tree being released
@@ -143,7 +143,7 @@ jobs:
     # ... build and sign the APK, upload it as an artifact named candidate-apk ...
   candidate-bytes:
     needs: build
-    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@7d8d0523f22046b71c0a2e0419d852219bed8a77
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@6f4b1eec2a8f73348725b7e3698d3e7bca93b890
     with:
       app: myapp
       published: false
@@ -153,7 +153,7 @@ jobs:
     # ... gh release create ...
   verify:
     needs: publish
-    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@7d8d0523f22046b71c0a2e0419d852219bed8a77
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@6f4b1eec2a8f73348725b7e3698d3e7bca93b890
     with:
       app: myapp
       published: true    # post-publish: verifies the live release + gallery
