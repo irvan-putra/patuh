@@ -226,12 +226,12 @@
    "archived": false
   },
   {
-   "app": "intodo",
-   "repo": "intodo",
+   "app": "tindak",
+   "repo": "tindak",
    "kind": "android-app",
    "module": "app",
-   "package_expected": "com.vanipy.intodo",
-   "package_note": "Visible rename intodo -> tindak approved 2026-11-20 16:36 (WhatsApp) and pushed by the app owner as c495a8a. applicationId com.vanipy.intodo, signing identity, storage keys, update asset names intodo-v* and DeltaChat miniapp identity deliberately unchanged, so installed apps update in place. Display name is tindak; intodo remains the technical/repo alias.",
+   "package_expected": "com.vanipy.tindak",
+   "package_note": "Full identity rename intodo -> tindak approved 2026-11-20 16:57 (WhatsApp): user explicitly rejected alias/redirect setups and accepted losing unused config/browser state. Same GitHub repo ID 1454664250, history preserved; migration commit 3fbfc42 moves package, updater, webxdc miniapp (0.4.10) and release artifact prefix (tindak-v*) together. applicationId com.vanipy.tindak means Android treats it as a NEW separate install, not an in-place update of com.vanipy.intodo; same signing key, no pairing-key export (fresh local setup key after install). Old com.vanipy.intodo releases stay published as historical artifacts and do not update to the new package.",
    "label_expected": "tindak",
    "permissions_baseline": [
     "android.permission.FOREGROUND_SERVICE",
