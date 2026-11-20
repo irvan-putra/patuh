@@ -408,6 +408,67 @@ class ReleaseGateWorkflowShape(unittest.TestCase):
         self.assertIn("inputs.published", post[0]["if"])
 
 
+def _build_axml(pkg):
+    """Minimal binary AndroidManifest.xml declaring one package attribute."""
+    import struct
+    strings = ["package", pkg, "manifest"]
+    blob, offsets = b"", []
+    for s in strings:
+        b = s.encode("utf-8")
+        offsets.append(len(blob))
+        blob += bytes([len(b), len(b)]) + b + b"\0"
+    sstart = 28 + 4 * len(strings)
+    sp = struct.pack("<HHIIIIII", 0x0001, 28, sstart + len(blob),
+                     len(strings), 0, 0x100, sstart, 0)
+    sp += b"".join(struct.pack("<I", o) for o in offsets) + blob
+    attr = struct.pack("<IIIHBBI", 0xFFFFFFFF, 0, 1, 8, 0, 0x03, 1)
+    body = struct.pack("<IIIIHHHHHH", 0, 0xFFFFFFFF, 0xFFFFFFFF, 2,
+                       20, 20, 1, 0, 0, 0) + attr
+    se = struct.pack("<HHI", 0x0102, 16, 8 + len(body)) + body
+    return struct.pack("<HHI", 0x0003, 8, 8 + len(sp) + len(se)) + sp + se
+
+
+def _apk_with_manifest(pkg):
+    import io, zipfile
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as z:
+        z.writestr("AndroidManifest.xml", _build_axml(pkg))
+    return buf.getvalue()
+
+
+class PackagedPackageCheck(unittest.TestCase):
+    """The APK's own manifest package must match the registry expectation."""
+
+    class Rep:
+        def __init__(self):
+            self.rows = []
+
+        def add(self, app, status, check, msg):
+            self.rows.append((status, check, msg))
+
+    PROJ = {"app": "x", "package_expected": "com.vanipy.x"}
+
+    def test_reads_binary_manifest_package(self):
+        self.assertEqual(patuh.apk_package(_apk_with_manifest("com.vanipy.x")),
+                         "com.vanipy.x")
+
+    def test_matching_package_passes(self):
+        rep = self.Rep()
+        patuh.check_packaged_package(rep, self.PROJ, _apk_with_manifest("com.vanipy.x"))
+        self.assertEqual([r[0] for r in rep.rows], ["PASS"])
+
+    def test_mismatched_package_fails(self):
+        # a stale artifact from before a rename must not slip through
+        rep = self.Rep()
+        patuh.check_packaged_package(rep, self.PROJ, _apk_with_manifest("com.old.x"))
+        self.assertEqual(rep.rows[0][0], "FAIL")
+
+    def test_unreadable_package_skips(self):
+        rep = self.Rep()
+        patuh.check_packaged_package(rep, self.PROJ, b"not an apk")
+        self.assertEqual(rep.rows[0][0], "SKIP")
+
+
 class CallerChainValidator(unittest.TestCase):
     """The validator script: a correctly wired chain passes, and each broken
     shape it exists to catch fails."""

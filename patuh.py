@@ -672,8 +672,85 @@ def check_release(rep, proj, conv, gallery_card, verify_downloads, workdir):
             rep.add(app, PASS, "release-download", "downloaded APK sha256 matches published checksum")
         else:
             rep.add(app, FAIL, "release-download", "downloaded APK sha256 MISMATCH")
+        check_packaged_package(rep, proj, data)
         check_packaged_icon(rep, proj, conv, data, version)
     return rel
+
+
+def _axml_package(data):
+    """Package attribute of a binary (compiled) AndroidManifest.xml, or None."""
+    u32 = lambda o: int.from_bytes(data[o:o + 4], "little")
+    u16 = lambda o: int.from_bytes(data[o:o + 2], "little")
+    if len(data) < 8 or u16(0) != 0x0003:  # RES_XML_TYPE
+        return None
+    off, strings = 8, None
+    while off + 8 <= len(data):
+        ctype, csize = u16(off), u32(off + 4)
+        if csize < 8 or off + csize > len(data):
+            return None
+        if ctype == 0x0001:  # RES_STRING_POOL_TYPE
+            scount, flags = u32(off + 8), u32(off + 16)
+            sstart = u32(off + 20)
+            strings = []
+            for i in range(scount):
+                so = off + sstart + u32(off + 28 + 4 * i)
+                if flags & 0x100:  # UTF-8
+                    ln = data[so]; so += 1
+                    if ln & 0x80:
+                        ln = ((ln & 0x7F) << 8) | data[so]; so += 1
+                    bln = data[so]; so += 1
+                    if bln & 0x80:
+                        bln = ((bln & 0x7F) << 8) | data[so]; so += 1
+                    strings.append(data[so:so + bln].decode("utf-8", "replace"))
+                else:
+                    ln = u16(so); so += 2
+                    if ln & 0x8000:
+                        ln = ((ln & 0x7FFF) << 16) | u16(so); so += 2
+                    strings.append(data[so:so + 2 * ln].decode("utf-16-le", "replace"))
+        elif ctype == 0x0102 and strings is not None:  # RES_XML_START_ELEMENT_TYPE
+            # chunk hdr 8 | lineNumber 4 | comment 4 | attrExt: ns 4 | name 4 |
+            # attributeStart 2 | attributeSize 2 | attributeCount 2 | ...
+            name_idx = u32(off + 20)
+            if strings and name_idx < len(strings) and strings[name_idx] == "manifest":
+                aoff = off + 16 + u16(off + 24)  # attrExt start + attributeStart
+                for i in range(u16(off + 28)):
+                    a = aoff + 20 * i
+                    if strings[u32(a + 4)] == "package":
+                        raw, dtype, dval = u32(a + 8), data[a + 15], u32(a + 16)
+                        if raw != 0xFFFFFFFF:
+                            return strings[raw]
+                        if dtype == 0x03:
+                            return strings[dval]
+                        return None
+            return None  # first element was not <manifest>
+        off += csize
+    return None
+
+
+def apk_package(apk_bytes):
+    """Package ID the APK actually declares, or None if unreadable."""
+    try:
+        z = zipfile.ZipFile(io.BytesIO(apk_bytes))
+        return _axml_package(z.read("AndroidManifest.xml"))
+    except Exception:
+        return None
+
+
+def check_packaged_package(rep, proj, apk_bytes):
+    """The published/candidate APK's own manifest package must match the
+    registry expectation - a renamed source that never rebuilt, or a stale
+    artifact, must not slip through on icon and filename alone."""
+    app = proj["app"]
+    want = proj.get("package_expected")
+    if not want:
+        return
+    got = apk_package(apk_bytes)
+    if got == want:
+        rep.add(app, PASS, "apk-package", "packaged package %s" % got)
+    elif got:
+        rep.add(app, FAIL, "apk-package", "packaged package %s; want %s" % (got, want))
+    else:
+        rep.add(app, SKIP, "apk-package", "package not readable from the APK manifest")
 
 
 def check_packaged_icon(rep, proj, conv, apk_bytes, version):
@@ -869,6 +946,7 @@ def main(argv):
                 rep.add(app, INFO, "candidate-name",
                         "candidate file %s will be renamed %s at upload; the post-publish "
                         "check verifies the published name" % (base, want_name))
+            check_packaged_package(rep, merged, apk_bytes)
             check_packaged_icon(rep, merged, conv, apk_bytes, clean_v)
         if not args.offline:
             rel = check_release(rep, merged, conv, by_app.get(app), args.apk, args.workdir)
