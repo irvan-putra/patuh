@@ -762,6 +762,10 @@ def main(argv):
                     help="verify a locally built, unpublished APK against the source: "
                          "packaged icon pixels must carry the family badge reading the "
                          "candidate versionName. Use between build and publish.")
+    ap.add_argument("--apk-version",
+                    help="candidate version for --apk-file when the checked-out source "
+                         "predates the version stamp (stamp-at-release flows). "
+                         "Default: versionName read from the source.")
     ap.add_argument("--offline", action="store_true",
                     help="skip GitHub API/release/gallery checks; source checks only")
     ap.add_argument("--json", help="write the machine-readable report here")
@@ -857,7 +861,7 @@ def main(argv):
             rep.add(app, INFO, "candidate-sha256",
                     "candidate APK sha256 %s" % hashlib.sha256(apk_bytes).hexdigest())
             base = os.path.basename(args.apk_file)
-            clean_v = version.replace(" (default)", "") if version else None
+            clean_v = args.apk_version or (version.replace(" (default)", "") if version else None)
             want_name = conv["android"]["apk_name_pattern"].format(app=app, version=clean_v)
             if base == want_name:
                 rep.add(app, PASS, "candidate-name", "candidate already named " + base)

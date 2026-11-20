@@ -45,6 +45,10 @@ on:
         description: "optional artifact name (uploaded earlier this run) holding one candidate APK to byte-check pre-publish"
         type: string
         default: ""
+      candidate_version:
+        description: "optional candidate version for the byte check when the release flow stamps the version after checkout (e.g. intodo). Default: versionName read from the checked-out source."
+        type: string
+        default: ""
 jobs:
   gate:
     runs-on: ubuntu-latest
@@ -71,7 +75,9 @@ jobs:
           set -euo pipefail
           APK=$(find candidate -name '*.apk' -type f | head -1)
           test -n "$APK" || { echo "no .apk in artifact ${{ inputs.candidate_apk_artifact }}"; exit 1; }
-          python3 patuh/patuh.py --only "${{ inputs.app }}" --offline --workdir clones --apk-file "$APK"
+          VER_ARG=()
+          if [ -n "${{ inputs.candidate_version }}" ]; then VER_ARG=(--apk-version "${{ inputs.candidate_version }}"); fi
+          python3 patuh/patuh.py --only "${{ inputs.app }}" --offline --workdir clones --apk-file "$APK" "${VER_ARG[@]}"
       - name: post-publish verification
         if: inputs.published
         env:
