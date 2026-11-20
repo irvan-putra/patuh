@@ -1,5 +1,5 @@
 {
-  "comment": "Registry of projects patuh checks. Baselines pin the state Irvan approved; drift is reported, never auto-fixed. Entries carrying baseline_source were qualified 2026-11-20 under his approval to enforce family release checks beyond Nada; their per-app permission/license baselines are seeded from the shipped source at that date and recorded openly, not silently approved. Licenses differ per project on purpose - patuh records them and warns on change (relicensing needs his confirmation per repo).",
+  "comment": "Registry of projects patuh checks. Baselines pin the state being guarded; drift is reported, never auto-fixed. Entries carrying baseline_source were qualified 2026-11-20 under his approval to enforce family release checks beyond Nada; their per-app permission/license baselines are seeded from the shipped source at that date and detect future drift only - seeding is not approval or security validation, and says so in each entry. Licenses differ per project on purpose - patuh records them and warns on change (relicensing needs his confirmation per repo).",
   "projects": [
     {
       "app": "intodo",
@@ -281,7 +281,7 @@
       "repo": "daya",
       "kind": "web-site",
       "license_baseline": "AGPL-3.0",
-      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules; the permission and license baselines below are seeded from the shipped source at that date, recorded here openly - they are not separately re-approved, and a deliberate baseline edit (his ok) is how they change.",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
       "notes": "Deterministic recipe-to-code generator (web). Web hygiene and naming checks only; no Android artifacts."
     },
     {
@@ -289,7 +289,7 @@
       "repo": "denting",
       "kind": "web-site",
       "license_baseline": "AGPL-3.0",
-      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules; the permission and license baselines below are seeded from the shipped source at that date, recorded here openly - they are not separately re-approved, and a deliberate baseline edit (his ok) is how they change.",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
       "notes": "Conversational-composing web workshop (local-first). Web hygiene and naming checks only; no Android artifacts."
     },
     {
@@ -457,7 +457,7 @@
       ],
       "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
-      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules; the permission and license baselines below are seeded from the shipped source at that date, recorded here openly - they are not separately re-approved, and a deliberate baseline edit (his ok) is how they change.",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
       "notes": "Published releases v0.1.2-v0.1.4 lack checksum assets - a real drift this qualification now surfaces."
     },
     {
@@ -500,7 +500,7 @@
       "permissions_baseline": [],
       "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
-      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules; the permission and license baselines below are seeded from the shipped source at that date, recorded here openly - they are not separately re-approved, and a deliberate baseline edit (his ok) is how they change.",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
       "notes": "v0.1.0/v0.1.1 releases predate the filename/checksum conventions (generic app-release.apk, no checksum); v0.1.2 release repair already in flight at his direction."
     },
     {
@@ -623,7 +623,7 @@
       "permissions_baseline": [],
       "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
-      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules; the permission and license baselines below are seeded from the shipped source at that date, recorded here openly - they are not separately re-approved, and a deliberate baseline edit (his ok) is how they change."
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
     },
     {
       "app": "sapi",
@@ -670,7 +670,7 @@
       ],
       "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
-      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules; the permission and license baselines below are seeded from the shipped source at that date, recorded here openly - they are not separately re-approved, and a deliberate baseline edit (his ok) is how they change.",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
       "notes": "No release yet; gallery card expected once an APK ships."
     },
     {
@@ -713,7 +713,7 @@
       "permissions_baseline": [],
       "license_baseline": "GPL-3.0",
       "icon_mode": "family",
-      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules; the permission and license baselines below are seeded from the shipped source at that date, recorded here openly - they are not separately re-approved, and a deliberate baseline edit (his ok) is how they change.",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
       "notes": "MIDI viewer/game; main branch source trails the latest release tag (0.2.0 vs v0.3.0) - branch state is the owner's to reconcile."
     },
     {
@@ -726,7 +726,7 @@
       "permissions_baseline": [],
       "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
-      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules; the permission and license baselines below are seeded from the shipped source at that date, recorded here openly - they are not separately re-approved, and a deliberate baseline edit (his ok) is how they change."
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
     },
     {
       "app": "typing",

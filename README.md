@@ -85,6 +85,8 @@ python3 patuh.py                 # source + release-metadata + gallery checks
 python3 patuh.py --apk           # additionally download APKs, verify checksums, pixel-check packaged icons
 python3 patuh.py --only tumbuh   # one project
 python3 patuh.py --offline       # source checks only (uses clones in --workdir)
+python3 patuh.py --only tumbuh --offline --apk-file app-release.apk
+                                 # pre-publish: byte-check a locally built candidate APK
 python3 patuh.py --json report.json
 ```
 
@@ -126,27 +128,50 @@ as its own small reviewed change:
 ```yaml
 jobs:
   consistency:
-    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.0
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1
     with:
       app: myapp
       published: false   # pre-publish gate on the exact tree being released
-  # ... build, sign, publish ...
+  build:
+    needs: consistency
+    # ... build and sign the APK, upload it as an artifact named candidate-apk ...
+  candidate-bytes:
+    needs: build
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1
+    with:
+      app: myapp
+      published: false
+      candidate_apk_artifact: candidate-apk   # byte-check BEFORE publishing
+  publish:
+    needs: candidate-bytes
+    # ... gh release create ...
   verify:
     needs: publish
-    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.0
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1
     with:
       app: myapp
       published: true    # post-publish: verifies the live release + gallery
 ```
 
-The pre-publish gate checks the candidate source (package ID, three-number
-version, lowercase label, permission/license drift, family icon geometry,
-badge text reading the candidate version). It does not judge older
-releases, so fixing an old non-conforming release is never blocked by its
-own past. The post-publish call runs after the release is live and verifies
-the published artifacts: tag format, versioned APK filename, checksum
-asset, gallery card agreement, downloaded-APK sha256, and the packaged
-icon's pixels.
+The gate always checks the caller's checkout at the ref that triggered the
+caller's workflow, never patuh's own tree. The pre-publish gate checks the
+candidate source (package ID, three-number version, lowercase label,
+permission/license drift, family icon geometry, badge text reading the
+candidate version). It does not judge older releases, so fixing an old
+non-conforming release is never blocked by its own past.
+
+With `candidate_apk_artifact`, the gate also checks the built APK's actual
+bytes before the publish job may run: the packaged launcher icon must carry
+the family badge reading the candidate version, and the candidate's sha256
+is logged for comparison with the published sidecar. **This is the
+preventive boundary**: wired before publish, a defect stops the release.
+The post-publish call runs after the release is live and verifies the
+published artifacts (tag format, versioned APK filename, checksum asset,
+gallery card agreement, downloaded-APK sha256, packaged icon pixels); it
+detects anything that still slipped through but cannot unpublish it.
+
+The gate does not replace an app's own build-time checks (signing-certificate
+pinning, aapt badging, tests); it adds the family-consistency layer.
 
 ## Scope
 
@@ -161,7 +186,9 @@ apps and three websites. The Android family grew from the original twelve on 202
 when Irvan approved making these checks required across the app family, explicitly beyond
 Nada (kokok, nada, sanggup, tampung, tengok and tuju qualified that day, plus the daya and
 denting websites). Their per-app permission/license baselines are seeded from the shipped
-source at that date and say so in their `baseline_source` notes; the family conventions
+source at that date and say so in their `baseline_source` notes: a seeded baseline detects
+FUTURE DRIFT from what shipped - seeding is not his approval of those permissions or that
+license, and not a security validation. The family conventions
 themselves (com.vanipy.* IDs, lowercase labels, three-number versions, family icons,
 versioned APK filenames with checksums) come from his standing rules. Seeded baselines
 change only by a deliberate edit with his ok.

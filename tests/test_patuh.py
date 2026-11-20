@@ -319,5 +319,39 @@ class RegistryShape(unittest.TestCase):
                 self.assertIn("seeded", p["baseline_source"])
 
 
+@unittest.skipUnless(have_pillow(), "Pillow 12.3.0 not available")
+class PackagedIcon(unittest.TestCase):
+    def apk_bytes(self, version, path="res/mipmap-xxxhdpi/ic_launcher.png"):
+        import io
+        import zipfile
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as z:
+            img = io.BytesIO()
+            make_family_icon(version).save(img, "PNG")
+            z.writestr(path, img.getvalue())
+        return buf.getvalue()
+
+    def test_candidate_apk_badge_must_match_candidate_version(self):
+        rep = patuh.Report()
+        patuh.check_packaged_icon(rep, {"app": "x", "icon_mode": "family"},
+                                  {"icon_family": CONV}, self.apk_bytes("1.2.3"), "1.2.3")
+        self.assertIn((patuh.PASS, "apk-icon-badge-version"),
+                      [(row[1], row[2]) for row in rep.rows])
+
+    def test_candidate_apk_stale_badge_fails(self):
+        rep = patuh.Report()
+        patuh.check_packaged_icon(rep, {"app": "x", "icon_mode": "family"},
+                                  {"icon_family": CONV}, self.apk_bytes("1.2.2"), "1.2.3")
+        self.assertIn((patuh.FAIL, "apk-icon-badge-version"),
+                      [(row[1], row[2]) for row in rep.rows])
+
+    def test_obfuscated_resource_path_still_checked(self):
+        rep = patuh.Report()
+        patuh.check_packaged_icon(rep, {"app": "x", "icon_mode": "family"},
+                                  {"icon_family": CONV}, self.apk_bytes("1.2.3", "res/ab.png"), "1.2.3")
+        self.assertIn((patuh.PASS, "apk-icon-badge-version"),
+                      [(row[1], row[2]) for row in rep.rows])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

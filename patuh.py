@@ -758,6 +758,10 @@ def main(argv):
                     help="where to put clones")
     ap.add_argument("--apk", action="store_true",
                     help="also download release APKs: verify sha256 and the packaged icon")
+    ap.add_argument("--apk-file",
+                    help="verify a locally built, unpublished APK against the source: "
+                         "packaged icon pixels must carry the family badge reading the "
+                         "candidate versionName. Use between build and publish.")
     ap.add_argument("--offline", action="store_true",
                     help="skip GitHub API/release/gallery checks; source checks only")
     ap.add_argument("--json", help="write the machine-readable report here")
@@ -771,6 +775,13 @@ def main(argv):
     if not projects:
         print("no projects selected", file=sys.stderr)
         return 2
+    if args.apk_file:
+        if len(projects) != 1:
+            print("--apk-file needs exactly one project (--only)", file=sys.stderr)
+            return 2
+        if not os.path.isfile(args.apk_file):
+            print("--apk-file not found: %s" % args.apk_file, file=sys.stderr)
+            return 2
 
     rep = Report()
     cards = []
@@ -840,6 +851,21 @@ def main(argv):
                          None, None, check_id_prefix="extra:" + em["path"] + ":",
                          lenient=True)
         check_icon(rep, merged, clone, conv, version)
+        if args.apk_file:
+            with open(args.apk_file, "rb") as f:
+                apk_bytes = f.read()
+            rep.add(app, INFO, "candidate-sha256",
+                    "candidate APK sha256 %s" % hashlib.sha256(apk_bytes).hexdigest())
+            base = os.path.basename(args.apk_file)
+            clean_v = version.replace(" (default)", "") if version else None
+            want_name = conv["android"]["apk_name_pattern"].format(app=app, version=clean_v)
+            if base == want_name:
+                rep.add(app, PASS, "candidate-name", "candidate already named " + base)
+            else:
+                rep.add(app, INFO, "candidate-name",
+                        "candidate file %s will be renamed %s at upload; the post-publish "
+                        "check verifies the published name" % (base, want_name))
+            check_packaged_icon(rep, merged, conv, apk_bytes, clean_v)
         if not args.offline:
             rel = check_release(rep, merged, conv, by_app.get(app), args.apk, args.workdir)
             if rel:

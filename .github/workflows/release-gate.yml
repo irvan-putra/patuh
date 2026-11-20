@@ -3,16 +3,28 @@ name: patuh release gate
 #
 #   jobs:
 #     consistency:
-#       uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.0
+#       uses: irvan-putra/patuh/.github/workflows/release-gate.yml@v0.2.1
 #       with:
 #         app: myapp
-#         published: false   # set true on a second call AFTER the release is live
+#         published: false   # pre-publish gate on the exact tree being released
 #
-# published=false (pre-publish gate): checks the exact source tree being
-# released - package ID, three-number version, lowercase label, permission
-# drift, license drift, family icon geometry and the badge text reading the
-# candidate version. Release metadata of older releases is not judged here,
-# so fixing an old non-conforming release is never blocked by its own past.
+# published=false (pre-publish gate): checks the CALLER's checkout at the ref
+# that triggered the caller's workflow - never patuh's own tree or a default
+# branch guess. It verifies package ID, three-number version, lowercase
+# label, permission/license drift, family icon geometry and the badge text
+# reading the candidate version. Release metadata of older releases is not
+# judged here, so fixing an old non-conforming release is never blocked by
+# its own past.
+#
+# candidate_apk_artifact (optional, pre-publish): name of a workflow
+# artifact the caller uploaded earlier in the same run, containing exactly
+# one APK - the built, not yet published candidate. The gate then also
+# checks the actual bytes: the packaged launcher icon must be the family
+# badge reading the candidate version, and it logs the candidate's sha256
+# for comparison with the sidecar the publish step uploads. This is the
+# preventive boundary: wired before the publish job, a defect stops the
+# release. The post-publish verify below can only detect a defect that
+# already shipped.
 #
 # published=true (post-publish verify): the new release must be live first;
 # runs the full online suite for this app including APK download, sha256
@@ -29,13 +41,17 @@ on:
         description: "false = pre-publish source gate; true = the release is already live, verify it"
         type: boolean
         default: false
+      candidate_apk_artifact:
+        description: "optional artifact name (uploaded earlier this run) holding one candidate APK to byte-check pre-publish"
+        type: string
+        default: ""
 jobs:
   gate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { repository: irvan-putra/patuh, ref: v0.2.0, path: patuh }
-      - name: place the caller's source where patuh looks for clones
+        with: { repository: irvan-putra/patuh, ref: v0.2.1, path: patuh }
+      - name: check out the caller's exact candidate tree
         uses: actions/checkout@v4
         with: { path: caller-clone }
       - run: mkdir -p clones && mv caller-clone "clones/${GITHUB_REPOSITORY#*/}"
@@ -45,6 +61,17 @@ jobs:
       - name: pre-publish source gate
         if: ${{ !inputs.published }}
         run: python3 patuh/patuh.py --only "${{ inputs.app }}" --offline --workdir clones
+      - name: fetch the candidate APK bytes
+        if: ${{ !inputs.published && inputs.candidate_apk_artifact != '' }}
+        uses: actions/download-artifact@v4
+        with: { name: "${{ inputs.candidate_apk_artifact }}", path: candidate }
+      - name: pre-publish candidate APK byte check
+        if: ${{ !inputs.published && inputs.candidate_apk_artifact != '' }}
+        run: |
+          set -euo pipefail
+          APK=$(find candidate -name '*.apk' -type f | head -1)
+          test -n "$APK" || { echo "no .apk in artifact ${{ inputs.candidate_apk_artifact }}"; exit 1; }
+          python3 patuh/patuh.py --only "${{ inputs.app }}" --offline --workdir clones --apk-file "$APK"
       - name: post-publish verification
         if: inputs.published
         env:
