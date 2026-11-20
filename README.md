@@ -127,7 +127,11 @@ as its own small reviewed change. Pin the reusable workflow by full commit
 SHA (as shown); version tags are movable and must not be used as the pin.
 The workflow itself checks out the patuh checker by its reviewed commit, so
 the executed code is immutable too. `tools/validate_caller_chain.py`
-shape-checks a wired release workflow before it is trusted:
+shape-checks a wired release workflow before it is trusted. It is scoped
+to release workflows: a push-gate-only workflow (consistency gate on push,
+no publish job) is correct by design and not a target - running the
+validator on one reports missing chain jobs, which is expected, not a
+defect.
 
     python3 tools/validate_caller_chain.py /path/to/repo/.github/workflows/release.yml
 

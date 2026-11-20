@@ -1,19 +1,28 @@
 #!/usr/bin/env python3
-"""Validate that a caller repo's release workflow wires the patuh gate in
+"""Validate that a caller repo's RELEASE workflow wires the patuh gate in
 the proven shape: the publish job may not run unless the candidate APK byte
-check passed, and nothing publishes automatically.
+check passed.
 
-Usage: python3 tools/validate_caller_chain.py path/to/workflow.yml [more.yml ...]
+Usage: python3 tools/validate_caller_chain.py path/to/release.yml [more.yml ...]
+
+Scope: run this against workflows that publish releases. Push-gate-only
+workflows (a consistency gate on push, no publish job) are correct by
+design without the chain below; running this validator on them reports
+missing chain jobs, which is expected and not a defect.
 
 Checks, per file:
+  - gate jobs pin the full reviewed commit SHA (a tag is mutable)
   - a consistency job calling the pinned release-gate (published: false)
   - the build job needs it
   - a candidate-bytes job calling the gate with candidate_apk_artifact,
     needing the build job
   - the publish job needs candidate-bytes (preventive boundary)
+  - a job referencing needs.X.outputs.Y lists X in its needs
   - a verify job calling the gate with published: true, needing publish
-  - the workflow has no automatic triggers (push/schedule/release): release
-    stays human-dispatched
+
+Notes (informational, never a failure): publish asset provenance that
+static analysis cannot prove (no checkout/download-artifact step).
+Trigger style is an implementation choice and is not checked.
 
 Exit 0 when every file is well-shaped, 1 otherwise.
 """
