@@ -27,6 +27,7 @@ jobs:
       - name: source + release + gallery checks
         run: python3 patuh.py --workdir "$RUNNER_TEMP/patuh-clones"
       - name: APK verification
-        # always on for the weekly run; on demand it follows the input
-        if: inputs.apk || github.event_name == 'schedule'
+        # always on for the weekly run; on demand it follows the input.
+        # always(): one red source finding must not hide the APK results.
+        if: ${{ always() && (inputs.apk || github.event_name == 'schedule') }}
         run: python3 patuh.py --apk --workdir "$RUNNER_TEMP/patuh-clones"
