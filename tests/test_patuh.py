@@ -430,7 +430,8 @@ class CallerChainValidator(unittest.TestCase):
                                          "candidate_apk_artifact": "candidate-apk"}},
             "publish": {"needs": "candidate-bytes",
                         "steps": [{"uses": "actions/download-artifact@v4"},
-                                  {"run": "gh release create v1 x.apk"}]},
+                                  {"env": {"GH_REPO": "o/r"},
+                                   "run": "gh release create v1 x.apk"}]},
             "verify": {"needs": "publish", "uses": gate,
                        "with": {"app": "x", "published": True}},
         }}
@@ -462,7 +463,7 @@ class CallerChainValidator(unittest.TestCase):
         doc = self.good()
         long_cmd = "gh release create v1 " + "--notes " + "x" * 120 + " app.apk"
         doc["jobs"]["publish"]["steps"] = [{"uses": "actions/download-artifact@v4"},
-                                           {"run": long_cmd}]
+                                           {"env": {"GH_REPO": "o/r"}, "run": long_cmd}]
         self.assertEqual(v.problems(self.write(doc))[0], [])
 
     def test_missing_bytes_job_fails(self):
@@ -509,7 +510,8 @@ class CallerChainValidator(unittest.TestCase):
         # provenance either way, so this stays a note.
         from tools import validate_caller_chain as v
         doc = self.good()
-        doc["jobs"]["publish"]["steps"] = [{"run": "gh release create v1 x.apk"}]
+        doc["jobs"]["publish"]["steps"] = [
+            {"env": {"GH_REPO": "o/r"}, "run": "gh release create v1 x.apk"}]
         probs, notes = v.problems(self.write(doc))
         self.assertEqual(probs, [])
         self.assertTrue(any("not statically proven" in n for n in notes))
