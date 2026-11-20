@@ -571,6 +571,18 @@
    "note": "spikes/ and prototypes/ modules are experiments with their own IDs (com.vanipy.saku.synthetic, com.vanipy.saku.storageprobe) and are not checked"
   },
   {
+   "app": "sambung",
+   "repo": "sambung",
+   "kind": "android-app",
+   "module": "android/app",
+   "package_expected": "com.vanipy.sambung",
+   "label_expected": "sambung",
+   "permissions_baseline": [],
+   "license_baseline": "AGPL-3.0",
+   "icon_mode": "family",
+   "baseline_source": "Qualified 2026-11-20 against real source at commit 563f07f9f3270d74d0046a6bf5ebbfb3fc4bca19 (sambung 0.1.0). Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that commit: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
+  },
+  {
    "app": "sanggup",
    "repo": "sanggup",
    "kind": "android-app",
