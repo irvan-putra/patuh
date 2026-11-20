@@ -398,6 +398,14 @@
    "permissions_note": "Rebaselined 2026-11-20 to the actual shipped implementation (kokok e7143def, released as v0.2.1): ACCESS_NETWORK_STATE (normal, install-time) supports the existing network-constrained JobScheduler feed sync required on Android 14; MODIFY_AUDIO_SETTINGS (normal) backs the explicit alarm-volume UI action adjustStreamVolume(STREAM_ALARM, ADJUST_SAME, FLAG_SHOW_UI) - no programmatic volume set; ACTIVITY_RECOGNITION (runtime) powers the optional sleep updates Irvan explicitly requested 2026-11-20 11:12 - off by default, requested only when he enables it, denial keeps it off, on-device only, no mic/camera/location. No new permission grant is implied; this records what already shipped."
   },
   {
+   "app": "konteks",
+   "repo": "konteks",
+   "kind": "web-site",
+   "license_baseline": null,
+   "baseline_source": "Qualified 2026-11-20: registered when first published. The license baseline is seeded from the shipped source at that date (no license file present): it detects FUTURE DRIFT - it is not his approval of the licensing state, and not a legal review.",
+   "notes": "Public research/comparison pages (vanipy.com/konteks/), built at his request 2026-11-20 16:36 to lay out printer, QR and inbox options. Web hygiene and naming checks only; no Android artifacts."
+  },
+  {
    "app": "menit",
    "repo": "menit",
    "kind": "android-app",
