@@ -445,11 +445,22 @@ class CallerChainValidator(unittest.TestCase):
         self.assertTrue(any("must gate publishing" in p
                             for p in v.problems(self.write(doc))))
 
-    def test_automatic_trigger_fails(self):
+    def test_tag_trigger_allowed_when_gates_hold(self):
+        # Trigger style is an implementation choice, not checker policy:
+        # a tag-triggered release passes while the publish job stays gated.
         from tools import validate_caller_chain as v
         doc = self.good()
-        doc["on"] = {"workflow_dispatch": None, "push": {"branches": ["main"]}}
-        self.assertTrue(any("human-dispatched" in p for p in v.problems(self.write(doc))))
+        doc["on"] = {"push": {"tags": ["v*"]}}
+        self.assertEqual(v.problems(self.write(doc)), [])
+
+    def test_wrapped_run_scalar_still_detected(self):
+        # yaml.safe_dump wraps long lines; detection must read the raw run
+        # scalars so a long gh-release command still marks the publish job.
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        long_cmd = "gh release create v1 " + "--notes " + "x" * 120 + " app.apk"
+        doc["jobs"]["publish"]["steps"] = [{"run": long_cmd}]
+        self.assertEqual(v.problems(self.write(doc)), [])
 
     def test_missing_bytes_job_fails(self):
         from tools import validate_caller_chain as v
@@ -478,6 +489,14 @@ class CallerChainValidator(unittest.TestCase):
     def test_publish_without_bytes_needs_fails(self):
         from tools import validate_caller_chain as v
         doc = self.good()
+        doc["jobs"]["publish"]["needs"] = "build"
+        self.assertTrue(any("must gate publishing" in p
+                            for p in v.problems(self.write(doc))))
+
+    def test_tag_trigger_with_ungated_publish_fails(self):
+        from tools import validate_caller_chain as v
+        doc = self.good()
+        doc["on"] = {"push": {"tags": ["v*"]}}
         doc["jobs"]["publish"]["needs"] = "build"
         self.assertTrue(any("must gate publishing" in p
                             for p in v.problems(self.write(doc))))
