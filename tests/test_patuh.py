@@ -143,6 +143,16 @@ class Parsing(unittest.TestCase):
         self.assertEqual(label, "myapp")
         self.assertEqual(icon, "@mipmap/ic_launcher")
 
+    def test_manifest_tools_remove_entries_are_not_permissions(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".xml", delete=False) as f:
+            f.write('<manifest xmlns:tools="http://schemas.android.com/tools">'
+                    '<uses-permission android:name="android.permission.WAKE_LOCK"\n'
+                    '        tools:node="remove" />'
+                    '<uses-permission android:name="android.permission.CAMERA"/>'
+                    '<application android:label="myapp" android:icon="@mipmap/ic_launcher"/></manifest>')
+        perms, label, icon = patuh.manifest_facts(f.name)
+        self.assertEqual(perms, ["android.permission.CAMERA"])
+
 
 class CurrentGallery(unittest.TestCase):
     def test_previous_build_does_not_shadow_available(self):

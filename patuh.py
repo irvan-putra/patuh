@@ -165,6 +165,10 @@ def parse_gradle(path):
 
 def manifest_facts(path):
     text = read(path)
+    # A uses-permission with tools:node="remove" is an instruction to the
+    # manifest merger to DROP a library-contributed permission, not to ship
+    # it; the element may wrap onto a second line before the tools attribute.
+    text = re.sub(r"<uses-permission\b[^>]*tools:node=\"remove\"[^>]*/?>", "", text)
     perms = sorted(set(re.findall(r"uses-permission[^>]*android:name=\"([^\"]+)\"", text)))
     m = re.search(r"android:label=\"([^\"]+)\"", text)
     label = m.group(1) if m else None
