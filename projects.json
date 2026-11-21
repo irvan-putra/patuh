@@ -1,856 +1,875 @@
 {
- "comment": "Registry of projects patuh checks. Baselines pin the state being guarded; drift is reported, never auto-fixed. Entries carrying baseline_source were qualified 2026-11-20 under his approval to enforce family release checks beyond Nada; their per-app permission/license baselines are seeded from the shipped source at that date and detect future drift only - seeding is not approval or security validation, and says so in each entry. Licenses differ per project on purpose - patuh records them and warns on change (relicensing needs his confirmation per repo).",
- "projects": [
-  {
-   "app": "PL101ProjectTemplate",
-   "repo": "PL101ProjectTemplate",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "adaptechid",
-   "repo": "adaptechid",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "aiq",
-   "repo": "aiq",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "animate",
-   "repo": "animate",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "anyam",
-   "repo": "anyam",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "awx",
-   "repo": "awx",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "bedah",
-   "repo": "bedah",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "bidik",
-   "repo": "bidik",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.bidik",
-   "label_expected": "bidik",
-   "permissions_baseline": [
-    "android.permission.FOREGROUND_SERVICE",
-    "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
-    "android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION",
-    "android.permission.INTERNET",
-    "android.permission.POST_NOTIFICATIONS",
-    "android.permission.RECORD_AUDIO"
-   ],
-   "license_baseline": null,
-   "icon_mode": "family",
-   "permissions_note": "MediaProjection foreground-service permission required for the requested screen-recorder feature targeting API34; https://developer.android.com/media/grow/media-projection . RECORD_AUDIO authorized 2026-11-20 by Irvan for optional game-sound and microphone recording options (WhatsApp 11:09:35 and 11:11:20, confirmed 11:13:33), merged in bidik 889745b. Android requires RECORD_AUDIO even for internal game-audio capture via AudioPlaybackCapture, and its consent prompt labels the microphone."
-  },
-  {
-   "app": "bitstarter",
-   "repo": "bitstarter",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "cabang",
-   "repo": "cabang",
-   "kind": "android-app",
-   "module": "android/app",
-   "package_expected": "com.vanipy.cabang",
-   "label_expected": "cabang",
-   "permissions_baseline": [
-    "android.permission.INTERNET"
-   ],
-   "license_baseline": "GPL-3.0",
-   "icon_mode": "family"
-  },
-  {
-   "app": "catat",
-   "repo": "catat",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "daya",
-   "repo": "daya",
-   "kind": "web-site",
-   "license_baseline": "AGPL-3.0",
-   "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
-   "notes": "Deterministic recipe-to-code generator (web). Web hygiene and naming checks only; no Android artifacts."
-  },
-  {
-   "app": "denting",
-   "repo": "denting",
-   "kind": "web-site",
-   "license_baseline": "AGPL-3.0",
-   "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
-   "notes": "Conversational-composing web workshop (local-first). Web hygiene and naming checks only; no Android artifacts."
-  },
-  {
-   "app": "denyut",
-   "repo": "denyut",
-   "kind": "android-app",
-   "module": "android/app",
-   "package_expected": "com.vanipy.denyut",
-   "label_expected": "denyut",
-   "permissions_baseline": [
-    "android.permission.FOREGROUND_SERVICE",
-    "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
-    "android.permission.INTERNET",
-    "android.permission.POST_NOTIFICATIONS"
-   ],
-   "license_baseline": "MIT",
-   "icon_mode": "family"
-  },
-  {
-   "app": "devguide",
-   "repo": "devguide",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "encore",
-   "repo": "encore",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "gitsafescan",
-   "repo": "gitsafescan",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "gotong",
-   "repo": "gotong",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "hackathon",
-   "repo": "hackathon",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "haskell-intro",
-   "repo": "haskell-intro",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "hello-lambda-jakarta",
-   "repo": "hello-lambda-jakarta",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "tindak",
-   "repo": "tindak",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.tindak",
-   "package_note": "Full identity rename intodo -> tindak approved 2026-11-20 16:57 (WhatsApp): user explicitly rejected alias/redirect setups and accepted losing unused config/browser state. Same GitHub repo ID 1454664250, history preserved; migration commit 3fbfc42 moves package, updater, webxdc miniapp (0.4.10) and release artifact prefix (tindak-v*) together. applicationId com.vanipy.tindak means Android treats it as a NEW separate install, not an in-place update of com.vanipy.intodo; same signing key, no pairing-key export (fresh local setup key after install). Old com.vanipy.intodo releases stay published as historical artifacts and do not update to the new package.",
-   "label_expected": "tindak",
-   "permissions_baseline": [
-    "android.permission.FOREGROUND_SERVICE",
-    "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
-    "android.permission.INTERNET",
-    "android.permission.POST_NOTIFICATIONS",
-    "android.permission.RECEIVE_BOOT_COMPLETED",
-    "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
-    "android.permission.REQUEST_INSTALL_PACKAGES"
-   ],
-   "license_baseline": null,
-   "icon_mode": "family"
-  },
-  {
-   "app": "irvan",
-   "repo": "irvan",
-   "kind": "inventory",
-   "source_type": "android-app",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false,
-   "observed_modules": [
-    "android/app"
-   ]
-  },
-  {
-   "app": "irvan-putra",
-   "repo": "irvan-putra",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "irvan-putra.github.io",
-   "repo": "irvan-putra.github.io",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "jejak",
-   "repo": "jejak",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "jin",
-   "repo": "jin",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.jin",
-   "label_expected": "jin",
-   "permissions_baseline": [
-    "android.permission.FOREGROUND_SERVICE",
-    "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
-    "android.permission.INTERNET",
-    "android.permission.POST_NOTIFICATIONS",
-    "android.permission.RECEIVE_BOOT_COMPLETED",
-    "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"
-   ],
-   "license_baseline": null,
-   "icon_mode": "family"
-  },
-  {
-   "app": "jumpa",
-   "repo": "jumpa",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.jumpa",
-   "label_expected": "jumpa",
-   "permissions_baseline": [],
-   "license_baseline": "GPL-3.0",
-   "icon_mode": "family",
-   "baseline_source": "Qualified 2026-11-20 against real source at commit 112c9c7 (jumpa 0.1.0). Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38), and confirmed GPL-3.0 for jumpa specifically (16:32). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission baseline below is seeded from the shipped source at that commit: it detects FUTURE DRIFT from what shipped - it is not his approval of those permissions, and not a security validation. A deliberate baseline edit with his ok is how it changes."
-  },
-  {
-   "app": "kaca",
-   "repo": "kaca",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "kaji",
-   "repo": "kaji",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "kapan",
-   "repo": "kapan",
-   "kind": "web-site",
-   "license_baseline": "AGPL-3.0",
-   "note": "Website (vanipy.com/kapan/ with /jakarta/ and /jogja/ routes); no APK. Checked for README, license baseline, commit author and naming only."
-  },
-  {
-   "app": "kemas",
-   "repo": "kemas",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.kemas",
-   "label_expected": "kemas",
-   "permissions_baseline": [
-    "android.permission.CAMERA"
-   ],
-   "license_baseline": null,
-   "icon_mode": "family"
-  },
-  {
-   "app": "kembang",
-   "repo": "kembang",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "kokok",
-   "repo": "kokok",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.kokok",
-   "label_expected": "kokok",
-   "permissions_baseline": [
-    "android.permission.ACCESS_NETWORK_STATE",
-    "android.permission.ACTIVITY_RECOGNITION",
-    "android.permission.FOREGROUND_SERVICE",
-    "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
-    "android.permission.INTERNET",
-    "android.permission.MODIFY_AUDIO_SETTINGS",
-    "android.permission.POST_NOTIFICATIONS",
-    "android.permission.RECEIVE_BOOT_COMPLETED",
-    "android.permission.REQUEST_INSTALL_PACKAGES",
-    "android.permission.SCHEDULE_EXACT_ALARM",
-    "android.permission.USE_EXACT_ALARM",
-    "android.permission.USE_FULL_SCREEN_INTENT",
-    "android.permission.VIBRATE",
-    "android.permission.WAKE_LOCK"
-   ],
-   "license_baseline": "AGPL-3.0",
-   "icon_mode": "family",
-   "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
-   "notes": "Published releases v0.1.2-v0.1.4 lack checksum assets - a real drift this qualification now surfaces.",
-   "permissions_note": "Rebaselined 2026-11-20 to the actual shipped implementation (kokok e7143def, released as v0.2.1): ACCESS_NETWORK_STATE (normal, install-time) supports the existing network-constrained JobScheduler feed sync required on Android 14; MODIFY_AUDIO_SETTINGS (normal) backs the explicit alarm-volume UI action adjustStreamVolume(STREAM_ALARM, ADJUST_SAME, FLAG_SHOW_UI) - no programmatic volume set; ACTIVITY_RECOGNITION (runtime) powers the optional sleep updates Irvan explicitly requested 2026-11-20 11:12 - off by default, requested only when he enables it, denial keeps it off, on-device only, no mic/camera/location. No new permission grant is implied; this records what already shipped."
-  },
-  {
-   "app": "kunjung",
-   "repo": "kunjung",
-   "kind": "web-site",
-   "license_baseline": null,
-   "baseline_source": "Qualified 2026-11-20: registered when first published. The license baseline is seeded from the shipped source at that date (no license file present): it detects FUTURE DRIFT - it is not his approval of the licensing state, and not a legal review.",
-   "notes": "Public research/comparison pages, built at his request 2026-11-20 16:36 to lay out printer, QR and inbox options. Renamed konteks -> kunjung with his explicit approval 2026-11-20 16:54; same GitHub repo (ID 1465245028), history intact, old konteks URL redirects. Web hygiene and naming checks only; no Android artifacts."
-  },
-  {
-   "app": "menit",
-   "repo": "menit",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.menit",
-   "label_expected": "menit",
-   "permissions_baseline": [
-    "android.permission.PACKAGE_USAGE_STATS"
-   ],
-   "license_baseline": "GPL-3.0",
-   "icon_mode": "family",
-   "extra_modules": [
+  "comment": "Registry of projects patuh checks. Baselines pin the state being guarded; drift is reported, never auto-fixed. Entries carrying baseline_source were qualified 2026-11-20 under his approval to enforce family release checks beyond Nada; their per-app permission/license baselines are seeded from the shipped source at that date and detect future drift only - seeding is not approval or security validation, and says so in each entry. Licenses differ per project on purpose - patuh records them and warns on change (relicensing needs his confirmation per repo).",
+  "projects": [
     {
-     "path": "diagnostic/app",
-     "package_expected": "com.vanipy.menit.diag",
-     "note": "separate diagnostic app with its own signing key; not gallery-listed"
+      "app": "PL101ProjectTemplate",
+      "repo": "PL101ProjectTemplate",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "adaptechid",
+      "repo": "adaptechid",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "aiq",
+      "repo": "aiq",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "animate",
+      "repo": "animate",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "anyam",
+      "repo": "anyam",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "awx",
+      "repo": "awx",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "bedah",
+      "repo": "bedah",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "bidik",
+      "repo": "bidik",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.bidik",
+      "label_expected": "bidik",
+      "permissions_baseline": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION",
+        "android.permission.INTERNET",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family",
+      "permissions_note": "MediaProjection foreground-service permission required for the requested screen-recorder feature targeting API34; https://developer.android.com/media/grow/media-projection . RECORD_AUDIO authorized 2026-11-20 by Irvan for optional game-sound and microphone recording options (WhatsApp 11:09:35 and 11:11:20, confirmed 11:13:33), merged in bidik 889745b. Android requires RECORD_AUDIO even for internal game-audio capture via AudioPlaybackCapture, and its consent prompt labels the microphone."
+    },
+    {
+      "app": "bitstarter",
+      "repo": "bitstarter",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "cabang",
+      "repo": "cabang",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.cabang",
+      "label_expected": "cabang",
+      "permissions_baseline": [
+        "android.permission.INTERNET"
+      ],
+      "license_baseline": "GPL-3.0",
+      "icon_mode": "family"
+    },
+    {
+      "app": "catat",
+      "repo": "catat",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "daya",
+      "repo": "daya",
+      "kind": "web-site",
+      "license_baseline": "AGPL-3.0",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
+      "notes": "Deterministic recipe-to-code generator (web). Web hygiene and naming checks only; no Android artifacts."
+    },
+    {
+      "app": "denting",
+      "repo": "denting",
+      "kind": "web-site",
+      "license_baseline": "AGPL-3.0",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
+      "notes": "Conversational-composing web workshop (local-first). Web hygiene and naming checks only; no Android artifacts."
+    },
+    {
+      "app": "denyut",
+      "repo": "denyut",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.denyut",
+      "label_expected": "denyut",
+      "permissions_baseline": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+        "android.permission.INTERNET",
+        "android.permission.POST_NOTIFICATIONS"
+      ],
+      "license_baseline": "MIT",
+      "icon_mode": "family"
+    },
+    {
+      "app": "devguide",
+      "repo": "devguide",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "encore",
+      "repo": "encore",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "gitsafescan",
+      "repo": "gitsafescan",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "gotong",
+      "repo": "gotong",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "hackathon",
+      "repo": "hackathon",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "haskell-intro",
+      "repo": "haskell-intro",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "hello-lambda-jakarta",
+      "repo": "hello-lambda-jakarta",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "tindak",
+      "repo": "tindak",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.tindak",
+      "package_note": "Full identity rename intodo -> tindak approved 2026-11-20 16:57 (WhatsApp): user explicitly rejected alias/redirect setups and accepted losing unused config/browser state. Same GitHub repo ID 1454664250, history preserved; migration commit 3fbfc42 moves package, updater, webxdc miniapp (0.4.10) and release artifact prefix (tindak-v*) together. applicationId com.vanipy.tindak means Android treats it as a NEW separate install, not an in-place update of com.vanipy.intodo; same signing key, no pairing-key export (fresh local setup key after install). Old com.vanipy.intodo releases stay published as historical artifacts and do not update to the new package.",
+      "label_expected": "tindak",
+      "permissions_baseline": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+        "android.permission.INTERNET",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
+        "android.permission.REQUEST_INSTALL_PACKAGES"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family"
+    },
+    {
+      "app": "irvan",
+      "repo": "irvan",
+      "kind": "inventory",
+      "source_type": "android-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false,
+      "observed_modules": [
+        "android/app"
+      ]
+    },
+    {
+      "app": "irvan-putra",
+      "repo": "irvan-putra",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "irvan-putra.github.io",
+      "repo": "irvan-putra.github.io",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "jejak",
+      "repo": "jejak",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "jin",
+      "repo": "jin",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.jin",
+      "label_expected": "jin",
+      "permissions_baseline": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+        "android.permission.INTERNET",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family"
+    },
+    {
+      "app": "jumpa",
+      "repo": "jumpa",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.jumpa",
+      "label_expected": "jumpa",
+      "permissions_baseline": [],
+      "license_baseline": "GPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Qualified 2026-11-20 against real source at commit 112c9c7 (jumpa 0.1.0). Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38), and confirmed GPL-3.0 for jumpa specifically (16:32). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission baseline below is seeded from the shipped source at that commit: it detects FUTURE DRIFT from what shipped - it is not his approval of those permissions, and not a security validation. A deliberate baseline edit with his ok is how it changes."
+    },
+    {
+      "app": "kaca",
+      "repo": "kaca",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "kaji",
+      "repo": "kaji",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "kapan",
+      "repo": "kapan",
+      "kind": "web-site",
+      "license_baseline": "AGPL-3.0",
+      "note": "Website (vanipy.com/kapan/ with /jakarta/ and /jogja/ routes); no APK. Checked for README, license baseline, commit author and naming only."
+    },
+    {
+      "app": "kemas",
+      "repo": "kemas",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.kemas",
+      "label_expected": "kemas",
+      "permissions_baseline": [
+        "android.permission.CAMERA"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family"
+    },
+    {
+      "app": "kembang",
+      "repo": "kembang",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "kokok",
+      "repo": "kokok",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.kokok",
+      "label_expected": "kokok",
+      "permissions_baseline": [
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.ACTIVITY_RECOGNITION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.INTERNET",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.REQUEST_INSTALL_PACKAGES",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.USE_EXACT_ALARM",
+        "android.permission.USE_FULL_SCREEN_INTENT",
+        "android.permission.VIBRATE",
+        "android.permission.WAKE_LOCK"
+      ],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
+      "notes": "Published releases v0.1.2-v0.1.4 lack checksum assets - a real drift this qualification now surfaces.",
+      "permissions_note": "Rebaselined 2026-11-20 to the actual shipped implementation (kokok e7143def, released as v0.2.1): ACCESS_NETWORK_STATE (normal, install-time) supports the existing network-constrained JobScheduler feed sync required on Android 14; MODIFY_AUDIO_SETTINGS (normal) backs the explicit alarm-volume UI action adjustStreamVolume(STREAM_ALARM, ADJUST_SAME, FLAG_SHOW_UI) - no programmatic volume set; ACTIVITY_RECOGNITION (runtime) powers the optional sleep updates Irvan explicitly requested 2026-11-20 11:12 - off by default, requested only when he enables it, denial keeps it off, on-device only, no mic/camera/location. No new permission grant is implied; this records what already shipped."
+    },
+    {
+      "app": "kunjung",
+      "repo": "kunjung",
+      "kind": "web-site",
+      "license_baseline": null,
+      "baseline_source": "Qualified 2026-11-20: registered when first published. The license baseline is seeded from the shipped source at that date (no license file present): it detects FUTURE DRIFT - it is not his approval of the licensing state, and not a legal review.",
+      "notes": "Public research/comparison pages, built at his request 2026-11-20 16:36 to lay out printer, QR and inbox options. Renamed konteks -> kunjung with his explicit approval 2026-11-20 16:54; same GitHub repo (ID 1465245028), history intact, old konteks URL redirects. Web hygiene and naming checks only; no Android artifacts."
+    },
+    {
+      "app": "menit",
+      "repo": "menit",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.menit",
+      "label_expected": "menit",
+      "permissions_baseline": [
+        "android.permission.PACKAGE_USAGE_STATS"
+      ],
+      "license_baseline": "GPL-3.0",
+      "icon_mode": "family",
+      "extra_modules": [
+        {
+          "path": "diagnostic/app",
+          "package_expected": "com.vanipy.menit.diag",
+          "note": "separate diagnostic app with its own signing key; not gallery-listed"
+        }
+      ]
+    },
+    {
+      "app": "mimpi",
+      "repo": "mimpi",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "minima",
+      "repo": "minima",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "myschoolcampid",
+      "repo": "myschoolcampid",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "nada",
+      "repo": "nada",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.nada",
+      "label_expected": "nada",
+      "permissions_baseline": [],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
+      "notes": "v0.1.0/v0.1.1 releases predate the filename/checksum conventions (generic app-release.apk, no checksum); v0.1.2 release repair already in flight at his direction."
+    },
+    {
+      "app": "naga",
+      "repo": "naga",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "old-visi-web",
+      "repo": "old-visi-web",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "onda",
+      "repo": "onda",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.onda",
+      "label_expected": "onda",
+      "permissions_baseline": [
+        "android.permission.CAMERA",
+        "android.permission.INTERNET",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family"
+    },
+    {
+      "app": "org-ruby",
+      "repo": "org-ruby",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "pandu",
+      "repo": "pandu",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "paper2repo",
+      "repo": "paper2repo",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "patuh",
+      "repo": "patuh",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "picu",
+      "repo": "picu",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "pustaka",
+      "repo": "pustaka",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "pyconapac2024-teaser",
+      "repo": "pyconapac2024-teaser",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "pythonid-10-2026",
+      "repo": "pythonid-10-2026",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "saku",
+      "repo": "saku",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.saku",
+      "label_expected": "saku",
+      "permissions_baseline": [],
+      "license_baseline": null,
+      "icon_mode": "family",
+      "note": "spikes/ and prototypes/ modules are experiments with their own IDs (com.vanipy.saku.synthetic, com.vanipy.saku.storageprobe) and are not checked"
+    },
+    {
+      "app": "sambung",
+      "repo": "sambung",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.sambung",
+      "label_expected": "sambung",
+      "permissions_baseline": [],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Qualified 2026-11-20 against real source at commit 563f07f9f3270d74d0046a6bf5ebbfb3fc4bca19 (sambung 0.1.0). Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that commit: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
+    },
+    {
+      "app": "sanggup",
+      "repo": "sanggup",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.sanggup",
+      "label_expected": "sanggup",
+      "permissions_baseline": [],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
+    },
+    {
+      "app": "sapa",
+      "repo": "sapa",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.sapa",
+      "label_expected": "sapa",
+      "permissions_baseline": [
+        "android.permission.CAMERA",
+        "android.permission.INTERNET"
+      ],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "icon_note": "Has mipmap-anydpi-v26 adaptive wrapper (@color background + @mipmap/ic_launcher_foreground) reviewed 2026-11-17; patuh checks the referenced resources exist and pixel-checks the raster set."
+    },
+    {
+      "app": "sapi",
+      "repo": "sapi",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.sapi",
+      "package_note": "applicationId moved com.irvanputra.sapi -> com.vanipy.sapi with his explicit approval 2026-11-20 16:40 (WhatsApp); he had not installed the app, so no data migration was needed. Local-only tester: talks to a backend on 127.0.0.1 over adb reverse, credentials stay on the computer.",
+      "label_expected": "sapi bca sandbox",
+      "permissions_baseline": [
+        "android.permission.INTERNET"
+      ],
+      "license_baseline": "MIT",
+      "icon_mode": "custom",
+      "icon_note": "No launcher icon resources and no android:icon in the manifest; the system default icon applies. Local tester tool; family icon art not yet made or approved."
+    },
+    {
+      "app": "setup",
+      "repo": "setup",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "signing-key-backups",
+      "repo": "signing-key-backups",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Encrypted backups of app signing keys (ciphertext only; recovery passwords live in the vault). Infrastructure, not an app: no package, permission, license or icon baseline applies. Registered so registry coverage is complete.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "suaka",
+      "repo": "suaka",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "tagih",
+      "repo": "tagih",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.tagih",
+      "label_expected": "tagih",
+      "permissions_baseline": [],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Qualified 2026-11-20 against real source at commit 4e7f61154b52729f5591aa2b15853a509f619787 (tagih 0.1.0). Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that commit: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
+    },
+    {
+      "app": "tampung",
+      "repo": "tampung",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.tampung",
+      "label_expected": "tampung",
+      "permissions_baseline": [
+        "android.permission.INTERNET"
+      ],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
+      "notes": "No release yet; gallery card expected once an APK ships."
+    },
+    {
+      "app": "tangkai",
+      "repo": "tangkai",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "tapak",
+      "repo": "tapak",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "tayang",
+      "repo": "tayang",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "tengok",
+      "repo": "tengok",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.tengok",
+      "label_expected": "tengok",
+      "permissions_baseline": [],
+      "license_baseline": "GPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
+      "notes": "MIDI viewer/game; main branch source trails the latest release tag (0.2.0 vs v0.3.0) - branch state is the owner's to reconcile."
+    },
+    {
+      "app": "tuju",
+      "repo": "tuju",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.tuju",
+      "label_expected": "tuju",
+      "permissions_baseline": [],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
+    },
+    {
+      "app": "tumbuh",
+      "repo": "tumbuh",
+      "kind": "android-app",
+      "module": "android/app",
+      "package_expected": "com.vanipy.tumbuh",
+      "label_expected": "tumbuh",
+      "permissions_baseline": [],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "note": "Android app is consolidated under android/ alongside the unchanged website. Its AGPL license applies to the Android subtree; package and signing identity unchanged.",
+      "license_root": "android"
+    },
+    {
+      "app": "typing",
+      "repo": "typing",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "unggah",
+      "repo": "unggah",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.unggah",
+      "label_expected": "unggah",
+      "permissions_baseline": [
+        "android.permission.INTERNET"
+      ],
+      "license_baseline": null,
+      "icon_mode": "family",
+      "package_note": "Renamed 2026-11-18 with his yes; the old com.vanipy.fae install stays on the phone as a separate app with its own settings.",
+      "icon_note": "Generated by tools/badge_icon.py: in-app rocket launching out of a parcel, version strip, single-density res/drawable/ic_launcher.png, manifest android:icon=@drawable/ic_launcher."
+    },
+    {
+      "app": "unggun",
+      "repo": "unggun",
+      "kind": "inventory",
+      "source_type": "flutter-app",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false,
+      "observed_modules": [
+        "android/app"
+      ]
+    },
+    {
+      "app": "utak",
+      "repo": "utak",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "vault-cli",
+      "repo": "vault-cli",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "app": "vnproject.id",
+      "repo": "vnproject.id",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "simak",
+      "repo": "simak",
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.simak",
+      "label_expected": "simak",
+      "permissions_baseline": [
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.READ_CONTACTS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.USE_EXACT_ALARM"
+      ],
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "baseline_source": "Registered 2026-11-21 when simak 0.1.0 was built at Irvan's request (IDSW companion, WhatsApp 2026-11-21 ~07:03). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines are seeded from the shipped source: they detect FUTURE DRIFT - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
+      "notes": "IDSW 2026 companion. Permissions tie to requested features: reminder notifications/alarms + boot re-arm, on-device contacts check."
     }
-   ]
-  },
-  {
-   "app": "mimpi",
-   "repo": "mimpi",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "minima",
-   "repo": "minima",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "myschoolcampid",
-   "repo": "myschoolcampid",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "nada",
-   "repo": "nada",
-   "kind": "android-app",
-   "module": "android/app",
-   "package_expected": "com.vanipy.nada",
-   "label_expected": "nada",
-   "permissions_baseline": [],
-   "license_baseline": "AGPL-3.0",
-   "icon_mode": "family",
-   "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
-   "notes": "v0.1.0/v0.1.1 releases predate the filename/checksum conventions (generic app-release.apk, no checksum); v0.1.2 release repair already in flight at his direction."
-  },
-  {
-   "app": "naga",
-   "repo": "naga",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "old-visi-web",
-   "repo": "old-visi-web",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "onda",
-   "repo": "onda",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.onda",
-   "label_expected": "onda",
-   "permissions_baseline": [
-    "android.permission.CAMERA",
-    "android.permission.INTERNET",
-    "android.permission.RECORD_AUDIO"
-   ],
-   "license_baseline": null,
-   "icon_mode": "family"
-  },
-  {
-   "app": "org-ruby",
-   "repo": "org-ruby",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "pandu",
-   "repo": "pandu",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "paper2repo",
-   "repo": "paper2repo",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "patuh",
-   "repo": "patuh",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "picu",
-   "repo": "picu",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "pustaka",
-   "repo": "pustaka",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "pyconapac2024-teaser",
-   "repo": "pyconapac2024-teaser",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "pythonid-10-2026",
-   "repo": "pythonid-10-2026",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "saku",
-   "repo": "saku",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.saku",
-   "label_expected": "saku",
-   "permissions_baseline": [],
-   "license_baseline": null,
-   "icon_mode": "family",
-   "note": "spikes/ and prototypes/ modules are experiments with their own IDs (com.vanipy.saku.synthetic, com.vanipy.saku.storageprobe) and are not checked"
-  },
-  {
-   "app": "sambung",
-   "repo": "sambung",
-   "kind": "android-app",
-   "module": "android/app",
-   "package_expected": "com.vanipy.sambung",
-   "label_expected": "sambung",
-   "permissions_baseline": [],
-   "license_baseline": "AGPL-3.0",
-   "icon_mode": "family",
-   "baseline_source": "Qualified 2026-11-20 against real source at commit 563f07f9f3270d74d0046a6bf5ebbfb3fc4bca19 (sambung 0.1.0). Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that commit: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
-  },
-  {
-   "app": "sanggup",
-   "repo": "sanggup",
-   "kind": "android-app",
-   "module": "android/app",
-   "package_expected": "com.vanipy.sanggup",
-   "label_expected": "sanggup",
-   "permissions_baseline": [],
-   "license_baseline": "AGPL-3.0",
-   "icon_mode": "family",
-   "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
-  },
-  {
-   "app": "sapa",
-   "repo": "sapa",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.sapa",
-   "label_expected": "sapa",
-   "permissions_baseline": [
-    "android.permission.CAMERA",
-    "android.permission.INTERNET"
-   ],
-   "license_baseline": "AGPL-3.0",
-   "icon_mode": "family",
-   "icon_note": "Has mipmap-anydpi-v26 adaptive wrapper (@color background + @mipmap/ic_launcher_foreground) reviewed 2026-11-17; patuh checks the referenced resources exist and pixel-checks the raster set."
-  },
-  {
-   "app": "sapi",
-   "repo": "sapi",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.sapi",
-   "package_note": "applicationId moved com.irvanputra.sapi -> com.vanipy.sapi with his explicit approval 2026-11-20 16:40 (WhatsApp); he had not installed the app, so no data migration was needed. Local-only tester: talks to a backend on 127.0.0.1 over adb reverse, credentials stay on the computer.",
-   "label_expected": "sapi bca sandbox",
-   "permissions_baseline": [
-    "android.permission.INTERNET"
-   ],
-   "license_baseline": "MIT",
-   "icon_mode": "custom",
-   "icon_note": "No launcher icon resources and no android:icon in the manifest; the system default icon applies. Local tester tool; family icon art not yet made or approved."
-  },
-  {
-   "app": "setup",
-   "repo": "setup",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "signing-key-backups",
-   "repo": "signing-key-backups",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Encrypted backups of app signing keys (ciphertext only; recovery passwords live in the vault). Infrastructure, not an app: no package, permission, license or icon baseline applies. Registered so registry coverage is complete.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "suaka",
-   "repo": "suaka",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "tagih",
-   "repo": "tagih",
-   "kind": "android-app",
-   "module": "android/app",
-   "package_expected": "com.vanipy.tagih",
-   "label_expected": "tagih",
-   "permissions_baseline": [],
-   "license_baseline": "AGPL-3.0",
-   "icon_mode": "family",
-   "baseline_source": "Qualified 2026-11-20 against real source at commit 4e7f61154b52729f5591aa2b15853a509f619787 (tagih 0.1.0). Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that commit: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
-  },
-  {
-   "app": "tampung",
-   "repo": "tampung",
-   "kind": "android-app",
-   "module": "android/app",
-   "package_expected": "com.vanipy.tampung",
-   "label_expected": "tampung",
-   "permissions_baseline": [
-    "android.permission.INTERNET"
-   ],
-   "license_baseline": "AGPL-3.0",
-   "icon_mode": "family",
-   "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
-   "notes": "No release yet; gallery card expected once an APK ships."
-  },
-  {
-   "app": "tangkai",
-   "repo": "tangkai",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "tapak",
-   "repo": "tapak",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "tayang",
-   "repo": "tayang",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "tengok",
-   "repo": "tengok",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.tengok",
-   "label_expected": "tengok",
-   "permissions_baseline": [],
-   "license_baseline": "GPL-3.0",
-   "icon_mode": "family",
-   "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
-   "notes": "MIDI viewer/game; main branch source trails the latest release tag (0.2.0 vs v0.3.0) - branch state is the owner's to reconcile."
-  },
-  {
-   "app": "tuju",
-   "repo": "tuju",
-   "kind": "android-app",
-   "module": "android/app",
-   "package_expected": "com.vanipy.tuju",
-   "label_expected": "tuju",
-   "permissions_baseline": [],
-   "license_baseline": "AGPL-3.0",
-   "icon_mode": "family",
-   "baseline_source": "Qualified 2026-11-20: Irvan approved making Patuh's release checks required across the app family, explicitly beyond Nada (WhatsApp 2026-11-20 11:38). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change."
-  },
-  {
-   "app": "tumbuh",
-   "repo": "tumbuh",
-   "kind": "android-app",
-   "module": "android/app",
-   "package_expected": "com.vanipy.tumbuh",
-   "label_expected": "tumbuh",
-   "permissions_baseline": [],
-   "license_baseline": "AGPL-3.0",
-   "icon_mode": "family",
-   "note": "Android app is consolidated under android/ alongside the unchanged website. Its AGPL license applies to the Android subtree; package and signing identity unchanged.",
-   "license_root": "android"
-  },
-  {
-   "app": "typing",
-   "repo": "typing",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "unggah",
-   "repo": "unggah",
-   "kind": "android-app",
-   "module": "app",
-   "package_expected": "com.vanipy.unggah",
-   "label_expected": "unggah",
-   "permissions_baseline": [
-    "android.permission.INTERNET"
-   ],
-   "license_baseline": null,
-   "icon_mode": "family",
-   "package_note": "Renamed 2026-11-18 with his yes; the old com.vanipy.fae install stays on the phone as a separate app with its own settings.",
-   "icon_note": "Generated by tools/badge_icon.py: in-app rocket launching out of a parcel, version strip, single-density res/drawable/ic_launcher.png, manifest android:icon=@drawable/ic_launcher."
-  },
-  {
-   "app": "unggun",
-   "repo": "unggun",
-   "kind": "inventory",
-   "source_type": "flutter-app",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false,
-   "observed_modules": [
-    "android/app"
-   ]
-  },
-  {
-   "app": "utak",
-   "repo": "utak",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
-   "app": "vault-cli",
-   "repo": "vault-cli",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "vnproject.id",
-   "repo": "vnproject.id",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  }
- ],
- "inventory_as_of": "2026-11-19",
- "inventory_source": "GitHub owner repository list, including forks and archives",
- "removed_repositories": [
-  {
-   "repo": "tumbuh-app",
-   "canonical_repo": "tumbuh",
-   "reason": "Absent from owner inventory and repository API returns404 after owner removal on2026-11-19. Android source and releases remain in tumbuh/android and canonical releases.",
-   "coverage": "not-current"
-  }
- ]
+  ],
+  "inventory_as_of": "2026-11-19",
+  "inventory_source": "GitHub owner repository list, including forks and archives",
+  "removed_repositories": [
+    {
+      "repo": "tumbuh-app",
+      "canonical_repo": "tumbuh",
+      "reason": "Absent from owner inventory and repository API returns404 after owner removal on2026-11-19. Android source and releases remain in tumbuh/android and canonical releases.",
+      "coverage": "not-current"
+    }
+  ]
 }
