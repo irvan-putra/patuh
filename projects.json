@@ -858,8 +858,8 @@
       ],
       "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
-      "baseline_source": "Registered 2026-11-21 when simak 0.1.0 was built at Irvan's request (IDSW companion, WhatsApp 2026-11-21 ~07:03). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from his standing rules. The permission and license baselines are seeded from the shipped source: they detect FUTURE DRIFT - they are not his approval of those permissions or that license, and not a security validation. A deliberate baseline edit with his ok is how they change.",
-      "notes": "IDSW 2026 companion. Permissions tie to requested features: reminder notifications/alarms + boot re-arm, on-device contacts check."
+      "baseline_source": "Registered 2026-11-21 alongside the initial simak release. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions follow the family rules. The permission and license baselines are seeded from the shipped source: they detect future drift - they are not an approval of those permissions or that license, and not a security validation.",
+      "notes": "IDSW 2026 companion. Permissions tie to features: reminder notifications and alarms with boot re-arm, and the on-device contacts check."
     }
   ],
   "inventory_as_of": "2026-11-19",
