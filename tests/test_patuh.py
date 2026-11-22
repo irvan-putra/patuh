@@ -214,6 +214,22 @@ class Checksums(unittest.TestCase):
 
 
 class RegistryCoverageTests(unittest.TestCase):
+    def test_new_inventory_entries_do_not_seed_baselines(self):
+        registry_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "projects.json")
+        with open(registry_path, encoding="utf-8") as f:
+            projects = json.load(f)["projects"]
+        entries = {p["repo"]: p for p in projects}
+        for name in ("jasa", "naung"):
+            entry = entries[name]
+            self.assertEqual(entry["kind"], "inventory")
+            self.assertEqual(entry["coverage"], "inventory-only")
+            self.assertFalse(set(entry) & {"package_id", "permissions", "license", "icon", "baseline_source"})
+        report = patuh.Report()
+        patuh.check_registry_coverage(report, projects, [{"name": n} for n in entries])
+        self.assertFalse(any(row[1] == patuh.FAIL for row in report.rows))
+        patuh.check_registry_coverage(report, projects, [{"name": "future-unregistered-repo"}])
+        self.assertTrue(any(row[1:3] == (patuh.FAIL, "registry-missing") for row in report.rows))
+
     def test_missing_repo_fails_even_if_other_entries_exist(self):
         r = patuh.Report()
         patuh.check_registry_coverage(r, [{"repo": "tumbuh"}], [{"name": "tumbuh"}, {"name": "new-app"}])

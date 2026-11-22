@@ -860,9 +860,29 @@
       "icon_mode": "family",
       "baseline_source": "Registered 2026-11-21 alongside the initial simak release. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions follow the family rules. The permission and license baselines are seeded from the shipped source: they detect future drift - they are not an approval of those permissions or that license, and not a security validation.",
       "notes": "IDSW 2026 companion. Permissions tie to features: reminder notifications and alarms with boot re-arm, and the on-device contacts check."
+    },
+    {
+      "app": "jasa",
+      "repo": "jasa",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Inventory presence only. No package, permission, license or icon baseline is qualified; app behavior is not checked.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "naung",
+      "repo": "naung",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Inventory presence only. No package, permission, license or icon baseline is qualified; app behavior is not checked.",
+      "fork": false,
+      "archived": false
     }
   ],
-  "inventory_as_of": "2026-11-19",
+  "inventory_as_of": "2026-11-22",
   "inventory_source": "GitHub owner repository list, including forks and archives",
   "removed_repositories": [
     {
