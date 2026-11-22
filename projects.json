@@ -880,6 +880,16 @@
       "coverage_note": "Inventory presence only. No package, permission, license or icon baseline is qualified; app behavior is not checked.",
       "fork": false,
       "archived": false
+    },
+    {
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "app": "skills",
+      "repo": "skills",
+      "fork": false,
+      "archived": false
     }
   ],
   "inventory_as_of": "2026-11-22",
