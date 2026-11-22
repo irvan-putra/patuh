@@ -59,7 +59,7 @@ jobs:
         # Pin the exact reviewed checker commit - a version tag is movable,
         # so a tag here would let the executed patuh.py change under an
         # otherwise immutable caller pin. Advance only by reviewed commits.
-        with: { repository: irvan-putra/patuh, ref: fe1744e946f2a53354a735df837fabac705144cc, path: patuh }
+        with: { repository: irvan-putra/patuh, ref: 56ebd08860cf1d804a88a9d0d4ca73805ad26115, path: patuh }
       - name: check out the caller's exact candidate tree
         uses: actions/checkout@v4
         with: { path: caller-clone }
