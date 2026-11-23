@@ -195,8 +195,9 @@ against or change any repo by itself.
 
 ## Complete repository inventory
 
-The registry represents all 76 current owner repositories observed on 23 November 2026,
-including forks and archived projects. Twenty-eight entries are qualified: twenty-four Android
+The registry represents all 77 current owner repositories as of 23 November 2026: the 76
+in the public listing (including forks and archived projects) plus one private repository
+(signing-key-backups, encrypted key material), marked visibility=private. Twenty-eight entries are qualified: twenty-four Android
 apps and four websites. The Android family grew from the original twelve on 2026-11-20,
 when Irvan approved making these checks required across the app family, explicitly beyond
 Nada (kokok, nada, sanggup, tampung, tengok and tuju qualified that day, plus the daya and
