@@ -1,0 +1,251 @@
+# Old details (pre-2026-11-24 refresh)
+
+Archived on 2026-11-24 before the repo-details refresh. Current details are in
+README.md and the repo metadata.
+
+## About description (before)
+
+Cross-project consistency checker: versions, com.vanipy.* package IDs, permissions, launcher labels, icon-family geometry, releases and gallery catalog agree - reports drift, never modifies projects.
+
+## Website field (before)
+
+(none)
+
+## README.md (before)
+
+```markdown
+# patuh
+
+Cross-project consistency checker for the app family. It catches drift from
+the approved conventions and from each project's own approved baseline.
+It reports; it never modifies a project.
+
+Born 2026-11-17: Tumbuh 0.1.0 shipped with a small floating pill badge while
+the other eleven apps share one rounded-square icon family with a full-width
+numeric version strip. A person caught it on a real launcher. patuh exists so
+a script catches the next one before release.
+
+## What it checks
+
+Per Android app in `projects.json`:
+
+- **Package identity.** `applicationId` matches the project's expected
+  `com.vanipy.*` ID in source (and, with `--apk`, is reported for the built
+  APK). A mismatch is a finding to discuss: changing an applicationId makes
+  Android treat the app as new, so patuh never "fixes" it.
+- **Versions are three numbers, aligned everywhere.** `versionName` in the
+  build file, the release tag (`vX.Y.Z`), the APK filename
+  (`app-vX.Y.Z.apk`), the published checksum, the gallery card, and the
+  version drawn on the icon badge itself (the badge is read character by
+  character with the family's pinned font, so a one-digit-stale badge
+  fails).
+- **Launcher icon: single variant + family geometry** (needs Pillow, pinned).
+  Since 2026-11-23 the family ships exactly one launcher icon: a 192px
+  full-color drawable at `res/drawable/ic_launcher.png`, referenced as
+  `@drawable/ic_launcher` (Simak 0.3.4 is the reference implementation).
+  Density mipmap ladders, `mipmap-anydpi-v26` adaptive XML, monochrome
+  layers, extra qualified launcher drawables, a missing or wrong-size
+  drawable, and a grayscale render are FAILs. Geometry: rounded corner,
+  full-width strip across the bottom 24%, badge text pixels match the
+  version string rendered with the pinned font, art stays inside the
+  round-mask safe circle.
+- **Permissions** in the module's `AndroidManifest.xml` equal the baselined
+  set (menit's usage-stats access, tumbuh's zero permissions, ...). Drift
+  either way is a FAIL.
+- **Launcher label** matches the baselined lowercase name.
+- **Repo hygiene.** Public repo, README, last-commit author. There is no
+  license check: it was removed on 2026-11-24 at the owner's request (it had
+  flagged saku's Apache-2.0 change). The old code and baselines stay in git
+  history.
+- **Naming.** New names contain no L/R and don't start with I. Existing
+  names are grandfathered: violations are warnings.
+- **Gallery agreement.** Every app has a card in kaji's `gallery/apps.json`;
+  card version matches the latest release; card checksum matches the
+  release's checksum. Since 2026-11-23 the trusted checksum is GitHub's own
+  per-asset digest (decided 2026-11-23) - the family no
+  longer publishes `.apk.sha256` sidecars or `SHA256SUMS` files, and
+  sidecars on already-published releases are kept but ignored.
+- With `--apk`: downloads the released APK, verifies its sha256 against the
+  published checksum, and pixel-checks the launcher icon that actually
+  ships.
+
+## Coverage: source configuration vs built APK
+
+Being explicit about where each fact is checked:
+
+| Fact | In source | In the built APK (--apk) |
+|---|---|---|
+| applicationId / com.vanipy.* | yes (build file) | no - compiled manifest decoding is not implemented |
+| versionName | yes (build file) | via tag/filename/badge |
+| permissions | yes (AndroidManifest.xml) | no |
+| launcher label | yes (manifest + strings) | no |
+| single-variant launcher icon, geometry + badge text | yes (res structure + PNG pixels) | yes (packaged PNG + variant scan, incl. obfuscated resource paths) |
+| checksum integrity | n/a | yes (download and hash) |
+| release assets, tag, gallery card | yes (GitHub API) | n/a |
+
+A build step that rewrites the manifest between source and APK would not be
+caught today; that gap is stated, not hidden.
+
+## What it does not check
+
+patuh compares structure, metadata and pixels. It cannot judge that art
+looks right, that an app works, that wording is good, or that an
+adaptive/custom/vector icon renders correctly on a launcher - those stay
+REVIEW items for a human with screenshots, and a green run is not proof an
+icon looks right. A declared custom photo icon is such a declared
+exception. CLEAN only means every check that ran passed; skipped
+and review items are always listed in the summary.
+
+Secret scanning is deliberately not reimplemented here: use
+[gitsafescan](https://github.com/irvan-putra/gitsafescan). Feed/projection
+wording checks live in tindak's `tools/feed-consistency`.
+
+## Usage
+
+```bash
+python3 patuh.py                 # source + release-metadata + gallery checks
+python3 patuh.py --apk           # additionally download APKs, verify checksums, pixel-check packaged icons
+python3 patuh.py --only tumbuh   # one project
+python3 patuh.py --offline       # source checks only (uses clones in --workdir)
+python3 patuh.py --only tumbuh --offline --apk-file app-release.apk
+                                 # pre-publish: byte-check a locally built candidate APK
+python3 patuh.py --json report.json
+```
+
+Requirements: Python 3.8+, git. Icon pixel checks need `pip install
+pillow==12.3.0` and use the pinned `fonts/DejaVuSans-Bold.ttf`
+(sha256-verified on load); without them those checks report SKIP, never a
+silent pass.
+
+Exit code: `0` no FAIL findings, `1` at least one FAIL, `2` usage error.
+
+## Configuration
+
+- `conventions.json` — the shared rules as data, each with its source.
+- `projects.json` — the registry: repo, app module path, expected package
+  ID, label, permission baseline, icon mode
+  (`family`/`adaptive`/`custom`), optional `license_root` for a licensed subtree, and free-text notes for declared
+  exceptions.
+- A repo's own `patuh.json` (see `examples/patuh.json`) overrides registry
+  fields for that repo. Declaring an exception in the repo keeps it next to
+  the code it describes.
+
+A baseline change is a deliberate edit with a commit message, not a side
+effect of running the checker.
+
+## Running in GitHub Actions
+
+`.github/workflows/patuh.yml` runs the checker on demand and weekly
+(Mondays 02:00 UTC, 09:00 WIB) against the whole registry, including the
+APK download/checksum/packaged-icon verification. The weekly schedule was
+approved 2026-11-20; before that the run was manual-only and this README
+was wrong. A red weekly run means drift was found between releases.
+
+## Required gate in an app's release workflow
+
+`.github/workflows/release-gate.yml` is a reusable workflow an app repo
+calls so a release cannot ship past a consistency failure. Wire it per app,
+as its own small reviewed change. Pin the reusable workflow by full commit
+SHA (as shown); version tags are movable and must not be used as the pin.
+The workflow itself checks out the patuh checker by its reviewed commit, so
+the executed code is immutable too. `tools/validate_caller_chain.py`
+shape-checks a wired release workflow before it is trusted. It is scoped
+to release workflows: a push-gate-only workflow (consistency gate on push,
+no publish job) is correct by design and not a target - running the
+validator on one reports missing chain jobs, which is expected, not a
+defect.
+
+    python3 tools/validate_caller_chain.py /path/to/repo/.github/workflows/release.yml
+
+```yaml
+jobs:
+  consistency:
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@6f4b1eec2a8f73348725b7e3698d3e7bca93b890
+    with:
+      app: myapp
+      published: false   # pre-publish gate on the exact tree being released
+  build:
+    needs: consistency
+    # ... build and sign the APK, upload it as an artifact named candidate-apk ...
+  candidate-bytes:
+    needs: build
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@6f4b1eec2a8f73348725b7e3698d3e7bca93b890
+    with:
+      app: myapp
+      published: false
+      candidate_apk_artifact: candidate-apk   # byte-check BEFORE publishing
+  publish:
+    needs: candidate-bytes
+    # ... gh release create ...
+  verify:
+    needs: publish
+    uses: irvan-putra/patuh/.github/workflows/release-gate.yml@6f4b1eec2a8f73348725b7e3698d3e7bca93b890
+    with:
+      app: myapp
+      published: true    # post-publish: verifies the live release + gallery
+```
+
+The gate always checks the caller's checkout at the ref that triggered the
+caller's workflow, never patuh's own tree. The pre-publish gate checks the
+candidate source (package ID, three-number version, lowercase label,
+permission drift, family icon geometry, badge text reading the
+candidate version). It does not judge older releases, so fixing an old
+non-conforming release is never blocked by its own past.
+
+With `candidate_apk_artifact`, the gate also checks the built APK's actual
+bytes before the publish job may run: the packaged launcher icon must carry
+the family badge reading the candidate version, and the candidate's sha256
+is logged for comparison with GitHub's asset digest once published. **This is the
+preventive boundary**: wired before publish, a defect stops the release.
+The post-publish call runs after the release is live and verifies the
+published artifacts (tag format, versioned APK filename, GitHub asset
+digest, gallery card agreement, downloaded-APK sha256, packaged icon pixels); it
+detects anything that still slipped through but cannot unpublish it.
+
+The gate does not replace an app's own build-time checks (signing-certificate
+pinning, aapt badging, tests); it adds the family-consistency layer.
+
+## Scope
+
+This repo checks the projects listed in its own registry. It does not run
+against or change any repo by itself.
+
+## Complete repository inventory
+
+The registry represents all 76 current owner repositories as of 24 November 2026: the 75
+in the public listing (including forks and archived projects) plus one private repository
+(signing-key-backups, encrypted key material), marked visibility=private. Twenty-eight entries are qualified: twenty-four Android
+apps and four websites. The Android family grew from the original twelve on 2026-11-20,
+when the checks became required across the app family, explicitly beyond
+Nada (kokok, nada, sanggup, tampung, tengok and tuju qualified that day, plus the daya and
+denting websites). Their per-app permission baselines are seeded from the shipped
+source at that date and say so in their `baseline_source` notes: a seeded baseline detects
+FUTURE DRIFT from what shipped - seeding is not the owner's approval of those permissions or that
+license, and not a security validation. The family conventions
+themselves (com.vanipy.* IDs, lowercase labels, three-number versions, family icons,
+versioned APK filenames with checksums) come from his standing rules. Seeded baselines
+change only by a deliberate edit with his ok.
+
+The other 48 entries are explicitly `inventory-only`, including naung, jasa, skills,
+kaji, tools and older repositories. Being on this list does not mean a
+project passed checks. Each such entry produces REVIEW, never PASS.
+New package/permission baselines have not been silently approved or invented.
+
+Every online run compares the whole registry with the live, paginated owner repository
+list. A new unregistered repository fails `registry-missing`, even with `--only`.
+An unavailable listing or offline run is SKIP. Removed/renamed entries are REVIEW.
+Removed tumbuh-app is recorded separately with its canonical destination, not as a current
+repository. Its direct URL is unavailable; consolidated Tumbuh source/releases remain. Current supported checks still cover native Android and website hygiene;
+Flutter, other types and unqualified projects need further checker work.
+
+Report status is NOT CLEAN for failures, INCOMPLETE for skips/reviews, WARNINGS for
+warnings alone, and CLEAN only when none of those remain. Historical author metadata
+is not repaired by a correctly attributed new HEAD; the author check inspects HEAD only.
+
+```
+
+## Refresh outcome
+
+The README was already convention-compliant (English, leads with the project,
+honest coverage tables and limits, no personal data), so the refresh made no
+README changes. Website stays empty: patuh has no web version of its own.
