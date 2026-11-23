@@ -735,5 +735,69 @@ class CallerChainValidator(unittest.TestCase):
                             for p in v.problems(self.write(doc))[0]))
 
 
+class ReleaseLinePickTests(unittest.TestCase):
+    """A repo can carry more than one release line; release_tag_prefix keeps
+    checks on the current one (unggun: Flutter 0.1.x vs native 1.0.x)."""
+
+    RELS = [
+        {"tag_name": "v0.1.8", "draft": False, "prerelease": True},
+        {"tag_name": "v0.1.7", "draft": False, "prerelease": True},
+        {"tag_name": "v0.1.6", "draft": True},
+        {"tag_name": "v1.0.2", "draft": False, "prerelease": True},
+    ]
+
+    def test_default_picks_first_non_draft(self):
+        self.assertEqual(patuh.pick_latest_release(self.RELS)["tag_name"], "v0.1.8")
+
+    def test_prefix_keeps_checks_on_the_current_line(self):
+        self.assertEqual(patuh.pick_latest_release(self.RELS, "v1.")["tag_name"], "v1.0.2")
+
+    def test_prefix_with_no_match_returns_none(self):
+        self.assertIsNone(patuh.pick_latest_release(self.RELS, "v2."))
+
+    def test_drafts_are_skipped(self):
+        rels = [{"tag_name": "v9.9.9", "draft": True}] + self.RELS
+        self.assertEqual(patuh.pick_latest_release(rels)["tag_name"], "v0.1.8")
+
+
+class DiscoveryTests(unittest.TestCase):
+    """Discovery diffs the live account against the registry and proposes a
+    tier per new repo. It never enrolls on its own."""
+
+    def test_new_repos_exclude_registered_and_removed(self):
+        projects = [{"repo": "tumbuh"}, {"repo": "unggun"}]
+        removed = [{"repo": "tumbuh-app"}]
+        repos = [{"name": "tumbuh"}, {"name": "unggun"}, {"name": "tumbuh-app"},
+                 {"name": "brand-new"}, {"name": "another-new"}]
+        self.assertEqual(patuh.discovery_new_repos(projects, removed, repos),
+                         ["another-new", "brand-new"])
+
+    def test_nothing_new(self):
+        projects = [{"repo": "tumbuh"}]
+        self.assertEqual(patuh.discovery_new_repos(projects, [], [{"name": "tumbuh"}]), [])
+
+    def test_propose_android_app(self):
+        tier, _ = patuh.propose_coverage({"name": "x"},
+                                         ["app/src/main/AndroidManifest.xml", "README.md"])
+        self.assertEqual(tier, "android-app")
+
+    def test_propose_flutter_app(self):
+        tier, _ = patuh.propose_coverage({"name": "x"}, ["pubspec.yaml", "lib/main.dart"])
+        self.assertEqual(tier, "android-app")
+
+    def test_propose_website(self):
+        tier, _ = patuh.propose_coverage({"name": "x"}, ["index.html", "style.css"])
+        self.assertEqual(tier, "web-site")
+
+    def test_propose_inventory_default(self):
+        tier, _ = patuh.propose_coverage({"name": "x"}, ["notes.md", "data/out.json"])
+        self.assertEqual(tier, "inventory-only")
+
+    def test_propose_archived(self):
+        tier, _ = patuh.propose_coverage({"name": "x", "archived": True},
+                                         ["app/src/main/AndroidManifest.xml"])
+        self.assertEqual(tier, "inventory-only")
+
+
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+        unittest.main(verbosity=2)

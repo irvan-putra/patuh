@@ -802,15 +802,21 @@
     {
       "app": "unggun",
       "repo": "unggun",
-      "kind": "inventory",
-      "source_type": "flutter-app",
-      "coverage": "inventory-only",
-      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-      "fork": true,
-      "archived": false,
-      "observed_modules": [
-        "android/app"
-      ]
+      "kind": "android-app",
+      "module": "native/app",
+      "package_expected": "com.vanipy.unggun",
+      "package_note": "Fork of Obtainium (ImranR98/Obtainium): the native Kotlin recode under native/ keeps the renamed com.vanipy.unggun identity he approved for the fork (2026-11-18); it installs over the superseded Flutter build, same package and signing key.",
+      "label_expected": "unggun",
+      "permissions_baseline": [
+        "android.permission.INTERNET",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.REQUEST_INSTALL_PACKAGES"
+      ],
+      "license_baseline": "GPL-3.0",
+      "icon_mode": "family",
+      "release_tag_prefix": "v1.",
+      "baseline_source": "Qualified 2026-11-23 at his word 'let's include all my repos, unggun shouldn't be exception' (WhatsApp 2026-11-23 13:11). The baseline describes the native recode under native/ (released as 1.0.x prereleases), which superseded the Flutter fork still in the tree (android/, lib/). The permission and license baselines are seeded from the shipped source: they detect FUTURE DRIFT - they are not his approval of those permissions or that license, and not a security validation. GPL-3.0 is retained from upstream Obtainium as the fork requires.",
+      "notes": "Two release lines share the repo: superseded Flutter 0.1.x prereleases and the current native 1.0.x prereleases; release_tag_prefix v1. keeps release checks on the native line. REQUEST_INSTALL_PACKAGES is the updater's core function."
     },
     {
       "app": "utak",
@@ -892,7 +898,7 @@
       "archived": false
     }
   ],
-  "inventory_as_of": "2026-11-22",
+  "inventory_as_of": "2026-11-23",
   "inventory_source": "GitHub owner repository list, including forks and archives",
   "removed_repositories": [
     {

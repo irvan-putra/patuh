@@ -1,0 +1,30 @@
+name: patuh repo discovery
+
+# Daily (09:30 WIB) and on demand: list the account's repositories, diff
+# them against projects.json and keep one issue on this repo up to date
+# with whatever patuh has not enrolled yet, each with a best-guess coverage
+# tier. Discovery reports and proposes only - patuh never enrolls a repo,
+# writes a baseline or adds a gate workflow on its own; Irvan gets the
+# first word on what a new project is (WhatsApp 2026-11-23 13:13). The
+# weekly patuh.yml run stays the loud backstop: an unregistered repo fails
+# registry-missing there.
+on:
+  schedule:
+    # 02:30 UTC = 09:30 WIB
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: python3 tools/discover.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

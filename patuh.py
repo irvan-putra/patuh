@@ -645,25 +645,37 @@ def find_checksum(assets, want_apk, want_sha):
     return None
 
 
-def latest_release(owner, repo):
-    rels = api_get("%s/repos/%s/%s/releases?per_page=5" % (GH_API, owner, repo))
-    for r in rels:
-        if not r.get("draft"):
-            return r
+def pick_latest_release(releases, tag_prefix=None):
+    """Newest non-draft release. tag_prefix keeps checks on one release line
+    when a repo carries several (unggun: the superseded Flutter 0.1.x line
+    sits next to the current native 1.0.x line)."""
+    for r in releases:
+        if r.get("draft"):
+            continue
+        if tag_prefix and not r.get("tag_name", "").startswith(tag_prefix):
+            continue
+        return r
     return None
+
+
+def latest_release(owner, repo, tag_prefix=None):
+    rels = api_get("%s/repos/%s/%s/releases?per_page=100" % (GH_API, owner, repo))
+    return pick_latest_release(rels, tag_prefix)
 
 
 def check_release(rep, proj, conv, gallery_card, verify_downloads, workdir):
     app = proj["app"]
     owner = conv["owner"]
     andr = conv["android"]
+    tag_prefix = proj.get("release_tag_prefix")
     try:
-        rel = latest_release(owner, proj["repo"])
+        rel = latest_release(owner, proj["repo"], tag_prefix)
     except Exception as e:
         rep.add(app, SKIP, "release", "GitHub API error: %s" % e)
         return
     if not rel:
-        rep.add(app, SKIP, "release", "no release yet")
+        rep.add(app, SKIP, "release", "no release yet"
+                + (" on the %s* line" % tag_prefix if tag_prefix else ""))
         return None
     tag = rel["tag_name"]
     m = re.fullmatch(r"v([0-9]+\.[0-9]+\.[0-9]+)", tag)
@@ -671,7 +683,8 @@ def check_release(rep, proj, conv, gallery_card, verify_downloads, workdir):
         rep.add(app, FAIL, "release-tag", "tag %r is not vX.Y.Z" % tag)
         return rel
     version = m.group(1)
-    rep.add(app, PASS, "release-tag", "latest release %s" % tag)
+    rep.add(app, PASS, "release-tag", "latest release %s%s"
+            % (tag, " (%s* line)" % tag_prefix if tag_prefix else ""))
     want_apk = andr["apk_name_pattern"].format(app=app, version=version)
     want_sha = andr["sha256_sidecar"].format(app=app, version=version)
     assets = {a["name"]: a for a in rel.get("assets", [])}
@@ -859,6 +872,33 @@ def check_registry_coverage(rep, projects, repositories):
         rep.add(name, REVIEW, "registry-stale", "registered repository not found in owner listing")
     if current <= registered:
         rep.add("(registry)", PASS, "registry-coverage", "%d owner repositories represented; presence is not qualification" % len(current))
+
+
+def discovery_new_repos(projects, removed, repositories):
+    """Owner repositories the registry does not know: neither registered nor
+    recorded as removed. Discovery reports and proposes; enrollment stays a
+    human decision (Irvan, WhatsApp 2026-11-23 13:13)."""
+    registered = {p["repo"] for p in projects}
+    gone = {r["repo"] for r in removed}
+    return sorted(r["name"] for r in repositories
+                  if r["name"] not in registered and r["name"] not in gone)
+
+
+def propose_coverage(repo, tree_paths):
+    """Best-guess coverage tier for an unregistered repository, from repo
+    metadata and file paths. A proposal for a human, never an enrollment:
+    patuh never writes a baseline or a caller workflow on its own."""
+    if repo.get("archived"):
+        return ("inventory-only",
+                "archived repository; presence watched, nothing qualified")
+    paths = set(tree_paths)
+    if any(p.endswith("src/main/AndroidManifest.xml") for p in paths) or "pubspec.yaml" in paths:
+        return ("android-app",
+                "Android app source present; needs a qualified baseline "
+                "(module, package, label, permissions, license, icon) before any gate")
+    if "index.html" in paths or any(p.endswith(".html") for p in paths):
+        return ("web-site", "HTML pages present; web hygiene and naming checks may fit")
+    return ("inventory-only", "no app or site signals; presence watched, nothing qualified")
 
 
 def check_gallery_coverage(rep, projects, cards, apps_with_release=None):
