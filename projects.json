@@ -1,5 +1,5 @@
 {
-  "comment": "Registry of projects patuh checks. Baselines pin the state being guarded; drift is reported, never auto-fixed. Entries carrying baseline_source were qualified 2026-11-20 when enforcing family release checks beyond Nada was decided; their per-app permission/license baselines are seeded from the shipped source at that date and detect future drift only - seeding is not approval or security validation, and says so in each entry. Licenses differ per project on purpose - patuh records them and warns on change (relicensing needs the owner's confirmation per repo).",
+  "comment": "Registry of projects patuh checks. Baselines pin the state being guarded; drift is reported, never auto-fixed. Entries carrying baseline_source were qualified 2026-11-20 when enforcing family release checks beyond Nada was decided; their per-app permission/license baselines are seeded from the shipped source at that date and detect future drift only - seeding is not approval or security validation, and says so in each entry. The license check was removed 2026-11-24 at the owner's request; license_baseline fields were dropped (they remain in git history).",
   "projects": [
     {
       "app": "PL101ProjectTemplate",
@@ -86,7 +86,6 @@
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.RECORD_AUDIO"
       ],
-      "license_baseline": null,
       "icon_mode": "family",
       "permissions_note": "MediaProjection foreground-service permission required for the requested screen-recorder feature targeting API34; https://developer.android.com/media/grow/media-projection . RECORD_AUDIO authorized 2026-11-20 for optional game-sound and microphone recording options, merged in bidik 889745b. Android requires RECORD_AUDIO even for internal game-audio capture via AudioPlaybackCapture, and its consent prompt labels the microphone."
     },
@@ -110,7 +109,6 @@
       "permissions_baseline": [
         "android.permission.INTERNET"
       ],
-      "license_baseline": "GPL-3.0",
       "icon_mode": "family"
     },
     {
@@ -127,7 +125,6 @@
       "app": "daya",
       "repo": "daya",
       "kind": "web-site",
-      "license_baseline": "AGPL-3.0",
       "baseline_source": "Qualified 2026-11-20 under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change.",
       "notes": "Deterministic recipe-to-code generator (web). Web hygiene and naming checks only; no Android artifacts."
     },
@@ -135,7 +132,6 @@
       "app": "denting",
       "repo": "denting",
       "kind": "web-site",
-      "license_baseline": "AGPL-3.0",
       "baseline_source": "Qualified 2026-11-20 under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change.",
       "notes": "Conversational-composing web workshop (local-first). Web hygiene and naming checks only; no Android artifacts."
     },
@@ -152,7 +148,6 @@
         "android.permission.INTERNET",
         "android.permission.POST_NOTIFICATIONS"
       ],
-      "license_baseline": "MIT",
       "icon_mode": "family"
     },
     {
@@ -242,7 +237,6 @@
         "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
         "android.permission.REQUEST_INSTALL_PACKAGES"
       ],
-      "license_baseline": null,
       "icon_mode": "family"
     },
     {
@@ -303,7 +297,6 @@
         "android.permission.RECEIVE_BOOT_COMPLETED",
         "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"
       ],
-      "license_baseline": null,
       "icon_mode": "family"
     },
     {
@@ -314,7 +307,6 @@
       "package_expected": "com.vanipy.jumpa",
       "label_expected": "jumpa",
       "permissions_baseline": [],
-      "license_baseline": "GPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Qualified 2026-11-20 against real source at commit 112c9c7 (jumpa 0.1.0), under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada; GPL-3.0 was confirmed for jumpa specifically. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission baseline below is seeded from the shipped source at that commit: it detects FUTURE DRIFT from what shipped - it is not the owner's approval of those permissions, and not a security validation. A deliberate, owner-approved baseline edit is how it changes."
     },
@@ -342,7 +334,6 @@
       "app": "kapan",
       "repo": "kapan",
       "kind": "web-site",
-      "license_baseline": "AGPL-3.0",
       "note": "Website (vanipy.com/kapan/ with /jakarta/ and /jogja/ routes); no APK. Checked for README, license baseline, commit author and naming only."
     },
     {
@@ -355,7 +346,6 @@
       "permissions_baseline": [
         "android.permission.CAMERA"
       ],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "license_note": "AGPL-3.0 LICENSE file added intentionally; confirmed 2026-11-23 after patuh flagged the change from the no-license baseline, and the baseline was updated accordingly."
     },
@@ -392,7 +382,6 @@
         "android.permission.VIBRATE",
         "android.permission.WAKE_LOCK"
       ],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Qualified 2026-11-20 under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change.",
       "notes": "Published releases v0.1.2-v0.1.4 lack checksum assets - a real drift this qualification now surfaces.",
@@ -402,7 +391,6 @@
       "app": "kunjung",
       "repo": "kunjung",
       "kind": "web-site",
-      "license_baseline": null,
       "baseline_source": "Qualified 2026-11-20: registered when first published. The license baseline is seeded from the shipped source at that date (no license file present): it detects FUTURE DRIFT - it is not the owner's approval of the licensing state, and not a legal review.",
       "notes": "Public research/comparison pages, built by request 2026-11-20 to lay out printer, QR and inbox options. Renamed konteks -> kunjung by owner decision 2026-11-20; same GitHub repo (ID 1465245028), history intact, old konteks URL redirects. Web hygiene and naming checks only; no Android artifacts."
     },
@@ -416,7 +404,6 @@
       "permissions_baseline": [
         "android.permission.PACKAGE_USAGE_STATS"
       ],
-      "license_baseline": "GPL-3.0",
       "icon_mode": "family",
       "extra_modules": [
         {
@@ -464,7 +451,6 @@
       "package_expected": "com.vanipy.nada",
       "label_expected": "nada",
       "permissions_baseline": [],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Qualified 2026-11-20 under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change.",
       "notes": "v0.1.0/v0.1.1 releases predate the filename/checksum conventions (generic app-release.apk, no checksum); v0.1.2 release repair already in flight by owner direction."
@@ -501,7 +487,6 @@
         "android.permission.INTERNET",
         "android.permission.RECORD_AUDIO"
       ],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "license_note": "AGPL-3.0 LICENSE file added intentionally; confirmed 2026-11-23 after patuh flagged the change from the no-license baseline, and the baseline was updated accordingly."
     },
@@ -593,7 +578,6 @@
       "package_expected": "com.vanipy.saku",
       "label_expected": "saku",
       "permissions_baseline": [],
-      "license_baseline": null,
       "icon_mode": "family",
       "note": "spikes/ and prototypes/ modules are experiments with their own IDs (com.vanipy.saku.synthetic, com.vanipy.saku.storageprobe) and are not checked"
     },
@@ -605,7 +589,6 @@
       "package_expected": "com.vanipy.sambung",
       "label_expected": "sambung",
       "permissions_baseline": [],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Qualified 2026-11-20 against real source at commit 563f07f9f3270d74d0046a6bf5ebbfb3fc4bca19 (sambung 0.1.0), under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that commit: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change."
     },
@@ -617,7 +600,6 @@
       "package_expected": "com.vanipy.sanggup",
       "label_expected": "sanggup",
       "permissions_baseline": [],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Qualified 2026-11-20 under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change."
     },
@@ -632,7 +614,6 @@
         "android.permission.CAMERA",
         "android.permission.INTERNET"
       ],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "icon_note": "Pre-single-variant adaptive wrapper (@color background + @mipmap/ic_launcher_foreground) plus density raster set, reviewed 2026-11-17; expected FAIL under the 2026-11-23 single-variant gate until sapa adopts it."
     },
@@ -647,7 +628,6 @@
       "permissions_baseline": [
         "android.permission.INTERNET"
       ],
-      "license_baseline": "MIT",
       "icon_mode": "family",
       "icon_note": "Family icon adopted 2026-11-23 (chosen from the proposal): single 192px full-color res/drawable/ic_launcher.png, cow head art, 1.0.0 version strip; passes all seven icon pixel checks.",
       "signing": "none",
@@ -692,7 +672,6 @@
       "package_expected": "com.vanipy.tagih",
       "label_expected": "tagih",
       "permissions_baseline": [],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Qualified 2026-11-20 against real source at commit 4e7f61154b52729f5591aa2b15853a509f619787 (tagih 0.1.0), under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that commit: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change."
     },
@@ -706,7 +685,6 @@
       "permissions_baseline": [
         "android.permission.INTERNET"
       ],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Qualified 2026-11-20 under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change.",
       "notes": "No release yet; gallery card expected once an APK ships.",
@@ -751,7 +729,6 @@
       "package_expected": "com.vanipy.tengok",
       "label_expected": "tengok",
       "permissions_baseline": [],
-      "license_baseline": "GPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Qualified 2026-11-20 under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change.",
       "notes": "MIDI viewer/game; main branch source trails the latest release tag (0.2.0 vs v0.3.0) - branch state is the owner's to reconcile."
@@ -764,7 +741,6 @@
       "package_expected": "com.vanipy.tuju",
       "label_expected": "tuju",
       "permissions_baseline": [],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Qualified 2026-11-20 under the family-wide decision of that date: Patuh's release checks are required across the app family, explicitly beyond Nada. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions come from the owner's standing rules. The permission and license baselines below are seeded from the shipped source at that date: they detect FUTURE DRIFT from what shipped - they are not the owner's approval of those permissions or that license, and not a security validation. A deliberate, owner-approved baseline edit is how they change."
     },
@@ -776,7 +752,6 @@
       "package_expected": "com.vanipy.tumbuh",
       "label_expected": "tumbuh",
       "permissions_baseline": [],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "note": "Android app is consolidated under android/ alongside the unchanged website. Its AGPL license applies to the Android subtree; package and signing identity unchanged.",
       "license_root": "android"
@@ -801,7 +776,6 @@
       "permissions_baseline": [
         "android.permission.INTERNET"
       ],
-      "license_baseline": null,
       "icon_mode": "family",
       "package_note": "Current package com.vanipy.unggah approved 2026-11-18; the superseded app was removed from the phone.",
       "icon_note": "Generated by tools/badge_icon.py: in-app rocket launching out of a parcel, version strip, single-density res/drawable/ic_launcher.png, manifest android:icon=@drawable/ic_launcher.",
@@ -821,7 +795,6 @@
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.REQUEST_INSTALL_PACKAGES"
       ],
-      "license_baseline": "GPL-3.0",
       "icon_mode": "family",
       "release_tag_prefix": "v1.",
       "baseline_source": "Qualified 2026-11-23 under the decision of that date that all repos are included, unggun no exception. The baseline describes the native recode under native/ (released as 1.0.x prereleases), which superseded the Flutter fork still in the tree (android/, lib/). The permission and license baselines are seeded from the shipped source: they detect FUTURE DRIFT - they are not the owner's approval of those permissions or that license, and not a security validation. GPL-3.0 is retained from upstream Obtainium as the fork requires.",
@@ -871,7 +844,6 @@
         "android.permission.SCHEDULE_EXACT_ALARM",
         "android.permission.USE_EXACT_ALARM"
       ],
-      "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
       "baseline_source": "Registered 2026-11-21 alongside the initial simak release. Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions follow the family rules. The permission and license baselines are seeded from the shipped source: they detect future drift - they are not an approval of those permissions or that license, and not a security validation.",
       "notes": "IDSW 2026 companion. Permissions tie to features: reminder notifications and alarms with boot re-arm, and the on-device contacts check."

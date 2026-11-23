@@ -15,7 +15,7 @@ What it CAN check (structural, from source metadata and image pixels):
   (rounded corner, full-width bottom strip, badge text equals the version,
   art inside the round-mask safe circle);
   release artifacts and GitHub's asset digests; the gallery catalog agreeing
-  with the releases; repo hygiene (public, LICENSE, README, commit author).
+  with the releases; repo hygiene (public, README, commit author; the license check was removed 2026-11-24 at the owner's request).
 
 What it CANNOT check: that art looks right, that an app works, that wording
 is good, or that an adaptive/custom icon renders correctly on a launcher.
@@ -122,23 +122,6 @@ def find_file(root, *candidates):
 def read(path):
     with open(path, "r", encoding="utf-8", errors="replace") as f:
         return f.read()
-
-
-def detect_license(clone, license_root="."):
-    for name in ("LICENSE", "LICENSE.md", "LICENSE.txt", "COPYING"):
-        p = os.path.join(clone, license_root, name)
-        if os.path.isfile(p):
-            head = read(p)[:400]
-            if "GNU AFFERO GENERAL PUBLIC LICENSE" in head:
-                return "AGPL-3.0"
-            if "GNU GENERAL PUBLIC LICENSE" in head:
-                return "GPL-3.0"
-            if "MIT License" in head or "Permission is hereby granted, free of charge" in head:
-                return "MIT"
-            if "Apache License" in head:
-                return "Apache-2.0"
-            return "other"
-    return None
 
 
 def parse_gradle(path):
@@ -423,13 +406,6 @@ def check_repo_hygiene(rep, proj, clone, conv, offline):
         rep.add(app, FAIL, "readme", "no README")
     else:
         rep.add(app, PASS, "readme", "README present")
-    lic = detect_license(clone, proj.get("license_root", "."))
-    base = proj.get("license_baseline")
-    if lic == base:
-        rep.add(app, PASS, "license", "license %s (as baselined)" % (lic or "absent"))
-    else:
-        rep.add(app, WARN, "license", "license now %s, baseline was %s - relicensing needs his ok"
-                % (lic or "absent", base or "absent"))
     try:
         out = subprocess.run(["git", "-C", clone, "log", "-1", "--format=%an|%ae"],
                              capture_output=True, text=True, check=True).stdout.strip()
@@ -926,7 +902,7 @@ def propose_coverage(repo, tree_paths):
     if any(p.endswith("src/main/AndroidManifest.xml") for p in paths) or "pubspec.yaml" in paths:
         return ("android-app",
                 "Android app source present; needs a qualified baseline "
-                "(module, package, label, permissions, license, icon) before any gate")
+                "(module, package, label, permissions, icon) before any gate")
     if "index.html" in paths or any(p.endswith(".html") for p in paths):
         return ("web-site", "HTML pages present; web hygiene and naming checks may fit")
     return ("inventory-only", "no app or site signals; presence watched, nothing qualified")

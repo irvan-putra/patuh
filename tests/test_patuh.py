@@ -98,22 +98,6 @@ class IconGeometry(unittest.TestCase):
         self.assertFalse(results_by_id(rows)["icon-safe-circle"])
 
 
-class ConsolidatedLicense(unittest.TestCase):
-    def test_nested_license_does_not_relicense_website(self):
-        with tempfile.TemporaryDirectory() as root:
-            os.makedirs(os.path.join(root, "android"))
-            with open(os.path.join(root, "android", "LICENSE"), "w") as f:
-                f.write("GNU AFFERO GENERAL PUBLIC LICENSE")
-            self.assertIsNone(patuh.detect_license(root))
-            self.assertEqual(patuh.detect_license(root, "android"), "AGPL-3.0")
-
-    def test_tumbuh_registry_points_to_consolidated_module(self):
-        with open(os.path.join(os.path.dirname(__file__), "..", "projects.json")) as f:
-            p = next(x for x in json.load(f)["projects"] if x["app"] == "tumbuh")
-        self.assertEqual((p["repo"], p["module"], p["license_root"]),
-                         ("tumbuh", "android/app", "android"))
-
-
 class Parsing(unittest.TestCase):
     def gradle(self, text):
         with tempfile.NamedTemporaryFile("w", suffix=".gradle", delete=False) as f:
@@ -423,7 +407,7 @@ class RegistryShape(unittest.TestCase):
 
     def test_inventory_entries_carry_no_baselines(self):
         baseline_fields = {"module", "package_expected", "label_expected",
-                           "permissions_baseline", "license_baseline", "icon_mode"}
+                           "permissions_baseline", "icon_mode"}
         for p in self.projects():
             if p["kind"] == "inventory":
                 self.assertFalse(baseline_fields & set(p),

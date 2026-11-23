@@ -37,9 +37,10 @@ Per Android app in `projects.json`:
   set (menit's usage-stats access, tumbuh's zero permissions, ...). Drift
   either way is a FAIL.
 - **Launcher label** matches the baselined lowercase name.
-- **Repo hygiene.** Public repo, README, LICENSE file compared against its
-  baseline (licenses differ per project on purpose; a change warns because
-  relicensing needs his confirmation), last-commit author.
+- **Repo hygiene.** Public repo, README, last-commit author. There is no
+  license check: it was removed on 2026-11-24 at the owner's request (it had
+  flagged saku's Apache-2.0 change). The old code and baselines stay in git
+  history.
 - **Naming.** New names contain no L/R and don't start with I. Existing
   names are grandfathered: violations are warnings.
 - **Gallery agreement.** Every app has a card in kaji's `gallery/apps.json`;
@@ -106,7 +107,7 @@ Exit code: `0` no FAIL findings, `1` at least one FAIL, `2` usage error.
 
 - `conventions.json` — the shared rules as data, each with its source.
 - `projects.json` — the registry: repo, app module path, expected package
-  ID, label, permission baseline, license baseline, icon mode
+  ID, label, permission baseline, icon mode
   (`family`/`adaptive`/`custom`), optional `license_root` for a licensed subtree, and free-text notes for declared
   exceptions.
 - A repo's own `patuh.json` (see `examples/patuh.json`) overrides registry
@@ -171,7 +172,7 @@ jobs:
 The gate always checks the caller's checkout at the ref that triggered the
 caller's workflow, never patuh's own tree. The pre-publish gate checks the
 candidate source (package ID, three-number version, lowercase label,
-permission/license drift, family icon geometry, badge text reading the
+permission drift, family icon geometry, badge text reading the
 candidate version). It does not judge older releases, so fixing an old
 non-conforming release is never blocked by its own past.
 
@@ -201,7 +202,7 @@ in the public listing (including forks and archived projects) plus one private r
 apps and four websites. The Android family grew from the original twelve on 2026-11-20,
 when the checks became required across the app family, explicitly beyond
 Nada (kokok, nada, sanggup, tampung, tengok and tuju qualified that day, plus the daya and
-denting websites). Their per-app permission/license baselines are seeded from the shipped
+denting websites). Their per-app permission baselines are seeded from the shipped
 source at that date and say so in their `baseline_source` notes: a seeded baseline detects
 FUTURE DRIFT from what shipped - seeding is not the owner's approval of those permissions or that
 license, and not a security validation. The family conventions
@@ -212,7 +213,7 @@ change only by a deliberate edit with his ok.
 The other 49 entries are explicitly `inventory-only`, including naung, jasa, skills,
 kaji, tools and older repositories. Being on this list does not mean a
 project passed checks. Each such entry produces REVIEW, never PASS.
-New package/permission/license baselines have not been silently approved or invented.
+New package/permission baselines have not been silently approved or invented.
 
 Every online run compares the whole registry with the live, paginated owner repository
 list. A new unregistered repository fails `registry-missing`, even with `--only`.
