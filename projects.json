@@ -667,9 +667,10 @@
       "kind": "inventory",
       "source_type": "repository",
       "coverage": "inventory-only",
-      "coverage_note": "Encrypted backups of app signing keys (ciphertext only; recovery passwords live in the vault). Infrastructure, not an app: no package, permission, license or icon baseline applies. Registered so registry coverage is complete.",
+      "coverage_note": "Private infrastructure repo: GPG-encrypted (AES256) backups of app signing keys, ciphertext only - recovery passwords live in his vault. Created 2026-11-18 during the per-app signing-key setup. Not in the public repo listing patuh checks against; private by design.",
       "fork": false,
-      "archived": false
+      "archived": false,
+      "visibility": "private"
     },
     {
       "app": "suaka",

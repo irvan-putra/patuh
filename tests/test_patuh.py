@@ -213,6 +213,18 @@ class RegistryCoverageTests(unittest.TestCase):
         patuh.check_registry_coverage(r, [{"repo": "tumbuh"}], [{"name": "tumbuh"}])
         self.assertIn("presence is not qualification", r.rows[0][3])
 
+    def test_registered_private_repo_is_not_stale(self):
+        r = patuh.Report()
+        patuh.check_registry_coverage(
+            r, [{"repo": "signing-key-backups", "visibility": "private"}], [])
+        self.assertFalse(any(row[1] == patuh.REVIEW for row in r.rows))
+        self.assertTrue(any(row[2] == "registry-private" for row in r.rows))
+
+    def test_registered_public_repo_missing_is_still_stale(self):
+        r = patuh.Report()
+        patuh.check_registry_coverage(r, [{"repo": "gone-public"}], [])
+        self.assertTrue(any(row[1:3] == (patuh.REVIEW, "registry-stale") for row in r.rows))
+
     def test_skips_reviews_and_warnings_not_clean(self):
         for severity, status in [(patuh.REVIEW, "INCOMPLETE"), (patuh.SKIP, "INCOMPLETE"), (patuh.WARN, "WARNINGS")]:
             r = patuh.Report()

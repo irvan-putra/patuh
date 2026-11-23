@@ -850,11 +850,19 @@ def check_packaged_icon(rep, proj, conv, apk_bytes, version):
 
 def check_registry_coverage(rep, projects, repositories):
     registered = {p["repo"] for p in projects}
+    by_repo = {p["repo"]: p for p in projects}
     current = {r["name"] for r in repositories}
     for name in sorted(current - registered):
         rep.add(name, FAIL, "registry-missing", "owner repository absent from registry")
     for name in sorted(registered - current):
-        rep.add(name, REVIEW, "registry-stale", "registered repository not found in owner listing")
+        if by_repo[name].get("visibility") == "private":
+            # The listing patuh runs against is public-only; a registered
+            # private repository is expected to be absent from it.
+            rep.add(name, INFO, "registry-private",
+                    "private repository, absent from the public listing as expected")
+        else:
+            rep.add(name, REVIEW, "registry-stale",
+                    "registered repository not found in owner listing")
     if current <= registered:
         rep.add("(registry)", PASS, "registry-coverage", "%d owner repositories represented; presence is not qualification" % len(current))
 

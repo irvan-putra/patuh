@@ -56,9 +56,11 @@ def issue_body(rows, overdue=False, sched_runs=None):
             "Patuh found %d repositor%s on the account that are not in its "
             "registry (`projects.json`)." % (len(rows), "y" if len(rows) == 1 else "ies"),
             "",
-            "Discovery reports and proposes only - patuh does not enroll a repo,",
-            "write a baseline or add a gate workflow on its own. Say what each",
-            "project is (or edit `projects.json`) and it gets enrolled.",
+            "Each was auto-registered as `inventory-only` (presence watched, nothing",
+            "qualified - auto-inventory approved 2026-11-23). The proposed tier is a",
+            "suggestion, never an enrollment: say the word (or edit `projects.json`)",
+            "to give one real checks. Discovery never writes baselines or gate",
+            "workflows on its own.",
             "",
             "| repo | proposed tier | why |",
             "| --- | --- | --- |",
@@ -71,7 +73,8 @@ def issue_body(rows, overdue=False, sched_runs=None):
             "Tiers: `android-app` (full source + release + icon gate), `web-site`",
             "(hygiene and naming checks), `inventory-only` (presence watched,",
             "nothing qualified). The weekly patuh run also fails registry-missing",
-            "while any of these stay unregistered.",
+            "The weekly patuh run fails registry-missing for anything that",
+            "stays unregistered.",
             "",
         ]
     else:
@@ -117,6 +120,37 @@ def main():
         tier, reason = patuh.propose_coverage(by_name[name], paths)
         rows.append((name, tier, reason))
         print("unregistered: %s -> proposed %s (%s)" % (name, tier, reason))
+
+    # Auto-inventory tier (his ok, WhatsApp 2026-11-23 14:00): brand-new
+    # repos are auto-registered as inventory-only - presence watched,
+    # nothing qualified. This never writes baselines or gate workflows;
+    # upgrading a tier stays his call. The workflow commits the result.
+    if rows:
+        known = {p["repo"] for p in registry["projects"]}
+        for name, tier, reason in rows:
+            if name in known:
+                continue
+            meta = by_name[name]
+            registry["projects"].append({
+                "app": name,
+                "repo": name,
+                "kind": "inventory",
+                "source_type": "repository",
+                "coverage": "inventory-only",
+                "coverage_note": ("Auto-registered by repo discovery (auto-inventory approved by "
+                                  "Irvan, WhatsApp 2026-11-23 14:00): presence watched, nothing "
+                                  "qualified. Discovery's best guess: %s - %s. Enrolling into real "
+                                  "checks stays his call." % (tier, reason)),
+                "fork": bool(meta.get("fork")),
+                "archived": bool(meta.get("archived")),
+            })
+            print("auto-registered %s as inventory-only" % name)
+        today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
+        registry["inventory_as_of"] = today
+        with open(os.path.join(REPO_DIR, "projects.json"), "w", encoding="utf-8") as f:
+            json.dump(registry, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+        print("projects.json updated for the workflow to commit")
 
     # catch-up: flag when the weekly audit's schedule never fires (his ok,
     # WhatsApp 2026-11-23 13:57, after the first Monday cron silently did
