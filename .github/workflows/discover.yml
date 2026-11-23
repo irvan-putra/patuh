@@ -27,7 +27,7 @@ jobs:
         with: { python-version: "3.12" }
       - run: python3 tools/discover.py
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CADANG_TOKEN || secrets.GITHUB_TOKEN }}
       - name: commit auto-inventory registrations
         run: |
           if git diff --quiet projects.json; then

@@ -17,6 +17,11 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      # CADANG_TOKEN (repo secret) lets the backup-coverage check read the
+      # private cadang repo; falls back to the default token, which cannot,
+      # and that check then reports SKIP instead of passing silently.
+      GITHUB_TOKEN: ${{ secrets.CADANG_TOKEN || secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

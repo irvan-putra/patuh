@@ -38,7 +38,7 @@ def api_write(method, url, payload):
         return json.loads(r.read().decode())
 
 
-def issue_body(rows, overdue=False, sched_runs=None):
+def issue_body(rows, overdue=False, sched_runs=None, missing_backups=None):
     lines = []
     if overdue:
         last = max((r["created_at"] for r in (sched_runs or [])), default=None)
@@ -49,6 +49,16 @@ def issue_body(rows, overdue=False, sched_runs=None):
             "may not be firing. Run it manually meanwhile: Actions -> patuh consistency",
             "check -> Run workflow with apk=true. This flag clears itself once a",
             "scheduled run lands.",
+            "",
+        ]
+    if missing_backups:
+        lines += [
+            "**Keystore backups missing in cadang** (%d app%s): %s."
+            % (len(missing_backups), "" if len(missing_backups) == 1 else "s",
+               ", ".join("`%s`" % a for a in missing_backups)),
+            "Every signed app must have its keystore backup in `cadang` (his",
+            "rule 2026-11-23). Regenerate from the app's Actions-secret",
+            "keystore and commit the ciphertext there.",
             "",
         ]
     if rows:
@@ -170,20 +180,40 @@ def main():
     else:
         print("weekly audit schedule healthy")
 
+    # cadang backup coverage (his rule 2026-11-23 14:20: patuh must not let a
+    # newly keyed app go unbacked-up). cadang is private; without a
+    # cross-repo token this flags nothing and says so.
+    missing_backups = []
+    try:
+        tree = patuh.api_get("%s/repos/%s/cadang/git/trees/HEAD" % (patuh.GH_API, owner))
+        cadang_files = [t["path"] for t in tree.get("tree", []) if t.get("type") == "blob"]
+        for p in registry["projects"]:
+            if p.get("kind") == "android-app" and p.get("signing") != "none":
+                want = p.get("signing_backup", "%s-signing-key-backup.txt" % p["app"])
+                if want not in cadang_files:
+                    missing_backups.append(p["app"])
+        if missing_backups:
+            print("cadang backups MISSING for: %s" % ", ".join(missing_backups))
+    except Exception as e:
+        print("cadang backup coverage not checked (private repo token?): %s" % e)
+
     issues = patuh.api_get("%s/repos/%s/patuh/issues?state=open&per_page=100"
                            % (patuh.GH_API, owner))
     existing = [i for i in issues
                 if i.get("title", "").startswith(ISSUE_TITLE_PREFIX)
                 and "pull_request" not in i]
 
-    if rows or overdue:
+    if rows or overdue or missing_backups:
         parts = []
         if rows:
             parts.append("%d unregistered repositor%s" % (len(rows), "y" if len(rows) == 1 else "ies"))
         if overdue:
             parts.append("weekly audit overdue")
+        if missing_backups:
+            parts.append("%d missing cadang backup%s"
+                         % (len(missing_backups), "" if len(missing_backups) == 1 else "s"))
         title = "%s %s" % (ISSUE_TITLE_PREFIX, ", ".join(parts))
-        body = issue_body(rows, overdue, sched_runs)
+        body = issue_body(rows, overdue, sched_runs, missing_backups)
         if existing:
             issue = existing[0]
             api_write("PATCH", issue["url"], {"title": title, "body": body})

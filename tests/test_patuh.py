@@ -225,6 +225,21 @@ class RegistryCoverageTests(unittest.TestCase):
         patuh.check_registry_coverage(r, [{"repo": "gone-public"}], [])
         self.assertTrue(any(row[1:3] == (patuh.REVIEW, "registry-stale") for row in r.rows))
 
+    def test_backup_coverage_pass_and_missing(self):
+        projects = [
+            {"app": "kemas", "kind": "android-app"},
+            {"app": "unggah", "kind": "android-app", "signing_backup": "fae-signing-key-backup.txt"},
+            {"app": "sapi", "kind": "android-app", "signing": "none"},
+        ]
+        r = patuh.Report()
+        patuh.check_backup_coverage(r, projects, ["kemas-signing-key-backup.txt",
+                                                  "fae-signing-key-backup.txt"])
+        self.assertFalse(any(row[1] == patuh.FAIL for row in r.rows))
+        r2 = patuh.Report()
+        patuh.check_backup_coverage(r2, projects, ["kemas-signing-key-backup.txt"])
+        self.assertTrue(any(row[1:3] == (patuh.FAIL, "backup-missing") and row[0] == "unggah"
+                            for row in r2.rows))
+
     def test_skips_reviews_and_warnings_not_clean(self):
         for severity, status in [(patuh.REVIEW, "INCOMPLETE"), (patuh.SKIP, "INCOMPLETE"), (patuh.WARN, "WARNINGS")]:
             r = patuh.Report()

@@ -848,6 +848,30 @@ def check_packaged_icon(rep, proj, conv, apk_bytes, version):
         rep.add(app, PASS if ok else (SKIP if ok is None else FAIL), "apk-" + cid, msg)
 
 
+
+def check_backup_coverage(rep, projects, cadang_files):
+    """Every enrolled, signed app must have its keystore backup in cadang.
+    His rule 2026-11-23 14:20 (WhatsApp): 'use cadang for all apk we have, and
+    patuh should ensure we don't forget new apk'."""
+    wanted = []
+    for p in projects:
+        if p.get("kind") != "android-app":
+            continue
+        if p.get("signing") == "none":
+            rep.add(p["app"], INFO, "backup", "unsigned app, no keystore backup required")
+            continue
+        wanted.append((p["app"], p.get("signing_backup", "%s-signing-key-backup.txt" % p["app"])))
+    missing = [(a, f) for a, f in wanted if f not in cadang_files]
+    for app, fname in wanted:
+        if fname in cadang_files:
+            rep.add(app, PASS, "backup", "keystore backup %s present in cadang" % fname)
+        else:
+            rep.add(app, FAIL, "backup-missing",
+                    "no keystore backup in cadang (want %s) - regenerate and commit it" % fname)
+    if not missing:
+        rep.add("(cadang)", PASS, "backup-coverage",
+                "all %d signed apps have keystore backups in cadang" % len(wanted))
+
 def check_registry_coverage(rep, projects, repositories):
     registered = {p["repo"] for p in projects}
     by_repo = {p["repo"]: p for p in projects}
@@ -981,6 +1005,14 @@ def main(argv):
             check_registry_coverage(rep, all_projects, repositories)
         except Exception as e:
             rep.add("(registry)", SKIP, "registry-coverage", "live owner inventory not verified: %s" % e)
+        try:
+            tree = api_get("%s/repos/%s/cadang/git/trees/HEAD" % (GH_API, conv["owner"]))
+            cadang_files = [t["path"] for t in tree.get("tree", []) if t.get("type") == "blob"]
+            check_backup_coverage(rep, all_projects, cadang_files)
+        except Exception as e:
+            rep.add("(cadang)", SKIP, "backup-coverage",
+                    "cadang listing unavailable (private repo; set the CADANG_TOKEN "
+                    "repo secret so CI can read it): %s" % e)
     else:
         rep.add("(registry)", SKIP, "registry-coverage", "offline: current owner repositories not verified")
     if not args.offline:
