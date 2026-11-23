@@ -355,8 +355,9 @@
       "permissions_baseline": [
         "android.permission.CAMERA"
       ],
-      "license_baseline": null,
-      "icon_mode": "family"
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "license_note": "AGPL-3.0 LICENSE file added intentionally; he confirmed on WhatsApp 2026-11-23 13:57 after patuh flagged the change from the no-license baseline. Baseline updated with his ok."
     },
     {
       "app": "kembang",
@@ -500,8 +501,9 @@
         "android.permission.INTERNET",
         "android.permission.RECORD_AUDIO"
       ],
-      "license_baseline": null,
-      "icon_mode": "family"
+      "license_baseline": "AGPL-3.0",
+      "icon_mode": "family",
+      "license_note": "AGPL-3.0 LICENSE file added intentionally; he confirmed on WhatsApp 2026-11-23 13:57 after patuh flagged the change from the no-license baseline. Baseline updated with his ok."
     },
     {
       "app": "org-ruby",
