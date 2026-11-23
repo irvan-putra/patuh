@@ -772,5 +772,29 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(tier, "inventory-only")
 
 
+class WeeklyAuditOverdueTests(unittest.TestCase):
+    """The discovery catch-up: a weekly audit with no scheduled run in 7
+    days is overdue; never having fired counts as overdue."""
+
+    NOW = __import__("datetime").datetime(2026, 11, 23, 13, 0,
+                                          tzinfo=__import__("datetime").timezone.utc)
+
+    def test_never_fired_is_overdue(self):
+        self.assertTrue(patuh.weekly_audit_overdue([], self.NOW))
+
+    def test_recent_fire_is_healthy(self):
+        runs = [{"created_at": "2026-11-23T02:00:00Z"}]
+        self.assertFalse(patuh.weekly_audit_overdue(runs, self.NOW))
+
+    def test_stale_fire_is_overdue(self):
+        runs = [{"created_at": "2026-11-16T02:00:00Z"}]
+        self.assertTrue(patuh.weekly_audit_overdue(runs, self.NOW))
+
+    def test_newest_run_decides(self):
+        runs = [{"created_at": "2026-11-16T02:00:00Z"},
+                {"created_at": "2026-11-23T02:00:00Z"}]
+        self.assertFalse(patuh.weekly_audit_overdue(runs, self.NOW))
+
+
 if __name__ == "__main__":
         unittest.main(verbosity=2)

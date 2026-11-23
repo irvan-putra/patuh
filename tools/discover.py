@@ -13,6 +13,7 @@ repo fails registry-missing there.
 Runs daily via .github/workflows/discover.yml and on demand. Needs
 GITHUB_TOKEN with issues:write on this repository.
 """
+import datetime
 import json
 import os
 import sys
@@ -37,30 +38,47 @@ def api_write(method, url, payload):
         return json.loads(r.read().decode())
 
 
-def issue_body(rows):
-    lines = [
-        "Patuh found %d repositor%s on the account that are not in its "
-        "registry (`projects.json`)." % (len(rows), "y" if len(rows) == 1 else "ies"),
-        "",
-        "Discovery reports and proposes only - patuh does not enroll a repo,",
-        "write a baseline or add a gate workflow on its own. Say what each",
-        "project is (or edit `projects.json`) and it gets enrolled.",
-        "",
-        "| repo | proposed tier | why |",
-        "| --- | --- | --- |",
-    ]
-    for name, tier, reason in rows:
-        lines.append("| [%s](https://github.com/irvan-putra/%s) | %s | %s |"
-                     % (name, name, tier, reason))
+def issue_body(rows, overdue=False, sched_runs=None):
+    lines = []
+    if overdue:
+        last = max((r["created_at"] for r in (sched_runs or [])), default=None)
+        lines += [
+            "**Weekly audit overdue**: the `patuh consistency check` workflow has no",
+            "scheduled run in the last 7 days (last: %s). The Monday 09:00 WIB cron"
+            % (last or "never"),
+            "may not be firing. Run it manually meanwhile: Actions -> patuh consistency",
+            "check -> Run workflow with apk=true. This flag clears itself once a",
+            "scheduled run lands.",
+            "",
+        ]
+    if rows:
+        lines += [
+            "Patuh found %d repositor%s on the account that are not in its "
+            "registry (`projects.json`)." % (len(rows), "y" if len(rows) == 1 else "ies"),
+            "",
+            "Discovery reports and proposes only - patuh does not enroll a repo,",
+            "write a baseline or add a gate workflow on its own. Say what each",
+            "project is (or edit `projects.json`) and it gets enrolled.",
+            "",
+            "| repo | proposed tier | why |",
+            "| --- | --- | --- |",
+        ]
+        for name, tier, reason in rows:
+            lines.append("| [%s](https://github.com/irvan-putra/%s) | %s | %s |"
+                         % (name, name, tier, reason))
+        lines += [
+            "",
+            "Tiers: `android-app` (full source + release + icon gate), `web-site`",
+            "(hygiene and naming checks), `inventory-only` (presence watched,",
+            "nothing qualified). The weekly patuh run also fails registry-missing",
+            "while any of these stay unregistered.",
+            "",
+        ]
+    else:
+        lines += ["No unregistered repositories today.", ""]
     lines += [
-        "",
-        "Tiers: `android-app` (full source + release + icon gate), `web-site`",
-        "(hygiene and naming checks), `inventory-only` (presence watched,",
-        "nothing qualified). The weekly patuh run also fails registry-missing",
-        "while any of these stay unregistered.",
-        "",
         "This issue updates itself on the daily discovery run; it closes",
-        "itself when the registry is complete again.",
+        "itself when nothing is flagged any more.",
     ]
     return "\n".join(lines)
 
@@ -100,16 +118,38 @@ def main():
         rows.append((name, tier, reason))
         print("unregistered: %s -> proposed %s (%s)" % (name, tier, reason))
 
+    # catch-up: flag when the weekly audit's schedule never fires (his ok,
+    # WhatsApp 2026-11-23 13:57, after the first Monday cron silently did
+    # not run).
+    now = datetime.datetime.now(datetime.timezone.utc)
+    try:
+        data = patuh.api_get("%s/repos/%s/patuh/actions/workflows/patuh.yml/runs"
+                             "?event=schedule&per_page=5" % patuh.GH_API)
+        sched_runs = data.get("workflow_runs", [])
+    except Exception as e:
+        sched_runs = []
+        print("scheduled-run listing failed: %s" % e)
+    overdue = patuh.weekly_audit_overdue(sched_runs, now)
+    if overdue:
+        last = max((r["created_at"] for r in sched_runs), default=None)
+        print("weekly audit OVERDUE (last scheduled run: %s)" % (last or "never"))
+    else:
+        print("weekly audit schedule healthy")
+
     issues = patuh.api_get("%s/repos/%s/patuh/issues?state=open&per_page=100"
                            % (patuh.GH_API, owner))
     existing = [i for i in issues
                 if i.get("title", "").startswith(ISSUE_TITLE_PREFIX)
                 and "pull_request" not in i]
 
-    if rows:
-        title = "%s %d unregistered repositor%s" % (
-            ISSUE_TITLE_PREFIX, len(rows), "y" if len(rows) == 1 else "ies")
-        body = issue_body(rows)
+    if rows or overdue:
+        parts = []
+        if rows:
+            parts.append("%d unregistered repositor%s" % (len(rows), "y" if len(rows) == 1 else "ies"))
+        if overdue:
+            parts.append("weekly audit overdue")
+        title = "%s %s" % (ISSUE_TITLE_PREFIX, ", ".join(parts))
+        body = issue_body(rows, overdue, sched_runs)
         if existing:
             issue = existing[0]
             api_write("PATCH", issue["url"], {"title": title, "body": body})
@@ -122,7 +162,8 @@ def main():
             api_write("PATCH", extra["url"], {"state": "closed"})
             print("closed duplicate issue #%s" % extra["number"])
     else:
-        print("registry complete: %d owner repositories represented" % len(repositories))
+        print("registry complete: %d owner repositories represented, weekly audit on time"
+              % len(repositories))
         for issue in existing:
             api_write("PATCH", issue["url"], {"state": "closed"})
             print("closed issue #%s - registry complete" % issue["number"])

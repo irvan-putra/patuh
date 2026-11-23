@@ -869,6 +869,20 @@ def discovery_new_repos(projects, removed, repositories):
                   if r["name"] not in registered and r["name"] not in gone)
 
 
+def weekly_audit_overdue(scheduled_runs, now, max_age_days=7):
+    """True when the weekly audit (patuh.yml's Monday schedule) has no
+    scheduled run within max_age_days. Never having fired counts as
+    overdue. scheduled_runs: newest-first list of run dicts with
+    created_at ISO strings. Catch-up approved by Irvan (WhatsApp
+    2026-11-23 13:57) after the first scheduled fire never happened."""
+    import datetime
+    if not scheduled_runs:
+        return True
+    newest = max(r["created_at"] for r in scheduled_runs)
+    ts = datetime.datetime.fromisoformat(newest.replace("Z", "+00:00"))
+    return (now - ts) > datetime.timedelta(days=max_age_days)
+
+
 def propose_coverage(repo, tree_paths):
     """Best-guess coverage tier for an unregistered repository, from repo
     metadata and file paths. A proposal for a human, never an enrollment:
