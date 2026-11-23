@@ -81,7 +81,7 @@ and review items are always listed in the summary.
 
 Secret scanning is deliberately not reimplemented here: use
 [gitsafescan](https://github.com/irvan-putra/gitsafescan). Feed/projection
-wording checks live in intodo's `tools/feed-consistency`.
+wording checks live in tindak's `tools/feed-consistency`.
 
 ## Usage
 

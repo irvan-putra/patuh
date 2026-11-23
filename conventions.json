@@ -28,8 +28,8 @@
     "apk_name_pattern": "{app}-v{version}.apk",
     "apk_name_source": "version in downloadable filenames, early enough not to be truncated",
     "label_lowercase": true,
-    "label_source": "lowercase launcher names, 2026-11-17 (itdapk, cabang, menit, ...)",
-    "checksum_source": "GitHub's per-asset digest (release asset 'digest' field, sha256) is the trusted checksum - Irvan, WhatsApp 2026-11-23 13:54: 'yes, let's trust Github here'. Family releases no longer publish .apk.sha256 sidecars or SHA256SUMS files; sidecars on already-published releases are kept but ignored, never rewritten."
+    "label_source": "lowercase launcher names, 2026-11-17 (tindak, cabang, menit, ...)",
+    "checksum_source": "GitHub's per-asset digest (release asset 'digest' field, sha256) is the trusted checksum (decision 2026-11-23). Family releases no longer publish .apk.sha256 sidecars or SHA256SUMS files; sidecars on already-published releases are kept but ignored, never rewritten."
   },
   "icon_family": {
     "source": "Eleven-app family approved 2026-11-17 ~17:37: rounded-square art, numbers-only full-width version strip across the bottom, readable at launcher size, main symbol left visible. Constants from the shared generator (kemas tools/badge_icon.py).",
