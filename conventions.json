@@ -17,13 +17,13 @@
     "forbid_first_chars": [
       "i"
     ],
-    "source": "Irvan 2026-11-14/15: no L or R letters, no leading I (looks like lowercase L), no people's names, not near big-tech brands. Applies to new names; existing names are grandfathered as warnings."
+    "source": "Decided 2026-11-14/15: no L or R letters, no leading I (looks like lowercase L), no people's names, not near big-tech brands. Applies to new names; existing names are grandfathered as warnings."
   },
   "android": {
     "package_prefix": "com.vanipy.",
     "package_source": "Decision 2026-11-15: all apps migrate to com.vanipy.* (he owns vanipy.com). Changing an applicationId makes Android treat it as a new app, so a mismatch is a finding to discuss, never something to auto-fix.",
     "version_regex": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-    "version_source": "Irvan 2026-11-17 14:33: three numbers everywhere, no r14/S1 labels",
+    "version_source": "Decided 2026-11-17: three numbers everywhere, no r14/S1 labels",
     "release_tag_pattern": "v{version}",
     "apk_name_pattern": "{app}-v{version}.apk",
     "apk_name_source": "version in downloadable filenames, early enough not to be truncated",
@@ -41,7 +41,7 @@
     "pillow_pin": "12.3.0",
     "font_sha256": "d1c3ff99f1e1ce1827a33efd4dad81f40babda06bff9e43bd7591c86662a287b",
     "single_variant": {
-      "source": "Irvan 2026-11-23 (WhatsApp): the app family ships exactly ONE launcher icon variant - a single 192px full-color drawable at res/drawable/ic_launcher.png, referenced as @drawable/ic_launcher. No density mipmap ladder, no mipmap-anydpi-v26 adaptive icon XML, no monochrome layer. Simak 0.3.4 (commit f0b495e) is the reference implementation; earlier baselines (five densities, adaptive wrappers) are superseded.",
+      "source": "Decided 2026-11-23: the app family ships exactly ONE launcher icon variant - a single 192px full-color drawable at res/drawable/ic_launcher.png, referenced as @drawable/ic_launcher. No density mipmap ladder, no mipmap-anydpi-v26 adaptive icon XML, no monochrome layer. Simak 0.3.4 (commit f0b495e) is the reference implementation; earlier baselines (five densities, adaptive wrappers) are superseded.",
       "drawable": "drawable/ic_launcher.png",
       "size_px": 192,
       "full_color_min_chroma": 30,
@@ -51,8 +51,8 @@
   "gallery": {
     "apps_url": "https://raw.githubusercontent.com/irvan-putra/kaji/main/gallery/apps.json",
     "page": "https://vanipy.com/kaji/apk/",
-    "source": "Irvan 2026-11-17 15:19: one page listing every APK with icons and links"
+    "source": "Decided 2026-11-17: one page listing every APK with icons and links"
   },
   "repos_public": true,
-  "repos_public_source": "Irvan 2026-11-16: all my repos should be public"
+  "repos_public_source": "Decided 2026-11-16: all repos should be public"
 }

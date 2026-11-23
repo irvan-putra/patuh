@@ -1,7 +1,7 @@
 # patuh
 
 Cross-project consistency checker for the app family. It catches drift from
-the conventions Irvan approved and from each project's own approved baseline.
+the approved conventions and from each project's own approved baseline.
 It reports; it never modifies a project.
 
 Born 2026-11-17: Tumbuh 0.1.0 shipped with a small floating pill badge while
@@ -45,7 +45,7 @@ Per Android app in `projects.json`:
 - **Gallery agreement.** Every app has a card in kaji's `gallery/apps.json`;
   card version matches the latest release; card checksum matches the
   release's checksum. Since 2026-11-23 the trusted checksum is GitHub's own
-  per-asset digest (Irvan: "yes, let's trust Github here") - the family no
+  per-asset digest (decided 2026-11-23) - the family no
   longer publishes `.apk.sha256` sidecars or `SHA256SUMS` files, and
   sidecars on already-published releases are kept but ignored.
 - With `--apk`: downloads the released APK, verifies its sha256 against the
@@ -199,11 +199,11 @@ The registry represents all 77 current owner repositories as of 23 November 2026
 in the public listing (including forks and archived projects) plus one private repository
 (signing-key-backups, encrypted key material), marked visibility=private. Twenty-eight entries are qualified: twenty-four Android
 apps and four websites. The Android family grew from the original twelve on 2026-11-20,
-when Irvan approved making these checks required across the app family, explicitly beyond
+when the checks became required across the app family, explicitly beyond
 Nada (kokok, nada, sanggup, tampung, tengok and tuju qualified that day, plus the daya and
 denting websites). Their per-app permission/license baselines are seeded from the shipped
 source at that date and say so in their `baseline_source` notes: a seeded baseline detects
-FUTURE DRIFT from what shipped - seeding is not his approval of those permissions or that
+FUTURE DRIFT from what shipped - seeding is not the owner's approval of those permissions or that
 license, and not a security validation. The family conventions
 themselves (com.vanipy.* IDs, lowercase labels, three-number versions, family icons,
 versioned APK filenames with checksums) come from his standing rules. Seeded baselines
