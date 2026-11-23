@@ -228,12 +228,12 @@ class RegistryCoverageTests(unittest.TestCase):
     def test_backup_coverage_pass_and_missing(self):
         projects = [
             {"app": "kemas", "kind": "android-app"},
-            {"app": "unggah", "kind": "android-app", "signing_backup": "fae-signing-key-backup.txt"},
+            {"app": "unggah", "kind": "android-app", "signing_backup": "unggah-signing-key-backup.txt"},
             {"app": "sapi", "kind": "android-app", "signing": "none"},
         ]
         r = patuh.Report()
         patuh.check_backup_coverage(r, projects, ["kemas-signing-key-backup.txt",
-                                                  "fae-signing-key-backup.txt"])
+                                                  "unggah-signing-key-backup.txt"])
         self.assertFalse(any(row[1] == patuh.FAIL for row in r.rows))
         r2 = patuh.Report()
         patuh.check_backup_coverage(r2, projects, ["kemas-signing-key-backup.txt"])
