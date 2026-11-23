@@ -176,6 +176,7 @@ class RegistryCoverageTests(unittest.TestCase):
         with open(registry_path, encoding="utf-8") as f:
             projects = json.load(f)["projects"]
         entries = {p["repo"]: p for p in projects}
+        self.assertNotIn("catat", entries)  # deleted owner repo, 2026-11-24
         for name in ("jasa", "naung"):
             entry = entries[name]
             self.assertEqual(entry["kind"], "inventory")

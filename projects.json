@@ -112,16 +112,6 @@
       "icon_mode": "family"
     },
     {
-      "app": "catat",
-      "repo": "catat",
-      "kind": "inventory",
-      "source_type": "repository",
-      "coverage": "inventory-only",
-      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-      "fork": false,
-      "archived": false
-    },
-    {
       "app": "daya",
       "repo": "daya",
       "kind": "web-site",
