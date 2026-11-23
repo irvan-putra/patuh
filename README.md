@@ -23,12 +23,16 @@ Per Android app in `projects.json`:
   version drawn on the icon badge itself (the badge is read character by
   character with the family's pinned font, so a one-digit-stale badge
   fails).
-- **Launcher icon family geometry** (needs Pillow, pinned): rounded corner,
+- **Launcher icon: single variant + family geometry** (needs Pillow, pinned).
+  Since 2026-11-23 the family ships exactly one launcher icon: a 192px
+  full-color drawable at `res/drawable/ic_launcher.png`, referenced as
+  `@drawable/ic_launcher` (Simak 0.3.4 is the reference implementation).
+  Density mipmap ladders, `mipmap-anydpi-v26` adaptive XML, monochrome
+  layers, extra qualified launcher drawables, a missing or wrong-size
+  drawable, and a grayscale render are FAILs. Geometry: rounded corner,
   full-width strip across the bottom 24%, badge text pixels match the
   version string rendered with the pinned font, art stays inside the
-  round-mask safe circle, all five densities present. An
-  `mipmap-anydpi-v26` adaptive icon is flagged: Android 8+ prefers it over
-  the raster set, which is exactly how the Tumbuh regression shipped.
+  round-mask safe circle.
 - **Permissions** in the module's `AndroidManifest.xml` equal the baselined
   set (menit's usage-stats access, tumbuh's zero permissions, ...). Drift
   either way is a FAIL.
@@ -57,7 +61,7 @@ Being explicit about where each fact is checked:
 | versionName | yes (build file) | via tag/filename/badge |
 | permissions | yes (AndroidManifest.xml) | no |
 | launcher label | yes (manifest + strings) | no |
-| launcher icon geometry + badge text | yes (res PNGs) | yes (packaged PNG, incl. obfuscated resource paths) |
+| single-variant launcher icon, geometry + badge text | yes (res structure + PNG pixels) | yes (packaged PNG + variant scan, incl. obfuscated resource paths) |
 | checksum integrity | n/a | yes (download and hash) |
 | release assets, tag, gallery card | yes (GitHub API) | n/a |
 

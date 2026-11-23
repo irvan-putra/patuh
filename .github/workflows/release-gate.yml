@@ -13,16 +13,18 @@ name: patuh release gate
 # published=false (pre-publish gate): checks the CALLER's checkout at the ref
 # that triggered the caller's workflow - never patuh's own tree or a default
 # branch guess. It verifies package ID, three-number version, lowercase
-# label, permission/license drift, family icon geometry and the badge text
-# reading the candidate version. Release metadata of older releases is not
+# label, permission/license drift, the single-variant launcher icon rule
+# (one 192px full-color drawable; no mipmaps, adaptive XML or monochrome),
+# family icon geometry and the badge text reading the candidate version. Release metadata of older releases is not
 # judged here, so fixing an old non-conforming release is never blocked by
 # its own past.
 #
 # candidate_apk_artifact (optional, pre-publish): name of a workflow
 # artifact the caller uploaded earlier in the same run, containing exactly
 # one APK - the built, not yet published candidate. The gate then also
-# checks the actual bytes: the packaged launcher icon must be the family
-# badge reading the candidate version, and it logs the candidate's sha256
+# checks the actual bytes: the packaged launcher icon must be the single
+# 192px family badge reading the candidate version (extra variants in the
+# APK fail), and it logs the candidate's sha256
 # for comparison with the sidecar the publish step uploads. This is the
 # preventive boundary: wired before the publish job, a defect stops the
 # release. The post-publish verify below can only detect a defect that

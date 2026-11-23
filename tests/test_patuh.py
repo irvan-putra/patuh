@@ -257,6 +257,9 @@ class DrawableIconTests(unittest.TestCase):
             r = patuh.Report()
             patuh.check_icon(r, {"app":"test", "module":"app"}, d, {"icon_family": CONV}, "1.2.3")
             self.assertFalse(any(row[2] == "icon-densities" for row in r.rows))
+            self.assertIn((patuh.PASS, "icon-variants"), [(row[1], row[2]) for row in r.rows])
+            self.assertIn((patuh.PASS, "icon-single"), [(row[1], row[2]) for row in r.rows])
+            self.assertFalse(any(row[1] == patuh.FAIL for row in r.rows))
             self.assertTrue(any(row[2] == "icon-badge-version" for row in r.rows))
 
     def test_manifest_vector_drawable_is_review_not_fail(self):
@@ -270,7 +273,7 @@ class DrawableIconTests(unittest.TestCase):
             (root / "res/drawable/ic_launcher.xml").write_text('<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp"/>')
             r = patuh.Report()
             patuh.check_icon(r, {"app": "test", "module": "app"}, d, {"icon_family": CONV}, "1.2.3")
-            self.assertIn((patuh.REVIEW, "icon-resource"), [(row[1], row[2]) for row in r.rows])
+            self.assertIn((patuh.REVIEW, "icon-single"), [(row[1], row[2]) for row in r.rows])
             self.assertFalse(any(row[1] == patuh.FAIL for row in r.rows))
 
     def test_manifest_drawable_missing_entirely_fails(self):
@@ -281,7 +284,107 @@ class DrawableIconTests(unittest.TestCase):
             (root / "AndroidManifest.xml").write_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android"><application android:icon="@drawable/ic_launcher"/></manifest>')
             r = patuh.Report()
             patuh.check_icon(r, {"app": "test", "module": "app"}, d, {"icon_family": CONV}, "1.2.3")
-            self.assertIn((patuh.FAIL, "icon-resource"), [(row[1], row[2]) for row in r.rows])
+            self.assertIn((patuh.FAIL, "icon-single"), [(row[1], row[2]) for row in r.rows])
+
+@unittest.skipUnless(have_pillow(), "Pillow 12.3.0 not available")
+class SingleVariantIconTests(unittest.TestCase):
+    """The 2026-11-23 convention: exactly one launcher icon - a 192px
+    full-color drawable at res/drawable/ic_launcher.png, referenced as
+    @drawable/ic_launcher. Mipmaps, adaptive XML and monochrome are FAILs."""
+
+    def tree(self, d, manifest_icon="@drawable/ic_launcher"):
+        from pathlib import Path
+        root = Path(d) / "app/src/main"
+        (root / "res/drawable").mkdir(parents=True)
+        (root / "AndroidManifest.xml").write_text(
+            '<manifest xmlns:android="http://schemas.android.com/apk/res/android">'
+            '<application android:icon="%s"/></manifest>' % manifest_icon)
+        make_family_icon("1.2.3").save(root / "res/drawable/ic_launcher.png")
+        return root
+
+    def run_check(self, d):
+        r = patuh.Report()
+        patuh.check_icon(r, {"app": "test", "module": "app"}, d, {"icon_family": CONV}, "1.2.3")
+        return {(row[1], row[2]) for row in r.rows}
+
+    def test_reference_tree_is_fully_green(self):
+        """The simak 0.3.4 shape: single drawable, nothing else."""
+        with tempfile.TemporaryDirectory() as d:
+            self.tree(d)
+            rows = self.run_check(d)
+            self.assertFalse(any(sev == patuh.FAIL for sev, _ in rows), rows)
+            for cid in ("icon-single", "icon-variants", "icon-adaptive",
+                        "icon-monochrome", "icon-resource", "icon-size", "icon-fullcolor"):
+                self.assertIn((patuh.PASS, cid), rows)
+
+    def test_density_mipmap_ladder_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self.tree(d)
+            (root / "res/mipmap-xxxhdpi").mkdir(parents=True)
+            make_family_icon("1.2.3").save(root / "res/mipmap-xxxhdpi/ic_launcher.png")
+            rows = self.run_check(d)
+            self.assertIn((patuh.FAIL, "icon-variants"), rows)
+
+    def test_extra_qualified_drawable_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self.tree(d)
+            (root / "res/drawable-night").mkdir(parents=True)
+            make_family_icon("1.2.3").save(root / "res/drawable-night/ic_launcher.png")
+            rows = self.run_check(d)
+            self.assertIn((patuh.FAIL, "icon-variants"), rows)
+
+    def test_adaptive_xml_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self.tree(d)
+            (root / "res/mipmap-anydpi-v26").mkdir(parents=True)
+            (root / "res/mipmap-anydpi-v26/ic_launcher.xml").write_text(
+                '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">'
+                '<background android:drawable="@drawable/ic_launcher"/>'
+                '<foreground android:drawable="@drawable/ic_launcher"/></adaptive-icon>')
+            rows = self.run_check(d)
+            self.assertIn((patuh.FAIL, "icon-adaptive"), rows)
+
+    def test_monochrome_file_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self.tree(d)
+            make_family_icon("1.2.3").save(root / "res/drawable/ic_launcher_monochrome.png")
+            rows = self.run_check(d)
+            self.assertIn((patuh.FAIL, "icon-monochrome"), rows)
+
+    def test_monochrome_element_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self.tree(d)
+            (root / "res/drawable/ic_launcher.xml").write_text(
+                '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">'
+                '<monochrome android:drawable="@drawable/ic_launcher"/></adaptive-icon>')
+            rows = self.run_check(d)
+            self.assertIn((patuh.FAIL, "icon-monochrome"), rows)
+
+    def test_grayscale_icon_fails_fullcolor(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self.tree(d)
+            gray = make_family_icon("1.2.3").convert("L").convert("RGBA")
+            gray.save(root / "res/drawable/ic_launcher.png")
+            rows = self.run_check(d)
+            self.assertIn((patuh.FAIL, "icon-fullcolor"), rows)
+            self.assertNotIn((patuh.FAIL, "icon-strip"), rows)
+
+    def test_wrong_size_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self.tree(d)
+            make_family_icon("1.2.3").resize((144, 144)).save(root / "res/drawable/ic_launcher.png")
+            rows = self.run_check(d)
+            self.assertIn((patuh.FAIL, "icon-size"), rows)
+
+    def test_mipmap_manifest_ref_fails(self):
+        """Manifest pointing at @mipmap/ic_launcher is the old convention."""
+        with tempfile.TemporaryDirectory() as d:
+            self.tree(d, manifest_icon="@mipmap/ic_launcher")
+            rows = self.run_check(d)
+            self.assertIn((patuh.FAIL, "icon-resource"), rows)
+            # the conforming drawable still gets checked
+            self.assertIn((patuh.PASS, "icon-single"), rows)
+
 
 class GalleryCoverageKinds(unittest.TestCase):
     def test_web_site_projects_skip_apk_gallery_coverage(self):

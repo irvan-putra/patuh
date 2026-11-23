@@ -45,15 +45,15 @@
     "text_size": 0.115,
     "safe_radius": 0.485,
     "corner_radius": 0.2,
-    "densities": {
-      "mdpi": 48,
-      "hdpi": 72,
-      "xhdpi": 96,
-      "xxhdpi": 144,
-      "xxxhdpi": 192
-    },
     "pillow_pin": "12.3.0",
-    "font_sha256": "d1c3ff99f1e1ce1827a33efd4dad81f40babda06bff9e43bd7591c86662a287b"
+    "font_sha256": "d1c3ff99f1e1ce1827a33efd4dad81f40babda06bff9e43bd7591c86662a287b",
+    "single_variant": {
+      "source": "Irvan 2026-11-23 (WhatsApp): the app family ships exactly ONE launcher icon variant - a single 192px full-color drawable at res/drawable/ic_launcher.png, referenced as @drawable/ic_launcher. No density mipmap ladder, no mipmap-anydpi-v26 adaptive icon XML, no monochrome layer. Simak 0.3.4 (commit f0b495e) is the reference implementation; earlier baselines (five densities, adaptive wrappers) are superseded.",
+      "drawable": "drawable/ic_launcher.png",
+      "size_px": 192,
+      "full_color_min_chroma": 30,
+      "full_color_min_fraction": 0.05
+    }
   },
   "gallery": {
     "apps_url": "https://raw.githubusercontent.com/irvan-putra/kaji/main/gallery/apps.json",

@@ -8,9 +8,12 @@ It reports; it never modifies a project.
 What it CAN check (structural, from source metadata and image pixels):
   version alignment across build config, release tag, APK filename, gallery
   card and the icon's version badge; com.vanipy.* package IDs; declared
-  Android permissions vs baseline; launcher label style; launcher-icon
-  geometry of the shared family (rounded corner, full-width bottom strip,
-  badge text equals the version, art inside the round-mask safe circle);
+  Android permissions vs baseline; launcher label style; the single-variant
+  launcher icon rule (exactly one 192px full-color drawable at
+  res/drawable/ic_launcher.png; no density mipmap ladder, no adaptive icon
+  XML, no monochrome layer) and the icon geometry of the shared family
+  (rounded corner, full-width bottom strip, badge text equals the version,
+  art inside the round-mask safe circle);
   release artifacts and their sha256 sidecars; the gallery catalog agreeing
   with the releases; repo hygiene (public, LICENSE, README, commit author).
 
@@ -305,6 +308,24 @@ def icon_pixel_checks(img, version, conv, font_path):
     px = im.load()
     out = []
 
+    # full color: the family ships one full-color drawable; a grayscale or
+    # monochrome render is not it
+    sv = conv.get("single_variant", {})
+    min_chroma = sv.get("full_color_min_chroma", 30)
+    min_frac = sv.get("full_color_min_fraction", 0.05)
+    n_opaque = n_color = 0
+    for yy in range(0, h, 2):
+        for xx in range(0, w, 2):
+            p = px[xx, yy]
+            if p[3] > 200:
+                n_opaque += 1
+                if max(p[0], p[1], p[2]) - min(p[0], p[1], p[2]) > min_chroma:
+                    n_color += 1
+    frac_color = n_color / n_opaque if n_opaque else 0.0
+    out.append((frac_color >= min_frac, "icon-fullcolor",
+                "%.1f%% of opaque pixels are colorful (full-color rule, need >= %.0f%%)"
+                % (frac_color * 100, min_frac * 100)))
+
     # rounded corner: measure first opaque row down the x=1 edge
     y = 0
     while y < h and px[1, y][3] < 10:
@@ -514,73 +535,85 @@ def check_icon(rep, proj, clone, conv, version):
         rep.add(app, REVIEW, "icon-adaptive",
                 "adaptive icon: family style not machine-verifiable - visual review needed")
         return
-    # family mode
-    anydpi = os.path.join(resdir, "mipmap-anydpi-v26")
-    if os.path.isdir(anydpi):
-        # collect available resource names per kind by scanning res/ once
-        available = {"mipmap": set(), "drawable": set(), "color": set()}
-        for d in os.listdir(resdir):
+    # family mode: the single-variant convention (Irvan, WhatsApp 2026-11-23)
+    # ships exactly ONE launcher icon - a 192px full-color PNG at
+    # res/drawable/ic_launcher.png, referenced as @drawable/ic_launcher.
+    # Density mipmap ladders, adaptive-icon XML and monochrome layers are
+    # findings, never optional extras. Reference: simak 0.3.4 (f0b495e).
+    single = conv["icon_family"].get("single_variant", {})
+    want_rel = single.get("drawable", "drawable/ic_launcher.png")
+    want_size = int(single.get("size_px", 192))
+
+    ladder, mono = [], []
+    anydpi_present = False
+    if os.path.isdir(resdir):
+        for d in sorted(os.listdir(resdir)):
             full = os.path.join(resdir, d)
             if not os.path.isdir(full):
                 continue
-            for kind in ("mipmap", "drawable"):
-                if d.startswith(kind):
-                    for f in os.listdir(full):
-                        available[kind].add(os.path.splitext(f)[0])
-        values_dir = os.path.join(resdir, "values")
-        if os.path.isdir(values_dir):
-            for vf in os.listdir(values_dir):
-                if vf.endswith(".xml"):
-                    available["color"] |= set(re.findall(r'<color name="([^"]+)"',
-                                                         read(os.path.join(values_dir, vf))))
-        for fn in os.listdir(anydpi):
-            text = read(os.path.join(anydpi, fn))
-            missing = []
-            for kind, name in re.findall(r"@(mipmap|drawable|color)/([A-Za-z0-9_]+)", text):
-                if name not in available.get(kind, set()):
-                    missing.append("@%s/%s" % (kind, name))
-            if missing:
-                rep.add(app, FAIL, "icon-adaptive-refs", "%s references missing %s" % (fn, missing))
-            else:
-                rep.add(app, WARN, "icon-adaptive-refs",
-                        "%s: adaptive icon present; Android 8+ uses it, not the raster set - "
-                        "references exist but family look needs visual check" % fn)
-    # Follow an actual manifest drawable reference, rather than assuming mipmaps.
+            files = sorted(os.listdir(full))
+            if d == "mipmap-anydpi-v26":
+                anydpi_present = True
+                rep.add(app, FAIL, "icon-adaptive",
+                        "adaptive icon XML in mipmap-anydpi-v26 (%s); the single-variant "
+                        "convention forbids it - delete the dir" % ", ".join(files))
+            elif d.startswith("mipmap-") or d.startswith("drawable-"):
+                hits = [f for f in files if f.startswith("ic_launcher")]
+                if hits:
+                    ladder.append("%s (%s)" % (d, ", ".join(hits)))
+            mono += ["%s/%s" % (d, f) for f in files if "monochrome" in f]
+    for root, _, files in os.walk(resdir):
+        for f in files:
+            if f.endswith(".xml") and "<monochrome" in read(os.path.join(root, f)):
+                mono.append(os.path.relpath(os.path.join(root, f), resdir)
+                            + " (<monochrome> element)")
+    if ladder:
+        rep.add(app, FAIL, "icon-variants",
+                "extra launcher icon variants: %s; only res/%s may ship"
+                % ("; ".join(ladder), want_rel))
+    else:
+        rep.add(app, PASS, "icon-variants", "no density mipmaps or extra launcher drawables")
+    if not anydpi_present:
+        rep.add(app, PASS, "icon-adaptive", "no adaptive icon XML")
+    if mono:
+        rep.add(app, FAIL, "icon-monochrome", "monochrome layer present: %s" % "; ".join(mono))
+    else:
+        rep.add(app, PASS, "icon-monochrome", "no monochrome layer")
+
     manifest = os.path.join(clone, module, "src", "main", "AndroidManifest.xml")
     _, _, icon_ref = manifest_facts(manifest)
-    drawable = re.fullmatch(r"@drawable/([A-Za-z0-9_]+)", icon_ref or "")
-    if drawable:
-        name = drawable.group(1)
-        biggest = os.path.join(resdir, "drawable", name + ".png")
-        vector = os.path.join(resdir, "drawable", name + ".xml")
-        if not os.path.isfile(biggest) and os.path.isfile(vector):
-            rep.add(app, REVIEW, "icon-resource",
-                    "manifest icon is a vector drawable (@drawable/%s) - family geometry not "
-                    "machine-verifiable, visual review on change" % name)
-            return
-        if not os.path.isfile(biggest):
-            rep.add(app, FAIL, "icon-resource", "manifest drawable icon missing: " + str(icon_ref))
-            return
-        rep.add(app, INFO, "icon-resource", "manifest uses single drawable PNG; mipmap-density coverage is not applicable")
+    if icon_ref == "@drawable/ic_launcher":
+        rep.add(app, PASS, "icon-resource", "manifest icon is @drawable/ic_launcher")
     else:
-        densities = conv["icon_family"]["densities"]
-        missing = [d for d in densities
-                   if not os.path.isfile(os.path.join(resdir, "mipmap-" + d, "ic_launcher.png"))]
-        if missing:
-            rep.add(app, FAIL, "icon-densities", "missing ic_launcher.png for %s" % ", ".join(missing))
+        rep.add(app, FAIL, "icon-resource",
+                "manifest android:icon is %s; the single-variant convention wants "
+                "@drawable/ic_launcher" % (icon_ref or "unset"))
+
+    biggest = os.path.join(resdir, "drawable", "ic_launcher.png")
+    vector = os.path.join(resdir, "drawable", "ic_launcher.xml")
+    if not os.path.isfile(biggest):
+        if os.path.isfile(vector):
+            rep.add(app, REVIEW, "icon-single",
+                    "vector drawable ic_launcher.xml ships instead of the 192px PNG - "
+                    "family geometry not machine-verifiable, visual review on change")
         else:
-            rep.add(app, PASS, "icon-densities", "ic_launcher.png in all %d densities" % len(densities))
-        biggest = os.path.join(resdir, "mipmap-xxxhdpi", "ic_launcher.png")
-        if not os.path.isfile(biggest):
-            return
+            rep.add(app, FAIL, "icon-single", "missing res/%s" % want_rel)
+        return
+    rep.add(app, PASS, "icon-single", "res/%s present" % want_rel)
     status = pil()
     if status[0] != "ok":
         rep.add(app, SKIP, "icon-pixels", "Pillow 12.3.0 not available - pixel checks skipped")
         return
     _, Image, _, _ = status
+    img = Image.open(biggest)
+    if img.size == (want_size, want_size):
+        rep.add(app, PASS, "icon-size", "drawable is %dx%d" % (want_size, want_size))
+    else:
+        rep.add(app, FAIL, "icon-size",
+                "drawable is %dx%d, want %dx%d" % (img.size[0], img.size[1], want_size, want_size))
     clean_version = version.replace(" (default)", "") if version else None
     font_path = os.path.join(REPO_DIR, "fonts", "DejaVuSans-Bold.ttf")
-    for ok, cid, msg in icon_pixel_checks(Image.open(biggest), clean_version,
+    for ok, cid, msg in icon_pixel_checks(img, clean_version,
                                           conv["icon_family"], font_path):
         rep.add(app, PASS if ok else (SKIP if ok is None else FAIL), cid, msg)
 
@@ -769,9 +802,17 @@ def check_packaged_icon(rep, proj, conv, apk_bytes, version):
     _, Image, _, _ = status
     z = zipfile.ZipFile(io.BytesIO(apk_bytes))
     names = z.namelist()
-    cand = [n for n in names if re.search(r"mipmap-xxxhdpi[^/]*/ic_launcher\.png$", n)]
-    if not cand:
-        cand = [n for n in names if re.search(r"mipmap-xxhdpi[^/]*/ic_launcher\.png$", n)]
+    # The single-variant convention ships exactly one launcher icon:
+    # res/drawable/ic_launcher.png (192px full color). Any mipmap or
+    # qualified-drawable ic_launcher in the APK is an extra variant.
+    single = [n for n in names if re.search(r"(^|/)drawable/ic_launcher\.png$", n)]
+    extra = [n for n in names if re.search(r"(^|/)(mipmap|drawable)-[^/]*/ic_launcher\.png$", n)]
+    if extra:
+        rep.add(app, FAIL, "apk-icon-variants",
+                "APK ships extra launcher icon variants: %s" % ", ".join(sorted(extra)))
+    elif single:
+        rep.add(app, PASS, "apk-icon-variants", "APK ships only the single drawable launcher icon")
+    cand = single
     if not cand:
         # obfuscated resource paths: fall back to the largest square PNG
         squares = []
@@ -789,12 +830,21 @@ def check_packaged_icon(rep, proj, conv, apk_bytes, version):
             density_pref = [192, 432, 512, 144, 96, 72, 48]
             squares.sort(key=lambda sn: (density_pref.index(sn[0]) if sn[0] in density_pref else 50, -sn[0]))
             cand = [squares[0][1]]
-            rep.add(app, INFO, "apk-icon", "resource paths obfuscated; checking %dpx square PNG %s"
-                    % (squares[0][0], cand[0]))
+            rep.add(app, INFO, "apk-icon",
+                    "resource paths obfuscated; checking %dpx square PNG %s "
+                    "(variant scan not possible on obfuscated paths)" % (squares[0][0], cand[0]))
     if not cand:
         rep.add(app, FAIL, "apk-icon", "no launcher icon found inside APK")
         return
     img = Image.open(io.BytesIO(z.read(cand[0])))
+    if single:
+        want_size = int(conv["icon_family"].get("single_variant", {}).get("size_px", 192))
+        if img.size == (want_size, want_size):
+            rep.add(app, PASS, "apk-icon-size", "packaged drawable is %dx%d" % (want_size, want_size))
+        else:
+            rep.add(app, FAIL, "apk-icon-size",
+                    "packaged drawable is %dx%d, want %dx%d"
+                    % (img.size[0], img.size[1], want_size, want_size))
     font_path = os.path.join(REPO_DIR, "fonts", "DejaVuSans-Bold.ttf")
     for ok, cid, msg in icon_pixel_checks(img, version, conv["icon_family"], font_path):
         rep.add(app, PASS if ok else (SKIP if ok is None else FAIL), "apk-" + cid, msg)

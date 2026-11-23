@@ -632,7 +632,7 @@
       ],
       "license_baseline": "AGPL-3.0",
       "icon_mode": "family",
-      "icon_note": "Has mipmap-anydpi-v26 adaptive wrapper (@color background + @mipmap/ic_launcher_foreground) reviewed 2026-11-17; patuh checks the referenced resources exist and pixel-checks the raster set."
+      "icon_note": "Pre-single-variant adaptive wrapper (@color background + @mipmap/ic_launcher_foreground) plus density raster set, reviewed 2026-11-17; expected FAIL under the 2026-11-23 single-variant gate until sapa adopts it."
     },
     {
       "app": "sapi",
