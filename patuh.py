@@ -14,7 +14,7 @@ What it CAN check (structural, from source metadata and image pixels):
   XML, no monochrome layer) and the icon geometry of the shared family
   (rounded corner, full-width bottom strip, badge text equals the version,
   art inside the round-mask safe circle);
-  release artifacts and their sha256 sidecars; the gallery catalog agreeing
+  release artifacts and GitHub's asset digests; the gallery catalog agreeing
   with the releases; repo hygiene (public, LICENSE, README, commit author).
 
 What it CANNOT check: that art looks right, that an app works, that wording
@@ -618,30 +618,17 @@ def check_icon(rep, proj, clone, conv, version):
         rep.add(app, PASS if ok else (SKIP if ok is None else FAIL), cid, msg)
 
 
-def find_checksum(assets, want_apk, want_sha):
-    """Locate the published checksum for the APK. Two accepted formats:
-    the per-asset sidecar `app-vX.Y.Z.apk.sha256` (hex, possibly followed by
-    the filename) and a sha256sum-format `SHA256SUMS` file listing every
-    asset. Returns (asset_name, sha_hex, format) or None."""
-    if want_sha in assets:
-        try:
-            text = fetch_bytes(assets[want_sha]["browser_download_url"]).decode()
-        except Exception:
-            return None
-        fields = text.split()
-        if fields and re.fullmatch(r"[0-9a-fA-F]{64}", fields[0]):
-            return (want_sha, fields[0].lower(), "sidecar")
-        return None
-    if "SHA256SUMS" in assets:
-        try:
-            text = fetch_bytes(assets["SHA256SUMS"]["browser_download_url"]).decode()
-        except Exception:
-            return None
-        for line in text.splitlines():
-            m = re.match(r"([0-9a-fA-F]{64})\s+\*?(\S+)", line.strip())
-            if m and m.group(2) == want_apk:
-                return ("SHA256SUMS", m.group(1).lower(), "sha256sums")
-        return None
+def asset_digest(asset):
+    """GitHub's server-computed digest for a release asset ("sha256:<hex>").
+
+    The trusted checksum source per Irvan (WhatsApp 2026-11-23 13:54, "yes,
+    let's trust Github here"): the family no longer publishes its own
+    .apk.sha256 sidecars or SHA256SUMS files. Sidecars on already-published
+    releases are kept but ignored - history is not rewritten."""
+    digest = asset.get("digest") or ""
+    algo, _, hexd = digest.partition(":")
+    if algo == "sha256" and re.fullmatch(r"[0-9a-fA-F]{64}", hexd or ""):
+        return hexd.lower()
     return None
 
 
@@ -686,7 +673,6 @@ def check_release(rep, proj, conv, gallery_card, verify_downloads, workdir):
     rep.add(app, PASS, "release-tag", "latest release %s%s"
             % (tag, " (%s* line)" % tag_prefix if tag_prefix else ""))
     want_apk = andr["apk_name_pattern"].format(app=app, version=version)
-    want_sha = andr["sha256_sidecar"].format(app=app, version=version)
     assets = {a["name"]: a for a in rel.get("assets", [])}
     if want_apk in assets:
         rep.add(app, PASS, "release-apk-name", want_apk)
@@ -694,14 +680,13 @@ def check_release(rep, proj, conv, gallery_card, verify_downloads, workdir):
         rep.add(app, FAIL, "release-apk-name", "assets %s; want %s" % (sorted(assets), want_apk))
     else:
         rep.add(app, FAIL, "release-apk-name", "release has no assets; want " + want_apk)
-    sha_declared = None
-    found = find_checksum(assets, want_apk, want_sha)
-    if found:
-        asset_name, sha_declared, fmt = found
-        rep.add(app, PASS, "release-sha256-file", "checksum published as %s (%s)" % (asset_name, fmt))
-    else:
-        rep.add(app, FAIL, "release-sha256-file",
-                "no checksum asset for %s (accepted: %s or a SHA256SUMS line)" % (want_apk, want_sha))
+    sha_declared = asset_digest(assets.get(want_apk) or {})
+    if sha_declared:
+        rep.add(app, PASS, "release-digest",
+                "checksum from GitHub's asset digest (family sidecars retired 2026-11-23)")
+    elif want_apk in assets:
+        rep.add(app, FAIL, "release-digest",
+                "GitHub reports no sha256 digest for %s" % want_apk)
     if gallery_card is not None:
         cv = gallery_card.get("version")
         if cv == version:

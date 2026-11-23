@@ -25,7 +25,7 @@ name: patuh release gate
 # checks the actual bytes: the packaged launcher icon must be the single
 # 192px family badge reading the candidate version (extra variants in the
 # APK fail), and it logs the candidate's sha256
-# for comparison with the sidecar the publish step uploads. This is the
+# for comparison with GitHub's asset digest once published. This is the
 # preventive boundary: wired before the publish job, a defect stops the
 # release. The post-publish verify below can only detect a defect that
 # already shipped.

@@ -44,9 +44,10 @@ Per Android app in `projects.json`:
   names are grandfathered: violations are warnings.
 - **Gallery agreement.** Every app has a card in kaji's `gallery/apps.json`;
   card version matches the latest release; card checksum matches the
-  release's published checksum. Two checksum formats are accepted, both in
-  approved use: the per-asset `app-vX.Y.Z.apk.sha256` sidecar and a
-  sha256sum-format `SHA256SUMS` file (intodo's format).
+  release's checksum. Since 2026-11-23 the trusted checksum is GitHub's own
+  per-asset digest (Irvan: "yes, let's trust Github here") - the family no
+  longer publishes `.apk.sha256` sidecars or `SHA256SUMS` files, and
+  sidecars on already-published releases are kept but ignored.
 - With `--apk`: downloads the released APK, verifies its sha256 against the
   published checksum, and pixel-checks the launcher icon that actually
   ships.
@@ -177,11 +178,11 @@ non-conforming release is never blocked by its own past.
 With `candidate_apk_artifact`, the gate also checks the built APK's actual
 bytes before the publish job may run: the packaged launcher icon must carry
 the family badge reading the candidate version, and the candidate's sha256
-is logged for comparison with the published sidecar. **This is the
+is logged for comparison with GitHub's asset digest once published. **This is the
 preventive boundary**: wired before publish, a defect stops the release.
 The post-publish call runs after the release is live and verifies the
-published artifacts (tag format, versioned APK filename, checksum asset,
-gallery card agreement, downloaded-APK sha256, packaged icon pixels); it
+published artifacts (tag format, versioned APK filename, GitHub asset
+digest, gallery card agreement, downloaded-APK sha256, packaged icon pixels); it
 detects anything that still slipped through but cannot unpublish it.
 
 The gate does not replace an app's own build-time checks (signing-certificate
@@ -194,9 +195,9 @@ against or change any repo by itself.
 
 ## Complete repository inventory
 
-The registry represents all 68 current owner repositories observed on 19 November 2026,
-including forks and archived projects. Twenty-one entries are qualified: eighteen Android
-apps and three websites. The Android family grew from the original twelve on 2026-11-20,
+The registry represents all 76 current owner repositories observed on 23 November 2026,
+including forks and archived projects. Twenty-eight entries are qualified: twenty-four Android
+apps and four websites. The Android family grew from the original twelve on 2026-11-20,
 when Irvan approved making these checks required across the app family, explicitly beyond
 Nada (kokok, nada, sanggup, tampung, tengok and tuju qualified that day, plus the daya and
 denting websites). Their per-app permission/license baselines are seeded from the shipped
@@ -207,9 +208,8 @@ themselves (com.vanipy.* IDs, lowercase labels, three-number versions, family ic
 versioned APK filenames with checksums) come from his standing rules. Seeded baselines
 change only by a deliberate edit with his ok.
 
-The other 47 entries are explicitly `inventory-only`, including Unggun (Flutter, checker
-unsupported), sapi (a personal sandbox tester outside the family conventions - whether it
-adopts them is his call), tools and older repositories. Being on this list does not mean a
+The other 49 entries are explicitly `inventory-only`, including naung, jasa, skills,
+kaji, tools and older repositories. Being on this list does not mean a
 project passed checks. Each such entry produces REVIEW, never PASS.
 New package/permission/license baselines have not been silently approved or invented.
 

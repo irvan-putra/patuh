@@ -163,54 +163,27 @@ class CurrentGallery(unittest.TestCase):
 
 
 class Checksums(unittest.TestCase):
-    class FakeResp:
-        def __init__(self, body):
-            self.body = body
+    """GitHub's per-asset digest is the trusted checksum (Irvan, WhatsApp
+    2026-11-23 13:54); family sidecars/SHA256SUMS are retired."""
 
-    def assets(self, *names):
-        return {n: {"browser_download_url": "https://example.invalid/" + n} for n in names}
+    def asset(self, digest):
+        return {"browser_download_url": "https://example.invalid/x.apk",
+                "digest": digest}
 
-    def patch_fetch(self, bodies):
-        real = patuh.fetch_bytes
-        patuh.fetch_bytes = lambda url: bodies[url.rsplit("/", 1)[-1]]
-        return real
+    def test_digest_hex_extracted(self):
+        self.assertEqual(patuh.asset_digest(self.asset("sha256:" + "a" * 64)), "a" * 64)
 
-    def test_sidecar_format(self):
-        assets = self.assets("myapp-v1.0.0.apk", "myapp-v1.0.0.apk.sha256")
-        real = self.patch_fetch({"myapp-v1.0.0.apk.sha256": b"a" * 64 + b"\n"})
-        try:
-            found = patuh.find_checksum(assets, "myapp-v1.0.0.apk", "myapp-v1.0.0.apk.sha256")
-        finally:
-            patuh.fetch_bytes = real
-        self.assertEqual(found, ("myapp-v1.0.0.apk.sha256", "a" * 64, "sidecar"))
+    def test_digest_uppercase_normalized(self):
+        self.assertEqual(patuh.asset_digest(self.asset("sha256:" + "A" * 64)), "a" * 64)
 
-    def test_sha256sums_format(self):
-        assets = self.assets("myapp-v1.0.0.apk", "SHA256SUMS")
-        body = ("b" * 64 + "  other.zip\n" + "c" * 64 + "  myapp-v1.0.0.apk\n").encode()
-        real = self.patch_fetch({"SHA256SUMS": body})
-        try:
-            found = patuh.find_checksum(assets, "myapp-v1.0.0.apk", "myapp-v1.0.0.apk.sha256")
-        finally:
-            patuh.fetch_bytes = real
-        self.assertEqual(found, ("SHA256SUMS", "c" * 64, "sha256sums"))
+    def test_missing_digest(self):
+        self.assertIsNone(patuh.asset_digest(self.asset("")))
 
-    def test_missing_checksum(self):
-        real = self.patch_fetch({})
-        try:
-            found = patuh.find_checksum(self.assets("myapp-v1.0.0.apk"),
-                                        "myapp-v1.0.0.apk", "myapp-v1.0.0.apk.sha256")
-        finally:
-            patuh.fetch_bytes = real
-        self.assertIsNone(found)
+    def test_wrong_algorithm(self):
+        self.assertIsNone(patuh.asset_digest(self.asset("sha1:" + "a" * 40)))
 
-    def test_sha256sums_without_apk_line(self):
-        assets = self.assets("myapp-v1.0.0.apk", "SHA256SUMS")
-        real = self.patch_fetch({"SHA256SUMS": ("b" * 64 + "  other.zip\n").encode()})
-        try:
-            found = patuh.find_checksum(assets, "myapp-v1.0.0.apk", "myapp-v1.0.0.apk.sha256")
-        finally:
-            patuh.fetch_bytes = real
-        self.assertIsNone(found)
+    def test_malformed_hex(self):
+        self.assertIsNone(patuh.asset_digest(self.asset("sha256:nothex")))
 
 
 class RegistryCoverageTests(unittest.TestCase):
