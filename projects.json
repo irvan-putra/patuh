@@ -501,8 +501,8 @@
       "archived": false
     },
     {
-      "app": "pandu",
-      "repo": "pandu",
+      "app": "kaidah",
+      "repo": "kaidah",
       "kind": "inventory",
       "source_type": "repository",
       "coverage": "inventory-only",
