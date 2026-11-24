@@ -529,6 +529,16 @@
       "archived": false
     },
     {
+      "app": "pelokalan",
+      "repo": "pelokalan",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
+      "fork": true,
+      "archived": false
+    },
+    {
       "app": "picu",
       "repo": "picu",
       "kind": "inventory",
@@ -877,7 +887,7 @@
       "archived": false
     }
   ],
-  "inventory_as_of": "2026-11-23",
+  "inventory_as_of": "2026-11-24",
   "inventory_source": "GitHub owner repository list, including forks and archives",
   "removed_repositories": [
     {
