@@ -1,0 +1,49 @@
+name: patuh report page
+
+# Publishes the "all checks, all projects" table to GitHub Pages
+# (https://vanipy.com/patuh/). Runs after every patuh consistency check,
+# on pushes that change the checker or renderer, and on demand. The page
+# is a render of `patuh.py --json` output: it reports, it never modifies
+# a project.
+
+on:
+  workflow_run:
+    workflows: ["patuh consistency check"]
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - "patuh.py"
+      - "conventions.json"
+      - "projects.json"
+      - "tools/render_report.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.CADANG_TOKEN || secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pillow==12.3.0
+      - name: run checks, machine-readable report
+        run: python3 patuh.py --json report.json --workdir "$RUNNER_TEMP/patuh-clones" || true
+        # || true: FAIL findings must still publish - the page is how they are seen.
+      - name: render the table page
+        run: python3 tools/render_report.py report.json site/index.html projects.json
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: site }
+      - uses: actions/deploy-pages@v4

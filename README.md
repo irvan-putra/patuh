@@ -84,6 +84,14 @@ Secret scanning is deliberately not reimplemented here: use
 [gitsafescan](https://github.com/irvan-putra/gitsafescan). Feed/projection
 wording checks live in tindak's `tools/feed-consistency`.
 
+## Live report
+
+Every check for every project, in one table: **https://vanipy.com/patuh/**
+
+The page is rendered from `patuh.py --json` by `tools/render_report.py` and
+republished by the `patuh report page` workflow after every check run, on
+relevant pushes, and on demand.
+
 ## Usage
 
 ```bash
