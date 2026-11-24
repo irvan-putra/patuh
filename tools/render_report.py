@@ -165,6 +165,22 @@ thead th.proj { z-index: 3; }
 td.cell { width: 26px; height: 24px; text-align: center; }
 td.cell span { display: inline-block; width: 18px; height: 18px; line-height: 18px; border-radius: 3px; color: #fff; font-size: 0.7rem; font-weight: 700; }
 td.na { background: #f5f5f5; }
+td.cell { position: relative; }
+td.cell.hit::after { content: ""; position: absolute; inset: 0; border: 2px solid #f9a825; pointer-events: none; }
+td.cell.cur::after { border-width: 3px; border-color: #ad1457; }
+[data-sev] { cursor: pointer; }
+[data-sev]:hover { text-decoration: underline; }
+.legend li.on, .chips span.on, .counts span.on { outline: 2px solid #1a1a1a; outline-offset: 1px; border-radius: 4px; font-weight: 700; }
+#jump { display: none; align-items: center; gap: 8px; font-size: 0.85rem; background: #fff; color: #1a1a1a; }
+#jump.show { display: flex; }
+#jump #jump-label { font-weight: 600; }
+#jump button { min-width: 44px; min-height: 38px; font-size: 1rem; border: 1px solid #90a4ae; border-radius: 4px; background: #eceff1; cursor: pointer; }
+@media (min-width: 701px) {
+  #jump.show { position: fixed; right: 16px; bottom: 16px; padding: 8px 12px; border: 1px solid #90a4ae; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,.25); z-index: 20; }
+}
+@media (max-width: 700px) {
+  #jump.show { flex: none; padding: 4px 12px; border-top: 1px solid #b0bec5; }
+}
 tr.kind td { background: #eceff1; text-align: left; padding: 4px 10px; font-size: 0.75rem; font-weight: 600; color: #455a64; letter-spacing: 0.04em; text-transform: uppercase; position: sticky; left: 0; }
 section { padding: 0 24px 24px; max-width: 1000px; }
 h2 { font-size: 1.05rem; margin: 20px 0 8px; }
@@ -189,10 +205,11 @@ Generated """ + esc(generated) + " (" + esc(generated_wib) + """).</div>
 <div class="counts">Status: <span class="status """ + status_class + '">' + status + "</span> &nbsp; ")
     for sev in SEVERITIES:
         if counts[sev]:
-            parts.append('<b class="%s">%d</b> %s &nbsp; ' % (SEV_CLASS[sev], counts[sev], sev.lower()))
+            parts.append('<span data-sev="%s" role="button" tabindex="0" title="jump to %s cells"><b class="%s">%d</b> %s &nbsp; </span>'
+                         % (sev, sev.lower(), SEV_CLASS[sev], counts[sev], sev.lower()))
     parts.append("""</div>
 </header>
-<div class="chips"><span><b class="fail">F</b> fail</span><span><b class="warn">W</b> warn</span><span><b class="review">R</b> review</span><span><b class="skip">S</b> skip</span><span><b class="info">i</b> info</span><span><b class="pass">\u2713</b> pass</span><span>tap a cell for details</span></div>
+<div class="chips"><span data-sev="FAIL" role="button" tabindex="0"><b class="fail">F</b> fail</span><span data-sev="WARN" role="button" tabindex="0"><b class="warn">W</b> warn</span><span data-sev="REVIEW" role="button" tabindex="0"><b class="review">R</b> review</span><span data-sev="SKIP" role="button" tabindex="0"><b class="skip">S</b> skip</span><span data-sev="INFO" role="button" tabindex="0"><b class="info">i</b> info</span><span data-sev="PASS" role="button" tabindex="0"><b class="pass">\u2713</b> pass</span><span>tap a label to find its cells</span></div>
 <div class="wrap">
 <table>
 <thead><tr><th class="proj">project</th>""")
@@ -222,10 +239,13 @@ Generated """ + esc(generated) + " (" + esc(generated_wib) + """).</div>
 </div>
 <section>
 <h2>Legend</h2>
+<p class="legend">Click a severity to highlight its cells and jump to the
+first one; the bar that appears steps through the rest and Esc clears.
+Tap the same severity again to step to the next cell.</p>
 <ul class="legend">""")
     for sev in SEVERITIES:
-        parts.append('<li><b class="%s" style="padding:0 6px;border-radius:3px;color:#fff">%s</b> %s</li>'
-                     % (SEV_CLASS[sev], sev, esc(SEV_MEANING[sev])))
+        parts.append('<li data-sev="%s" role="button" tabindex="0"><b class="%s" style="padding:0 6px;border-radius:3px;color:#fff">%s</b> %s</li>'
+                     % (sev, SEV_CLASS[sev], sev, esc(SEV_MEANING[sev])))
     parts.append("""</ul>
 <p class="legend">A blank cell means the check does not apply to that project.
 CLEAN only means every check that ran passed: patuh compares structure,
@@ -258,14 +278,17 @@ Pages workflow from the machine-readable report (<code>patuh.py --json</code>).
 patuh reports; it never modifies a project. Re-runs weekly after the Monday
 audit and on every push to this repo.</p>
 </footer>
+<div id="jump"><span id="jump-label"></span>
+<button type="button" id="jump-prev" aria-label="previous matching cell">&#9664;</button>
+<button type="button" id="jump-next" aria-label="next matching cell">&#9654;</button>
+<button type="button" id="jump-clear" aria-label="clear highlight">&#10005;</button>
+</div>
 <div id="detail"><span class="hint">Tap a cell to see the check and its findings.</span></div>
 <script>
 (function () {
   var d = document.getElementById("detail"), sel = null;
   var cls = {FAIL:"fail",WARN:"warn",REVIEW:"review",SKIP:"skip",INFO:"info",PASS:"pass"};
-  document.addEventListener("click", function (e) {
-    var td = e.target.closest ? e.target.closest("td.cell[data-p]") : null;
-    if (!td) return;
+  function showCell(td) {
     if (sel) sel.classList.remove("sel");
     sel = td; td.classList.add("sel");
     d.textContent = "";
@@ -280,7 +303,68 @@ audit and on every push to this repo.</p>
       p.appendChild(sp); p.appendChild(document.createTextNode(i > 0 ? line.slice(i + 2) : line));
       d.appendChild(p);
     });
+  }
+  var jump = document.getElementById("jump"), jl = document.getElementById("jump-label");
+  var hits = [], hi = -1, hsev = null;
+  function label() {
+    jl.textContent = hsev + (hits.length ? " cell " + (hi + 1) + " of " + hits.length : ": no cells");
+  }
+  function markLegend() {
+    var on = hits.length > 0;
+    document.querySelectorAll("[data-sev]").forEach(function (el) {
+      el.classList.toggle("on", on && el.getAttribute("data-sev") === hsev);
+    });
+  }
+  function step(dir) {
+    if (!hits.length) { label(); return; }
+    hi = (hi + dir + hits.length) % hits.length;
+    hits.forEach(function (td, i) { td.classList.toggle("cur", i === hi); });
+    var td = hits[hi];
+    td.scrollIntoView({ block: "center", inline: "center", behavior: "smooth" });
+    showCell(td);
+    label();
+  }
+  function clearJump() {
+    hits.forEach(function (td) { td.classList.remove("hit", "cur"); });
+    hits = []; hi = -1; hsev = null;
+    jump.classList.remove("show");
+    markLegend();
+  }
+  function focusSev(sev) {
+    if (hsev === sev && hits.length) { step(1); return; }
+    clearJump();
+    hsev = sev;
+    hits = [].slice.call(document.querySelectorAll('td.cell[data-s="' + sev + '"]'));
+    hits.forEach(function (td) { td.classList.add("hit"); });
+    jump.classList.add("show");
+    markLegend();
+    step(1);
+  }
+  document.addEventListener("click", function (e) {
+    var td = e.target.closest ? e.target.closest("td.cell[data-p]") : null;
+    if (td) {
+      showCell(td);
+      var i = hits.indexOf(td);
+      if (i >= 0) {
+        hi = i;
+        hits.forEach(function (t, j) { t.classList.toggle("cur", j === i); });
+        label();
+      }
+      return;
+    }
+    var lg = e.target.closest ? e.target.closest("[data-sev]") : null;
+    if (lg) { e.preventDefault(); focusSev(lg.getAttribute("data-sev")); }
   });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { clearJump(); return; }
+    if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("[data-sev]")) {
+      e.preventDefault();
+      focusSev(e.target.getAttribute("data-sev"));
+    }
+  });
+  document.getElementById("jump-prev").addEventListener("click", function () { step(-1); });
+  document.getElementById("jump-next").addEventListener("click", function () { step(1); });
+  document.getElementById("jump-clear").addEventListener("click", clearJump);
 })();
 </script>
 </body>
