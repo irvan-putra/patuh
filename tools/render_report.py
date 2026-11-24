@@ -131,20 +131,24 @@ h1 { font-size: 1.35rem; margin: 0 0 4px; }
   header { padding: 10px 12px 4px; }
   h1 { font-size: 1.1rem; }
   .meta { font-size: 0.75rem; }
-  .wrap { padding: 4px 0 0; max-height: calc(100vh - 150px); max-height: calc(100dvh - 150px); -webkit-overflow-scrolling: touch; }
-  body { padding-bottom: 130px; }
+  html, body { height: 100%; overflow: hidden; }
+  body { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+  header, .chips, #detail { flex: none; }
+  header > .meta { display: none; }
+  .wrap { flex: 1 1 auto; min-height: 0; max-height: none; padding: 0; -webkit-overflow-scrolling: touch; }
+  section, footer { display: none; }
   table { font-size: 0.75rem; }
-  thead th.check { height: 120px; }
+  thead th.check { height: 105px; }
   thead th.check span { font-size: 0.7rem; padding: 4px 0; }
   td.proj, th.proj { padding: 2px 6px; max-width: 34vw; overflow: hidden; text-overflow: ellipsis; border-right: 2px solid #b0bec5; }
-  td.cell { width: 24px; height: 28px; }
+  td.cell { width: 22px; height: 28px; }
   td.cell span { width: 20px; height: 20px; line-height: 20px; }
   tr.kind td { font-size: 0.68rem; padding: 3px 6px; }
   .chips { display: flex; flex-wrap: wrap; gap: 4px 8px; padding: 4px 12px; font-size: 0.72rem; color: #444; }
   .chips b { padding: 0 5px; border-radius: 3px; color: #fff; }
   section { padding: 0 12px 16px; }
   footer { padding: 0 12px 24px; }
-  #detail { display: block; position: fixed; left: 0; right: 0; bottom: 0; max-height: 38vh; overflow: auto; background: #fff; border-top: 3px solid #455a64; padding: 8px 12px; font-size: 0.85rem; z-index: 10; box-shadow: 0 -2px 8px rgba(0,0,0,.2); }
+  #detail { display: block; position: static; height: 20vh; max-height: 20vh; overflow: auto; background: #fff; border-top: 3px solid #455a64; padding: 8px 12px; font-size: 0.85rem; z-index: 10; box-shadow: 0 -2px 8px rgba(0,0,0,.2); }
   #detail .hint { color: #666; }
   #detail .sev { display: inline-block; padding: 0 6px; border-radius: 3px; color: #fff; font-size: 0.72rem; font-weight: 700; margin-right: 6px; }
   #detail p { margin: 4px 0; }
