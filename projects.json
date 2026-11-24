@@ -323,8 +323,16 @@
     {
       "app": "kapan",
       "repo": "kapan",
-      "kind": "web-site",
-      "note": "Website (vanipy.com/kapan/ with /jakarta/ and /jogja/ routes); no APK. Checked for README, license baseline, commit author and naming only."
+      "kind": "android-app",
+      "module": "app",
+      "package_expected": "com.vanipy.kapan",
+      "label_expected": "kapan",
+      "permissions_baseline": [
+        "android.permission.INTERNET"
+      ],
+      "icon_mode": "family",
+      "baseline_source": "Enrolled 2026-11-24 with the first kapan release: the owner asked for the kapan Android APK and widget the same day (WhatsApp). Package ID, lowercase label, three-number version, family icon and versioned APK filename conventions follow the family rules. The permission baseline is seeded from the shipped source: it detects future drift - it is not the owner's approval of that permission, and not a security validation.",
+      "notes": "Developer events + moviegoer film/festival dates (vanipy.com/kapan/ with /jakarta/ and /jogja/ routes). The single INTERNET permission fetches the public listings for the offline cache and the home-screen widget."
     },
     {
       "app": "kemas",
