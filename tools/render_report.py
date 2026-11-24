@@ -124,7 +124,33 @@ h1 { font-size: 1.35rem; margin: 0 0 4px; }
 .counts b { display: inline-block; min-width: 14px; text-align: center; padding: 1px 5px; border-radius: 4px; color: #fff; font-size: 0.78rem; }
 .pass { background: #2e7d32; } .fail { background: #c62828; } .warn { background: #ef6c00; }
 .review { background: #6a1b9a; } .skip { background: #546e7a; } .info { background: #1565c0; }
-.wrap { overflow-x: auto; padding: 8px 24px 24px; }
+.wrap { overflow: auto; padding: 8px 24px 24px; max-height: calc(100vh - 16px); }
+.chips { display: none; }
+#detail { display: none; }
+@media (max-width: 700px) {
+  header { padding: 10px 12px 4px; }
+  h1 { font-size: 1.1rem; }
+  .meta { font-size: 0.75rem; }
+  .wrap { padding: 4px 0 0; max-height: calc(100vh - 150px); max-height: calc(100dvh - 150px); -webkit-overflow-scrolling: touch; }
+  body { padding-bottom: 130px; }
+  table { font-size: 0.75rem; }
+  thead th.check { height: 120px; }
+  thead th.check span { font-size: 0.7rem; padding: 4px 0; }
+  td.proj, th.proj { padding: 2px 6px; max-width: 34vw; overflow: hidden; text-overflow: ellipsis; border-right: 2px solid #b0bec5; }
+  td.cell { width: 24px; height: 28px; }
+  td.cell span { width: 20px; height: 20px; line-height: 20px; }
+  tr.kind td { font-size: 0.68rem; padding: 3px 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px 8px; padding: 4px 12px; font-size: 0.72rem; color: #444; }
+  .chips b { padding: 0 5px; border-radius: 3px; color: #fff; }
+  section { padding: 0 12px 16px; }
+  footer { padding: 0 12px 24px; }
+  #detail { display: block; position: fixed; left: 0; right: 0; bottom: 0; max-height: 38vh; overflow: auto; background: #fff; border-top: 3px solid #455a64; padding: 8px 12px; font-size: 0.85rem; z-index: 10; box-shadow: 0 -2px 8px rgba(0,0,0,.2); }
+  #detail .hint { color: #666; }
+  #detail .sev { display: inline-block; padding: 0 6px; border-radius: 3px; color: #fff; font-size: 0.72rem; font-weight: 700; margin-right: 6px; }
+  #detail p { margin: 4px 0; }
+  td.cell:not(.na) { cursor: pointer; }
+  td.cell.sel { outline: 3px solid #1a1a1a; outline-offset: -3px; }
+}
 table { border-collapse: collapse; font-size: 0.8rem; background: #fff; }
 th, td { border: 1px solid #e0e0e0; padding: 0; }
 thead th { position: sticky; top: 0; background: #fff; z-index: 2; }
@@ -162,6 +188,7 @@ Generated """ + esc(generated) + " (" + esc(generated_wib) + """).</div>
             parts.append('<b class="%s">%d</b> %s &nbsp; ' % (SEV_CLASS[sev], counts[sev], sev.lower()))
     parts.append("""</div>
 </header>
+<div class="chips"><span><b class="fail">F</b> fail</span><span><b class="warn">W</b> warn</span><span><b class="review">R</b> review</span><span><b class="skip">S</b> skip</span><span><b class="info">i</b> info</span><span><b class="pass">\u2713</b> pass</span><span>tap a cell for details</span></div>
 <div class="wrap">
 <table>
 <thead><tr><th class="proj">project</th>""")
@@ -183,8 +210,8 @@ Generated """ + esc(generated) + " (" + esc(generated_wib) + """).</div>
                 continue
             sev = worst(pm[c])
             tip = "\n".join("%s: %s" % (r["severity"], r["message"]) for r in pm[c])
-            parts.append('<td class="cell" title="%s"><span class="%s">%s</span></td>'
-                         % (esc(tip), SEV_CLASS[sev], esc(SEV_SHORT[sev])))
+            parts.append('<td class="cell" title="%s" data-p="%s" data-c="%s" data-s="%s"><span class="%s">%s</span></td>'
+                         % (esc(tip), esc(proj), esc(c), esc(sev), SEV_CLASS[sev], esc(SEV_SHORT[sev])))
         parts.append("</tr>")
     parts.append("""</tbody>
 </table>
@@ -227,6 +254,31 @@ Pages workflow from the machine-readable report (<code>patuh.py --json</code>).
 patuh reports; it never modifies a project. Re-runs weekly after the Monday
 audit and on every push to this repo.</p>
 </footer>
+<div id="detail"><span class="hint">Tap a cell to see the check and its findings.</span></div>
+<script>
+(function () {
+  var d = document.getElementById("detail"), sel = null;
+  var cls = {FAIL:"fail",WARN:"warn",REVIEW:"review",SKIP:"skip",INFO:"info",PASS:"pass"};
+  document.addEventListener("click", function (e) {
+    var td = e.target.closest ? e.target.closest("td.cell[data-p]") : null;
+    if (!td) return;
+    if (sel) sel.classList.remove("sel");
+    sel = td; td.classList.add("sel");
+    d.textContent = "";
+    var h = document.createElement("p");
+    var b = document.createElement("b");
+    b.textContent = td.dataset.p + " \u00b7 " + td.dataset.c;
+    h.appendChild(b); d.appendChild(h);
+    (td.getAttribute("title") || "").split("\\n").forEach(function (line) {
+      var i = line.indexOf(": "), p = document.createElement("p");
+      var sev = i > 0 ? line.slice(0, i) : "", sp = document.createElement("span");
+      sp.className = "sev " + (cls[sev] || "skip"); sp.textContent = sev;
+      p.appendChild(sp); p.appendChild(document.createTextNode(i > 0 ? line.slice(i + 2) : line));
+      d.appendChild(p);
+    });
+  });
+})();
+</script>
 </body>
 </html>
 """)
