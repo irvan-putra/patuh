@@ -233,3 +233,7 @@ Flutter, other types and unqualified projects need further checker work.
 Report status is NOT CLEAN for failures, INCOMPLETE for skips/reviews, WARNINGS for
 warnings alone, and CLEAN only when none of those remain. Historical author metadata
 is not repaired by a correctly attributed new HEAD; the author check inspects HEAD only.
+
+---
+
+Built with AI assistance (Instinct and others). Not everything has been reviewed by Irvan.
