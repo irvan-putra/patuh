@@ -204,7 +204,7 @@ against or change any repo by itself.
 
 ## Complete repository inventory
 
-The registry represents all 78 current owner repositories as of 24 November 2026: the 77
+The registry represents all 77 current owner repositories as of 24 November 2026: the 76
 in the public listing (including forks and archived projects) plus one private repository
 (signing-key-backups, encrypted key material), marked visibility=private. Twenty-eight entries are qualified: twenty-four Android
 apps and four websites. The Android family grew from the original twelve on 2026-11-20,
@@ -218,7 +218,7 @@ themselves (com.vanipy.* IDs, lowercase labels, three-number versions, family ic
 versioned APK filenames with checksums) come from his standing rules. Seeded baselines
 change only by a deliberate edit with his ok.
 
-The other 50 entries are explicitly `inventory-only`, including naung, jasa, skills,
+The other 49 entries are explicitly `inventory-only`, including naung, jasa, skills,
 kaji, tools and older repositories. Being on this list does not mean a
 project passed checks. Each such entry produces REVIEW, never PASS.
 New package/permission baselines have not been silently approved or invented.
@@ -226,7 +226,7 @@ New package/permission baselines have not been silently approved or invented.
 Every online run compares the whole registry with the live, paginated owner repository
 list. A new unregistered repository fails `registry-missing`, even with `--only`.
 An unavailable listing or offline run is SKIP. Removed/renamed entries are REVIEW.
-Removed tumbuh-app is recorded separately with its canonical destination, not as a current
+Removed tumbuh-app and pelokalan-ideas are recorded separately with its canonical destination, not as a current
 repository. Its direct URL is unavailable; consolidated Tumbuh source/releases remain. Current supported checks still cover native Android and website hygiene;
 Flutter, other types and unqualified projects need further checker work.
 

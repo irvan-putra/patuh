@@ -539,16 +539,6 @@
       "archived": false
     },
     {
-      "app": "pelokalan-ideas",
-      "repo": "pelokalan-ideas",
-      "kind": "inventory",
-      "source_type": "repository",
-      "coverage": "inventory-only",
-      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked. Archived 2026-11-24: content moved into kaji (https://vanipy.com/kaji/pelokalan/review/).",
-      "fork": false,
-      "archived": true
-    },
-    {
       "app": "picu",
       "repo": "picu",
       "kind": "inventory",
@@ -903,7 +893,13 @@
     {
       "repo": "tumbuh-app",
       "canonical_repo": "tumbuh",
-      "reason": "Absent from owner inventory and repository API returns404 after owner removal on2026-11-19. Android source and releases remain in tumbuh/android and canonical releases.",
+      "reason": "Absent from owner inventory and repository API returns 404 after owner removal on 2026-11-19. Android source and releases remain in tumbuh/android and canonical releases.",
+      "coverage": "not-current"
+    },
+    {
+      "repo": "pelokalan-ideas",
+      "canonical_repo": "kaji",
+      "reason": "Deleted by the owner on 2026-11-24, hours after creation. Its review page moved into kaji (https://vanipy.com/kaji/pelokalan/review/).",
       "coverage": "not-current"
     }
   ]
