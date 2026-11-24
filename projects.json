@@ -539,6 +539,16 @@
       "archived": false
     },
     {
+      "app": "pelokalan-ideas",
+      "repo": "pelokalan-ideas",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked. Archived 2026-11-24: content moved into kaji (https://vanipy.com/kaji/pelokalan/review/).",
+      "fork": false,
+      "archived": true
+    },
+    {
       "app": "picu",
       "repo": "picu",
       "kind": "inventory",
