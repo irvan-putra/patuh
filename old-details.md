@@ -249,3 +249,10 @@ is not repaired by a correctly attributed new HEAD; the author check inspects HE
 The README was already convention-compliant (English, leads with the project,
 honest coverage tables and limits, no personal data), so the refresh made no
 README changes. Website stays empty: patuh has no web version of its own.
+
+## Second pass (2026-11-24, later)
+
+After the first pass, the live checks table went up at
+https://vanipy.com/patuh/ (commit 38de354). The Website field was set to it.
+The README already had a Live report section pointing at the page, and the
+About description already fits, so neither needed a change.
