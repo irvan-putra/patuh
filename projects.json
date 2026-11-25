@@ -885,9 +885,29 @@
       "repo": "skills",
       "fork": false,
       "archived": false
+    },
+    {
+      "app": "fantasi",
+      "repo": "fantasi",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Auto-registered by repo discovery (auto-inventory approved by Irvan, WhatsApp 2026-11-23 14:00): presence watched, nothing qualified. Discovery's best guess: web-site - HTML pages present; web hygiene and naming checks may fit. Enrolling into real checks stays his call.",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "app": "kota",
+      "repo": "kota",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Auto-registered by repo discovery (auto-inventory approved by Irvan, WhatsApp 2026-11-23 14:00): presence watched, nothing qualified. Discovery's best guess: web-site - HTML pages present; web hygiene and naming checks may fit. Enrolling into real checks stays his call.",
+      "fork": false,
+      "archived": false
     }
   ],
-  "inventory_as_of": "2026-11-24",
+  "inventory_as_of": "2026-11-25",
   "inventory_source": "GitHub owner repository list, including forks and archives",
   "removed_repositories": [
     {
