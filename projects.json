@@ -925,9 +925,19 @@
       "coverage_note": "Auto-registered by repo discovery (auto-inventory approved by Irvan, WhatsApp 2026-11-23 14:00): presence watched, nothing qualified. Discovery's best guess: web-site - HTML pages present; web hygiene and naming checks may fit. Enrolling into real checks stays his call.",
       "fork": false,
       "archived": false
+    },
+    {
+      "app": "python-docs-id",
+      "repo": "python-docs-id",
+      "kind": "inventory",
+      "source_type": "repository",
+      "coverage": "inventory-only",
+      "coverage_note": "Auto-registered by repo discovery (auto-inventory approved by Irvan, WhatsApp 2026-11-23 14:00): presence watched, nothing qualified. Discovery's best guess: inventory-only - no app or site signals; presence watched, nothing qualified. Enrolling into real checks stays his call.",
+      "fork": true,
+      "archived": false
     }
   ],
-  "inventory_as_of": "2026-11-26",
+  "inventory_as_of": "2026-11-27",
   "inventory_source": "GitHub owner repository list, including forks and archives",
   "removed_repositories": [
     {
