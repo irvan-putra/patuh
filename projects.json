@@ -2,8 +2,8 @@
  "comment": "Registry of projects patuh checks. Baselines pin the state being guarded; drift is reported, never auto-fixed. Entries carrying baseline_source were qualified 2026-11-20 when enforcing family release checks beyond Nada was decided; their per-app permission/license baselines are seeded from the shipped source at that date and detect future drift only - seeding is not approval or security validation, and says so in each entry. The license check was removed 2026-11-24 at the owner's request; license_baseline fields were dropped (they remain in git history).",
  "projects": [
   {
-   "app": "adaptechid",
-   "repo": "adaptechid",
+   "app": "adaptek",
+   "repo": "adaptek",
    "kind": "inventory",
    "source_type": "repository",
    "coverage": "inventory-only",
@@ -80,8 +80,8 @@
    "permissions_note": "MediaProjection foreground-service permission required for the requested screen-recorder feature targeting API34; https://developer.android.com/media/grow/media-projection . RECORD_AUDIO authorized 2026-11-20 for optional game-sound and microphone recording options, merged in bidik 889745b. Android requires RECORD_AUDIO even for internal game-audio capture via AudioPlaybackCapture, and its consent prompt labels the microphone."
   },
   {
-   "app": "bitstarter",
-   "repo": "bitstarter",
+   "app": "monoton",
+   "repo": "monoton",
    "kind": "inventory",
    "source_type": "repository",
    "coverage": "inventory-only",
