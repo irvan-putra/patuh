@@ -42,16 +42,6 @@
    "archived": false
   },
   {
-   "app": "awx",
-   "repo": "awx",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
    "app": "bedah",
    "repo": "bedah",
    "kind": "inventory",
@@ -142,16 +132,6 @@
    "icon_mode": "family"
   },
   {
-   "app": "devguide",
-   "repo": "devguide",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
    "app": "encore",
    "repo": "encore",
    "kind": "inventory",
@@ -192,16 +172,6 @@
    "archived": false
   },
   {
-   "app": "hackathon",
-   "repo": "hackathon",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
    "app": "haskell-intro",
    "repo": "haskell-intro",
    "kind": "inventory",
@@ -209,16 +179,6 @@
    "coverage": "inventory-only",
    "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
    "fork": false,
-   "archived": false
-  },
-  {
-   "app": "hello-lambda-jakarta",
-   "repo": "hello-lambda-jakarta",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
    "archived": false
   },
   {
@@ -454,26 +414,6 @@
    "archived": false
   },
   {
-   "app": "minima",
-   "repo": "minima",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
-   "app": "myschoolcampid",
-   "repo": "myschoolcampid",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
    "app": "nada",
    "repo": "nada",
    "kind": "android-app",
@@ -506,16 +446,6 @@
    "archived": false
   },
   {
-   "app": "old-visi-web",
-   "repo": "old-visi-web",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": false,
-   "archived": false
-  },
-  {
    "app": "onda",
    "repo": "onda",
    "kind": "android-app",
@@ -529,16 +459,6 @@
    ],
    "icon_mode": "family",
    "license_note": "AGPL-3.0 LICENSE file added intentionally; confirmed 2026-11-23 after patuh flagged the change from the no-license baseline, and the baseline was updated accordingly."
-  },
-  {
-   "app": "org-ruby",
-   "repo": "org-ruby",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
   },
   {
    "app": "pantau",
@@ -619,16 +539,6 @@
    "coverage": "inventory-only",
    "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
    "fork": false,
-   "archived": false
-  },
-  {
-   "app": "pyconapac2024-teaser",
-   "repo": "pyconapac2024-teaser",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
    "archived": false
   },
   {
@@ -713,16 +623,6 @@
    "icon_note": "Family icon adopted 2026-11-23 (chosen from the proposal): single 192px full-color res/drawable/ic_launcher.png, cow head art, 1.0.0 version strip; passes all seven icon pixel checks.",
    "signing": "none",
    "signing_note": "No signing secrets and no signed releases; nothing to back up. Verified 2026-11-23: Actions secrets inventory empty of signing material."
-  },
-  {
-   "app": "setup",
-   "repo": "setup",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
   },
   {
    "app": "simak",
@@ -884,16 +784,6 @@
    "license_root": "android"
   },
   {
-   "app": "typing",
-   "repo": "typing",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
    "app": "unggah",
    "repo": "unggah",
    "kind": "android-app",
@@ -938,16 +828,6 @@
    "archived": false
   },
   {
-   "app": "vault-cli",
-   "repo": "vault-cli",
-   "kind": "inventory",
-   "source_type": "repository",
-   "coverage": "inventory-only",
-   "coverage_note": "Registered but not qualified. No approved package, permission, license or icon baseline is claimed. App behavior is not checked.",
-   "fork": true,
-   "archived": false
-  },
-  {
    "app": "vnproject.id",
    "repo": "vnproject.id",
    "kind": "inventory",
@@ -958,7 +838,7 @@
    "archived": false
   }
  ],
- "inventory_as_of": "2026-11-27",
+ "inventory_as_of": "2026-11-28",
  "inventory_source": "GitHub owner repository list, including forks and archives",
  "removed_repositories": [
   {
@@ -971,6 +851,78 @@
    "repo": "pelokalan-ideas",
    "canonical_repo": "kaji",
    "reason": "Deleted by the owner on 2026-11-24, hours after creation. Its review page moved into kaji (https://vanipy.com/kaji/pelokalan/review/).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "awx",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "devguide",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "hackathon",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "hello-lambda-jakarta",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "minima",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "myschoolcampid",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "old-visi-web",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "org-ruby",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "pyconapac2024-teaser",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "setup",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "typing",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
+   "coverage": "not-current"
+  },
+  {
+   "repo": "vault-cli",
+   "canonical_repo": null,
+   "reason": "Absent from owner inventory; repository API returns 404 (deleted from the account, owner-confirmed registry prune 2026-11-28).",
    "coverage": "not-current"
   }
  ]
